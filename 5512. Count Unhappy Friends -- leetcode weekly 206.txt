@@ -1,0 +1,102 @@
+class Solution {
+    public int unhappyFriends(int n, int[][] preferences, int[][] pairs) {
+//         <member, prefrence>
+        HashMap<Integer, Integer> hmap = new HashMap<>();
+        for(int i  = 0; i < preferences.length; i++){
+            hmap.put(i, preferences[i][0]);
+        }
+        HashMap<Integer, Integer> pmap = new HashMap<>();
+        for(int i = 0; i<pairs.length; i++){
+            int x = pairs[i][0];
+            int y = pairs[i][1];
+            pmap.put(x,1);
+            pmap.put(y, 1);
+        }
+        HashMap<Integer,Integer> pair = new HashMap<>();
+        for(int i = 0; i<pairs.length; i++){
+            int x = pairs[i][0];
+            int y = pairs[i][1];
+            pair.put(x,y);
+            pair.put(y, x);
+        }
+        int count = 0;
+        for(int i  = 0; i < pairs.length; i++){
+            int first = pairs[i][0];
+            int second = pairs[i][1];
+            int y = pairs[i][1];
+            if(hmap.get(first) != second && search(preferences, first,i, pmap, pairs, hmap, pair)){
+              count++;
+            }
+            if(hmap.get(second) != first && search(preferences, second, i, pmap, pairs, hmap, pair)){
+              count++;
+            }
+        }
+        return count;
+    }
+    public boolean search(int [][]y, int index, int pIndex, HashMap<Integer,Integer> pmap, int[][]pairs, HashMap<Integer, Integer> hmap,HashMap<Integer, Integer> pair){
+       for(int j = 0; j < y[index].length; j++){
+           int first = pairs[pIndex][0];
+            int second = pairs[pIndex][1];
+           if(y[index][j] != first && y[index][j] != second && pmap.containsKey(y[index][j])){
+               int a = y[index][j];
+               int x = pair.get(a);
+               Boolean isPrefered = false;
+               for(int i = 0; i < y[a].length; i++){
+                   if(y[a][i] == x){
+                       break;
+                   }else if(y[a][i] == index){
+                       isPrefered = true;
+                       break;
+                   }            
+               }
+               if(isPrefered){
+                return true;   
+               }else{
+                   return false;
+               }
+                
+           }
+       }
+        return false;
+    }
+}
+----------------------------
+correct
+
+
+
+---
+class Solution {
+    public int unhappyFriends(int n, int[][] preferences, int[][] pairs) {
+       int ans = 0;
+       int matchedWith[] = new int[n];
+        for(int i = 0 ; i < pairs.length; i++){
+            matchedWith[pairs[i][0]] = pairs[i][1];
+            matchedWith[pairs[i][1]] = pairs[i][0];
+        }
+        outer: for(int p1 = 0; p1<n; p1++){
+            for(int p2 =0; p2<n; p2++){
+                if(p1 == p2){
+                    continue;
+                }
+                int firstCur = indexOf(matchedWith[p1], preferences[p1]);
+                int secondCur = indexOf(matchedWith[p2], preferences[p2]);
+                int firstNew = indexOf(p2, preferences[p1]);
+                int secondNew = indexOf(p1, preferences[p2]);
+                if(firstNew<firstCur && secondNew < secondCur){
+                    ans++;
+                    continue outer;
+                }
+            }
+        }
+        return ans;
+    }  
+    public int indexOf(int x,int a[]){
+        for(int i = 0; i<a.length; i++){
+            if(a[i] == x){
+                return i;
+            }
+        }
+        throw null;
+    }
+}

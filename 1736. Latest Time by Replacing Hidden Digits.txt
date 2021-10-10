@@ -1,0 +1,71 @@
+class Solution {
+    public String maximumTime(String time) {
+        int hour = 0, hourIndex = -1, minute = 0, minuteIndex = -1;
+        int hMiss = 0, mMiss = 0; 
+        String s[] = time.split(":");
+        String str = s[0];
+        char hrs[] = str.toCharArray();
+        for(int i = 0; i<hrs.length; i++){
+            char c = hrs[i];
+            if(Character.isDigit(c)){
+                hour = c -'0';
+            }else{
+                hourIndex = i;
+                hMiss++;
+            }
+        }
+        String str1 = s[1];
+        char mins[] = str1.toCharArray();
+        for(int i = 0; i<mins.length; i++){
+            char c = mins[i];
+            if(Character.isDigit(c)){
+                minute = c -'0';
+            }else{
+                minuteIndex = i+2;
+                mMiss++;
+            }
+        }
+        String h = "";
+ 
+            if(hourIndex == 1){
+               if(hour == 0 || hour == 1){
+                  h = hour+""+"9"+ "";  
+               }else if(hour == 2){
+                   h = hour +""+ "3"+"";
+               } 
+                 
+            }else if(hourIndex == 0){
+                if(hour<=3){
+                    h ="2" +""+ hour+ ""; 
+                }else{
+                    h = "1" +""+ hour+ "";
+                }
+            }
+          String m = "";
+ 
+            if(minuteIndex == 2){              
+                 m = "5"+ "" + minute; 
+                 
+            }else if(minuteIndex == 3){
+                  m = ""+minute+""+"9";  
+                
+            }
+        if(hMiss >=2){
+            h = "23";
+        }
+        if(mMiss >=2){
+            m= "59";
+        }
+        String ans = h+ ":"+ m;
+           if(minuteIndex == -1 && hourIndex!=-1){
+                ans = h+":"+str1;
+           }else if(hourIndex == -1&&minuteIndex != -1){
+                ans = str+":"+m;
+           }else if(hourIndex == -1 && minuteIndex == -1){
+               return time;
+           }
+           
+        return ans;
+    }
+   
+}

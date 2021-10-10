@@ -1,0 +1,57 @@
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+		List<List<Integer>> al = permute3(nums, 0 , nums.length-1);
+        // String str = "";
+		// for(int i = 0;i<nums.length;i++){
+		// str = str + nums[i];
+		// }
+		// List<String> al = permute2(str);
+		// List<List<Integer>> f = new ArrayList<>();
+		// for(String s : al){
+		//     List<Integer> l = new ArrayList<>(); 
+		//     for(int i = 0;i<s.length();i++){
+		//         char c = s.charAt(i);
+		//         int x = Integer.parseInt(""+c);
+		//         l.add(x);
+		//     }      
+		//     f.add(l);
+		// }
+		// return f;
+    }
+   // public static List<String> permute2(String str){
+   //      if(str.length() == 0){
+   //          List<String> br = new ArrayList<String>();
+   //          br.add("");
+   //          return br;
+   //      }
+   //      char cc = str.charAt(0);
+   //      String ros = str.substring(1);
+   //      List<String> a = permute2(ros);
+   //      List<String> f = new ArrayList<String>();
+   //      for(String rr : a){
+   //          for(int i  = 0;i<=rr.length();i++){
+   //              String r = rr.substring(0,i)+ cc + rr.substring(i);
+   //              f.add(r);
+   //          }
+   //      }
+   //      return f;
+   //  }
+    
+    public static List<List<Integer>> permute3(int nums[], int si, int ei){
+        if(si == ei){
+            List<Integer> br = new ArrayList<Integer>();
+            br.add(nums[ei]);
+            return br;
+        }
+        int ci = nums[si];
+        List<Integer> al = permute3(nums, si, ei);
+        List<Integer> f = new ArrayList<>();
+        for(Integer rr : al){
+            for(int i  = 0;i<=rr.length();i++){
+                rr.add(ci);
+                f.add(rr);
+            }
+        }
+        return f;
+    }
+}

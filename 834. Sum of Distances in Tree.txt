@@ -1,0 +1,36 @@
+class Solution {
+    int []dist = null;
+    int subTreeNodeCount[] = null;
+    ArrayList<HashSet<Integer>> tree = new ArrayList<>();
+    public int[] sumOfDistancesInTree(int n, int[][] edges) {
+        dist = new int[n];
+        for(int indx = 0; indx<n; indx++){
+            tree.add(new HashSet<Integer>());
+        }
+        subTreeNodeCount = new int[n];
+        for(int edge[] : edges){
+            tree.get(edge[0]).add(edge[1]);
+            tree.get(edge[1]).add(edge[0]);
+        }
+        postOrder(-1, 0);
+        preOrder(-1, 0);
+        return dist;
+    }
+    public  void postOrder(int parent, int root){
+        
+        for(int child : tree.get(root)){
+            if(child == parent) continue;
+            postOrder(root, child);
+            subTreeNodeCount[root] += subTreeNodeCount[child];
+            dist[root] += dist[child] + subTreeNodeCount[child];
+        }
+        ++subTreeNodeCount[root];
+    }
+    public void preOrder(int parent, int root){
+        for(int child : tree.get(root)){
+            if(child == parent) continue;
+            dist[child] = dist[root] - subTreeNodeCount[child] + subTreeNodeCount.length - subTreeNodeCount[child];
+            preOrder(root, child);
+        }
+    }
+}

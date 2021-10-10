@@ -1,0 +1,32 @@
+class Solution {
+//     TC : O(nlogn)
+//     auxiliary space : O(n)
+    public int minRefuelStops(int target, int startFuel, int[][] stations) {
+        if(startFuel >= target){
+            return 0;
+        }
+       PriorityQueue<Integer> queue = new PriorityQueue<>((a, b) -> b - a);
+        int count = 0, currDist = startFuel;
+        for(int i[] : stations){
+            int nextStation = i[0];
+            int fuelAtStat = i[1];
+            while(currDist < nextStation){
+                if(queue.isEmpty()){
+                    return -1;
+                }
+                count++;
+                currDist += queue.poll();
+            }
+            queue.offer(fuelAtStat);
+        }
+        while(currDist < target){
+            if(queue.isEmpty()){
+                return -1;
+            }
+            currDist += queue.poll();
+            count++;
+            
+        }
+        return count;
+    }
+}

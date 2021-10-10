@@ -1,0 +1,97 @@
+class Solution {
+    public boolean canFormArray(int[] arr, int[][] pieces) {
+        List<Integer> al = new ArrayList<>();
+        for(int x : arr){
+            al.add(x);
+        }
+        ArrayList<List<Integer> > piece  = new ArrayList<>();
+       for(int x[] : pieces){
+           List<Integer> li = new ArrayList<>();
+           for(int z : x){
+               li.add(z);
+           }
+           piece.add(li);
+       }
+        if (check(al, piece)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    public boolean check(
+        List<Integer> arr,
+        ArrayList<List<Integer> > pieces)
+    {
+        // Stores the index of element in
+        // the given array arr[]
+        Map<Integer, Integer> m
+            = new HashMap<>();
+ 
+        for (int i = 0; i < arr.size(); i++)
+            m.put(arr.get(i), i);
+ 
+        // Traverse over the list pieces
+        for (int i = 0;
+             i < pieces.size(); i++) {
+ 
+            // If item size is 1 and
+            // exists in map
+            if (pieces.get(i).size() == 1
+                && m.containsKey(
+                       pieces.get(i).get(0))) {
+                continue;
+            }
+ 
+            // If item contains > 1 element
+            // then check order of element
+            else if (pieces.get(i).size() > 1
+                     && m.containsKey(
+                            pieces.get(i).get(0))) {
+ 
+                int idx = m.get(
+                    pieces.get(i).get(0));
+ 
+                idx++;
+ 
+                // If end of the array
+                if (idx >= arr.size())
+                    return false;
+ 
+                // Check the order of elements
+                for (int j = 1;
+                     j < pieces.get(i).size();
+                     j++) {
+ 
+                    // If order is same as
+                    // the array elements
+                    if (arr.get(idx).equals(
+                            pieces.get(i).get(j))) {
+ 
+                        // Increment idx
+                        idx++;
+ 
+                        // If order breaks
+                        if (idx >= arr.size()
+                            && j < pieces.get(i).size() - 1)
+                            return false;
+                    }
+ 
+                    // Otherwise
+                    else {
+                        return false;
+                    }
+                }
+            }
+ 
+            // Return false if the first
+            // element doesn't exist in m
+            else {
+                return false;
+            }
+        }
+ 
+        // Return true
+        return true;
+    }
+}

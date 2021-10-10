@@ -1,0 +1,39 @@
+TC: O(N^2) 
+AS: O(N)
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        int dp[] = new int[nums.length];
+        Arrays.fill(dp, 1);
+        int maxLen = 1;
+        for(int i = 1; i<nums.length; i++){
+            for(int j = i-1; j>= 0; j--){
+                if(nums[i]>nums[j]){
+                    dp[i] = Math.max(dp[j]+1, dp[i]);
+                }
+            }
+        }
+        for(int i : dp){
+            maxLen = Math.max(maxLen, i);
+        }
+        return maxLen;
+    }
+}
+--------------------------------
+//Patience Sort Algorithm
+TC:O(NLogN)
+AS:O(N)
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+      TreeSet<Integer> bst = new TreeSet<Integer>();
+        for(int i : nums){
+            Integer higherOrEqual = bst.ceiling(i);
+            if(higherOrEqual == null){
+                bst.add(i);
+            }else{
+                bst.remove(higherOrEqual);
+                bst.add(i);
+            }
+        }
+        return bst.size();
+    }
+}

@@ -1,0 +1,47 @@
+class Solution {
+    public int[] sortArrayByParityII(int[] nums) {
+        int n = nums.length;
+        
+        int lo = 0, hi = n-1;
+        while(lo < n && hi>=0){
+            while(lo < n && (lo %2 == 0 && (nums[lo] % 2 == 0) || (lo %2 != 0 && nums[lo] % 2 != 0))){
+                lo += 2;
+            }
+            while( hi >= 0 && ((hi %2 == 0 && nums[hi] % 2 == 0) || (hi %2 != 0 && nums[hi] % 2 != 0))){
+                hi -= 2;
+            }
+            if( lo < n && hi >= 0){
+                int temp = nums[lo];
+                nums[lo] = nums[hi];
+                nums[hi] = temp;
+                lo += 2;
+                hi -= 2;
+            }
+        }
+       return nums;
+    }
+}
+----------------
+class Solution {
+    public int[] sortArrayByParityII(int[] nums) {
+        int n = nums.length;
+        
+        int lo = 0, hi = 1;
+        while(lo < n && hi<n){
+            while(lo < n && (lo %2 == 0 && (nums[lo] % 2 == 0) || (lo %2 != 0 && nums[lo] % 2 != 0))){
+                lo += 2;
+            }
+            while(hi <n && ((hi %2 == 0 && nums[hi] % 2 == 0) || (hi %2 != 0 && nums[hi] % 2 != 0))){
+                hi += 2;
+            }
+            if(lo < n && hi < n){
+                int temp = nums[lo];
+                nums[lo] = nums[hi];
+                nums[hi] = temp;
+                lo += 2;
+                hi += 2;
+            }
+        }
+       return nums;
+    }
+}

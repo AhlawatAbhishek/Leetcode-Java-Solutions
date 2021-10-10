@@ -1,0 +1,90 @@
+class Solution {
+    public int islandPerimeter(int[][] grid) {
+        int rows = grid.length, cols = grid[0].length, boundary = 0;
+        for(int row = 0; row<grid.length; row++){
+            for(int col = 0; col<grid[0].length; col++){
+                if(grid[row][col] == 1){
+                    if(row-1<0 || grid[row-1][col] == 0){
+                        boundary++;
+                    }
+                    if(col-1<0 || grid[row][col-1] == 0){
+                        boundary++;
+                    }
+                    if(row+1>=rows || grid[row+1][col] == 0){
+                        boundary++;
+                    }
+                    if(col+1>=cols || grid[row][col+1] == 0){
+                        boundary++;
+                    }
+                }
+            }
+        }
+        return boundary;
+    }
+}
+-----------------------
+slow approach---------------
+class Solution {
+    int[][] grid;
+    int m, n;
+    int rslt;
+    public static int[][] dirs = {{1,0},{-1,0},{0,1},{0,-1}};
+    public int islandPerimeter(int[][] grid) {
+        boolean foundLand = false;
+
+        this.grid = grid;
+        this.m = grid.length;
+        this.n = grid[0].length;
+        boolean[][] visited = new boolean[m][n];
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if (grid[i][j] == 1){
+                    foundLand = true;
+                    dfs(i, j,visited);
+                    break;
+                }
+                if (foundLand)
+                    break;
+            }
+        }
+        return rslt;
+    }
+    private void dfs(int u, int v,boolean[][] visited){
+        if (visited[u][v])
+            return ;
+        //System.out.println("u and v " + u + " $ " + v);
+        visited[u][v] = true;
+        // got a land - check which ones you can add to perim
+        for(int[] dir: dirs){
+            int nx = u + dir[0];
+            int ny = v + dir[1];
+            if (isWater(nx, ny)){
+                rslt++;
+                //System.out.println("found water at " + nx + " $ " + ny + " rslt = " + rslt);
+            }
+        }
+        
+        // now actually traverse the neighbouring nodes - to do
+        // their own counts
+        for(int[] dir: dirs){
+            int nx = u + dir[0];
+            int ny = v + dir[1];
+            if (!isValid(nx, ny) || grid[nx][ny] == 0)
+                continue;
+            // only if land - do the counting
+            dfs(nx, ny, visited);
+        }
+    } 
+    private boolean isValid(int u,int v){
+        if (u < 0 || u >= m || v < 0 || v >= n)
+            return false;
+        return true;
+    }
+    private boolean isWater(int u, int v){
+        if (u < 0 || u >= m || v < 0 || v >= n)
+            return true;
+        if (grid[u][v] == 0)
+            return true;
+        return false;
+    }
+}

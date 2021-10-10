@@ -1,0 +1,20 @@
+class Solution {
+    public int maxPower(String s) {
+        if(s.length() == 1){
+            return 1; 
+        }
+        char c = s.charAt(0);
+        int count = 1, max = Integer.MIN_VALUE;
+        for(int i = 1; i<s.length(); i++){
+             char chs = s.charAt(i);
+             if(c == chs){
+                 count++;      
+             }else{
+                c = chs;
+                count = 1; 
+             }
+             max = Math.max(count, max);
+        }
+        return max;
+    }
+}

@@ -1,0 +1,25 @@
+class Solution {
+    public int numSubmatrixSumTarget(int[][] matrix, int target) {
+//         Caculating prefix Sum for each cell
+        for(int row = 0; row<matrix.length; row++){
+            for(int col = 1; col < matrix[row].length; col++){
+                matrix[row][col] += matrix[row][col-1];
+            }
+        }
+        int count = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int startCol = 0; startCol<matrix[0].length; startCol++){
+            for(int currCol = startCol; currCol<matrix[0].length; currCol++){
+                map.clear();
+                int sum = 0;
+                map.put(0, 1);
+                for(int row = 0; row<matrix.length; row++){
+                    sum += matrix[row][currCol] - (startCol > 0 ? matrix[row][startCol-1] : 0); 
+                    count += map.getOrDefault(sum-target, 0);
+                    map.put(sum ,map.getOrDefault(sum, 0)+1);
+                }
+            }
+        }
+        return count;
+    }
+}

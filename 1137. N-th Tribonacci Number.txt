@@ -1,0 +1,19 @@
+// Time complexity: O(N), where n is the number which is given in input
+// Auxiliary Space : O(N), to store the results of previous numbers to avoid recomputation 
+class Solution {
+    public int tribonacci(int n) {
+//         Looking for the edge cases
+        if(n == 0) return 0;
+        if(n == 1 || n == 2) return 1;
+//        since we are required to find it for nth number that's why we are taking the tribo array size to n+1, since it is a 0 based indexing 
+        int tribo[] = new int[n+1];
+//         initializing the first three numbers of tribonacci series
+        tribo[0] = 0;
+        tribo[1] = 1;
+        tribo[2] = 1;
+        for(int indx = 3; indx<=n; indx++){
+            tribo[indx] = tribo[indx-1]+tribo[indx-2]+tribo[indx-3];
+        }
+        return tribo[n];
+    }
+}

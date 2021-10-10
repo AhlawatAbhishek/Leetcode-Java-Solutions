@@ -1,0 +1,77 @@
+class Solution {
+     List<List<String>> result = new ArrayList<>();
+     HashMap<String, List<String>> map = new HashMap<>();
+    public List<List<String>> findDuplicate(String[] paths) {      
+        
+        for(String a : paths){
+            String pathArr[] = a.split(" "); 
+            String path = pathArr[0];
+          for(int i = 1; i<pathArr.length; i++){
+              String s = pathArr[i];              
+            boolean bracketStarted = false;
+            StringBuilder sb = new StringBuilder();
+            for(char c : s.toCharArray()){
+                if(c == '('){
+                    bracketStarted = true;
+                }else if(c == ')'){
+                    makeEntryInMap(sb, s, path);
+                    bracketStarted = false;
+                }             
+                if(bracketStarted && c != '(' && c != ')'){
+                    sb.append(c+"");
+                }
+            }
+          }  
+           
+        }
+        
+        for(Map.Entry<String , List<String>> entry : map.entrySet()){
+            List<String> li = entry.getValue();
+            if(li.size() >=2) result.add(li);
+        }
+        return result;
+    }
+    public void makeEntryInMap(StringBuilder sb,  String s, String path){
+         String s1 = sb.toString();
+        StringBuilder ss = new StringBuilder();
+        char ch[] = s.toCharArray();
+        int index = 0;
+        while(ch[index] != '(' ){
+            ss.append(ch[index++]);
+        }
+        s  = ss.toString();
+         String sNew = path + "/" +s;
+            if(map.containsKey(s1)){
+                List<String> li = map.get(s1);
+                li.add(sNew);
+            }else{
+                List<String> li = new ArrayList<>();
+                li.add(sNew);
+                map.put(s1, li);
+            }
+    }
+}
+----------------------------------------
+class Solution {
+    public List<List<String>> findDuplicate(String[] paths) {
+        Map<String,List<String>> store = new HashMap<>();
+        
+        for(String path:paths){
+            String[] arr = path.split(" ");
+            String directory = arr[0];
+            
+            for(int i=1;i<arr.length;i++){
+                //fileName(content)
+                String fileName = arr[i].substring(0,arr[i].indexOf("("));
+                String content = arr[i].substring(arr[i].indexOf("(")+1,arr[i].length()-1);
+                List<String> filepaths = store.getOrDefault(content,new ArrayList<>());
+                filepaths.add(directory +"/"+fileName);
+                store.put(content,filepaths);
+            }
+        }
+        
+        store.entrySet().removeIf(entry -> entry.getValue().size()<2);
+        
+        return new ArrayList<>(store.values());
+    }
+}

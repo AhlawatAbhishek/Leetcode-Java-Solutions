@@ -1,0 +1,82 @@
+class SegmentTreeNode{
+    SegmentTreeNode left, right;
+    int start, end , sum = 0;
+    SegmentTreeNode(int start, int end){
+        left = null;
+        right = null;
+        this.start = start;
+        this.end = end;
+        this.sum = 0;
+    }
+}
+class NumArray {
+    SegmentTreeNode root = null;
+    int arr[] = null;
+    public NumArray(int[] nums) {
+        root = buildTree(nums, 0, nums.length-1);
+    }
+    public SegmentTreeNode buildTree(int []nums, int start, int end){
+        if(start > end){
+            return null;
+        }else{
+           SegmentTreeNode node = new SegmentTreeNode(start, end);
+            if(start == end){
+                node.sum = nums[start]; 
+            }else{
+                 int mid = start + (end - start) /2 ;          
+                 node.left = buildTree(nums, start, mid);
+                 node.right = buildTree(nums, mid+1, end);
+                 node.sum = (node.left != null ? node.left.sum : 0) + (node.right != null ? node.right.sum : 0);
+            }
+           
+            return node;
+        }  
+    }
+    
+    public void update(int index, int val) {
+       updateHelper(this.root, index, val);
+    }
+    public void updateHelper(SegmentTreeNode root, int index, int val){
+        if(root.start == root.end){
+            root.sum = val;
+            return;
+        }else{
+            int mid = root.start + (root.end - root.start)/2;
+            if(index <= mid){
+                updateHelper(root.left, index, val);
+            }else{
+                updateHelper(root.right, index, val);
+            }
+            root.sum = (root.left != null ? root.left.sum : 0) + (root.right != null ? root.right.sum  : 0);
+        }
+    }
+    public int sumRange(int left, int right) {
+       return sumRangeHelper(root, left, right);
+    }
+    public int sumRangeHelper(SegmentTreeNode root, int left, int right){
+        // if(root == null){
+        //     return 0;
+        // }
+        if(root.start == left && root.end == right){
+            return root.sum;
+        }else{
+            int mid = root.start + (root.end - root.start) /2;
+            if(mid >= right){
+                return sumRangeHelper(root.left, left, right);
+            }else if(left >= mid+1){
+                return sumRangeHelper(root.right, left, right);
+            }else{
+               return sumRangeHelper(root.left, left, mid) + 
+                sumRangeHelper(root.right, mid+1, right);
+            }
+            
+        }
+    }
+}
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray obj = new NumArray(nums);
+ * obj.update(index,val);
+ * int param_2 = obj.sumRange(left,right);
+ */

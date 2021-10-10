@@ -1,0 +1,77 @@
+Not correct recursion solution giving tle for large input
+---------------
+class Solution {
+    String res = "";
+    public String findLongestWord(String s, List<String> d) {
+        findLongest(s, d, "", 0);
+        return res;
+    }
+    public void findLongest(String s, List<String> d, String newString, int  index){
+        
+         if(d.contains(newString)){
+            // System.out.println("Entered with index -" + index);
+            if(res.length() == newString.length()){
+                 if(res.compareTo(newString) > 0) res = newString;
+            }else if(res.length() < newString.length()){
+                res = newString; 
+                // System.out.println(newString + "-assigned");
+            }
+            
+        }
+        if(index >= s.length()){
+            return;
+        }
+        findLongest(s, d, newString+s.charAt(index), index+1);
+        findLongest(s, d, newString, index+1);   
+
+    }
+}----------------------------
+---------------
+class Solution {
+    public String findLongestWord(String s, List<String> d) {
+        String result = "";
+        d.sort((String a, String b) -> a.length() == b.length() ? a.compareTo(b) : b.length() - a.length());
+        //sort me negative deta ternary operator toh a phele aaega or postivie deta h toh b phele(mtlb descending order hoga))
+        for(String str : d){
+            if(isSubsequence(s, str)){
+                return result =  str;
+            }
+        }
+        return result;
+    }
+    public boolean isSubsequence(String s, String d){
+        int i = 0, j = 0;
+        if(d.length() > s.length()){
+            return false;
+        }
+        while(i < s.length() && j<d.length()){
+            if(s.charAt(i) == d.charAt(j))j++;
+            i++;
+        }
+        return j == d.length();
+    }
+}------------------
+---------------------------------------
+class Solution {
+    public String findLongestWord(String s, List<String> d) {
+        String result = "";
+        for(String str : d){
+            if(isSubsequence(s, str)){
+               if(result.length() < str.length() ||(result.length() == str.length() && str.compareTo(result)< 0)) 
+                result =  str;
+            }
+        }
+        return result;
+    }
+    public boolean isSubsequence(String s, String d){
+        int i = 0, j = 0;
+        if(d.length() > s.length()){
+            return false;
+        }
+        while(i < s.length() && j<d.length()){
+            if(s.charAt(i) == d.charAt(j))j++;
+            i++;
+        }
+        return j == d.length();
+    }
+}

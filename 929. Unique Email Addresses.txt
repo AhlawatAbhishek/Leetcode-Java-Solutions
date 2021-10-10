@@ -1,0 +1,120 @@
+// Time complexity : O(N*len), N is number of entries in emails array and len is length of longest input mail
+// Auxiliarty Space: O(number of unique mails)
+class Solution {
+    public int numUniqueEmails(String[] emails) {
+//         To count unique mails
+        HashSet<String> uniqueMail = new HashSet<>();
+//         iterate all mails in the array
+        for(String email : emails){
+            int indx = 0, len = email.length();
+            boolean atRateStarts = false;
+            StringBuilder actualMail = new StringBuilder();
+//             iterate the mail charcater by character
+            while(indx < len){
+                char ch = email.charAt(indx);
+//                 using appropriate conditions to skip or add the character
+                if(ch == '+'){
+                    if(!atRateStarts){
+                        indx++;
+                    while(indx< len && email.charAt(indx) != '@'){
+                        indx++;
+                    }
+                    actualMail.append('@');
+                     indx++;   
+                    atRateStarts = true;
+                    }else{   
+                    while(indx< len){
+                        actualMail.append(email.charAt(indx));
+                        indx++;
+                    }
+                    }                   
+                    
+                }else if(ch == '.'){
+                    if(atRateStarts){
+                        while(indx< len){
+                            actualMail.append(email.charAt(indx));
+                            indx++;
+                        }
+                    }else{
+                        indx++;
+                        continue;
+                    }
+                }else{
+                  if(ch == '@'){
+                      atRateStarts = true;
+                  }  
+                 actualMail.append(email.charAt(indx));
+                 indx++;
+                }
+            }
+            String mail = actualMail.toString();
+            // System.out.print(mail+" ");
+//             adding mail generate after processing to unique mail
+            uniqueMail.add(mail);
+        }
+//         returning number of unique mails
+        return uniqueMail.size();
+    }
+}// Time complexity : O(N*len), N is number of entries in emails array and len is length of longest input mail
+// Auxiliarty Space: O(number of unique mails)
+class Solution {
+    public int numUniqueEmails(String[] emails) {
+//         To count unique mails
+        HashSet<String> uniqueMail = new HashSet<>();
+//         iterate all mails in the array
+        for(String email : emails){
+
+            String mail = processMail(email);
+            // System.out.print(mail+" ");
+//             adding mail generate after processing to unique mail
+            uniqueMail.add(mail);
+        }
+//         returning number of unique mails
+        return uniqueMail.size();
+    }
+    
+    String processMail(String email){
+                    int indx = 0, len = email.length();
+            boolean atRateStarts = false;
+            StringBuilder actualMail = new StringBuilder();
+//             iterate the mail charcater by character
+            while(indx < len){
+                char ch = email.charAt(indx);
+//                 using appropriate conditions to skip or add the character
+                if(ch == '+'){
+                    if(!atRateStarts){
+                        indx++;
+                    while(indx< len && email.charAt(indx) != '@'){
+                        indx++;
+                    }
+                    actualMail.append('@');
+                     indx++;   
+                    atRateStarts = true;
+                    }else{   
+                    while(indx< len){
+                        actualMail.append(email.charAt(indx));
+                        indx++;
+                    }
+                    }                   
+                    
+                }else if(ch == '.'){
+                    if(atRateStarts){
+                        while(indx< len){
+                            actualMail.append(email.charAt(indx));
+                            indx++;
+                        }
+                    }else{
+                        indx++;
+                        continue;
+                    }
+                }else{
+                  if(ch == '@'){
+                      atRateStarts = true;
+                  }  
+                 actualMail.append(email.charAt(indx));
+                 indx++;
+                }
+            }
+        return actualMail.toString();
+    }
+}

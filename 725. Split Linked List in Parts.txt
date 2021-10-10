@@ -1,0 +1,85 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode[] splitListToParts(ListNode head, int k) {
+        int len = 0;
+        ListNode curr = head, prev = null;
+        while(curr != null){
+             curr = curr.next;
+            len++;
+        }
+        ListNode res[] = new ListNode[k];
+        int nodesInOneBlock = len/k;
+        int numOfNodesHavOneExt = len % k;
+        int indx = 0;
+        curr = head;
+        while(curr != null && indx < numOfNodesHavOneExt*(nodesInOneBlock+1)){
+            prev = curr;
+            res[indx] = curr;
+            curr = curr.next;
+            if(indx == nodesInOneBlock){
+               prev.next = null;
+            }
+            indx++;
+        }
+         while(indx < k){
+           if(curr != null){  
+            prev = curr;
+            curr = curr.next;
+            res[indx] = curr;
+            if(indx == nodesInOneBlock){
+               prev.next = null;
+            }
+           }else{
+               res[indx] = null;
+           }    
+          indx++;
+        }
+        return res;
+    }
+}
+---------------------------
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode[] splitListToParts(ListNode head, int k) {
+        int len = 0;
+        ListNode curr = head, prev = null;
+        while(curr != null){
+             curr = curr.next;
+            len++;
+        }
+        ListNode res[] = new ListNode[k];
+        int nodesInOneBlock = len/k;
+        int numOfNodesHavOneExt = len % k;
+        int indx = 0;
+        curr = head;
+        while(curr != null && indx < k){
+            res[indx] = curr;
+            for(int index = 1; index<=nodesInOneBlock+(numOfNodesHavOneExt > 0 ? 1 : 0); index++){
+               prev = curr; 
+               curr = curr.next;
+            }
+            prev.next = null;
+            numOfNodesHavOneExt--;
+            indx++;
+        }
+        return res;
+    }
+}

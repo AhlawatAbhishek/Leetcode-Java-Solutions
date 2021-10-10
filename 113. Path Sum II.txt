@@ -1,0 +1,39 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+         List<List<Integer>> res = new ArrayList<>();
+        populateList(root, targetSum, new int[5001], 0,  res); 
+        return res;
+    }
+    public void populateList(TreeNode root, int targetSum, int []currPath, int index,
+                            List<List<Integer>> res){
+        if(root == null){
+            return;
+        }
+        currPath[index] = root.val;
+        if(root.left == null && root.right == null && root.val == targetSum){
+            List<Integer> li = new ArrayList<>();
+            for(int i = 0; i<=index; i++){
+                li.add(currPath[i]);
+            }
+            res.add(li);
+            return;
+        }
+        populateList(root.left, targetSum -root.val, currPath, index+1, res);
+        populateList(root.right, targetSum -root.val, currPath, index+1, res);
+    }
+}

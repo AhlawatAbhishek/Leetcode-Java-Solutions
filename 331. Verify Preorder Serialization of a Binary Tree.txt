@@ -1,0 +1,14 @@
+class Solution {
+    public boolean isValidSerialization(String preorder) {
+        String tree[] = preorder.split(",");
+        int vacancy = 1;
+        for(String s : tree){
+            vacancy--;
+            if(vacancy < 0) return false;
+            if(!s.equals("#")){
+                vacancy += 2;
+            }
+        }
+        return vacancy == 0;
+    }
+}

@@ -1,0 +1,30 @@
+class Solution {
+    public boolean validMountainArray(int[] arr) {
+        if(arr == null ||  arr.length<3){
+            return false;
+        }
+        if(arr[0]>=arr[1]){
+            return false;
+        }
+        int i = 0;
+        boolean dec = false;
+        while(i < arr.length-1){
+            if(arr[i]>arr[i+1]){
+                dec = true;
+                break;
+            }
+            i++;
+        }
+        if(dec == true){
+            while(i<arr.length-1){
+                if(arr[i]<=arr[i+1]){
+                    return false;
+                }
+                i++;
+            }
+            return true;
+        }else{
+            return false;
+        }
+    }
+}

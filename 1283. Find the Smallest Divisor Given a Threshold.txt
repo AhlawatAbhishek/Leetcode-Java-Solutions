@@ -1,0 +1,23 @@
+class Solution {
+    public int smallestDivisor(int[] nums, int threshold) {
+        int lowDivisor = 1, highDivisor = 1000000;
+        while(lowDivisor < highDivisor){
+            int midDivisor = lowDivisor + (highDivisor - lowDivisor) / 2;
+            int quotientSum = findQuotientSum(nums, midDivisor);
+            if(quotientSum <= threshold){
+              highDivisor = midDivisor;  
+            }else{
+                lowDivisor = midDivisor + 1;
+            } 
+
+        }
+        return lowDivisor;
+    }
+    private int findQuotientSum(int []nums, int midDivisor){
+        int sum = 0;
+        for(int num : nums){
+            sum += 1+ ((num-1) / midDivisor);
+        }
+        return sum;
+    }
+}

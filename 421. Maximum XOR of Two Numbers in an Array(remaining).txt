@@ -1,0 +1,49 @@
+class Solution {
+    public int findMaximumXOR(int[] nums) {
+         if(nums.length == 0 || nums.length == 1){
+             return 0;
+         }
+        ArrayList<Integer> al = new ArrayList<>();
+        getSubArray(al, new ArrayList<Integer>(), 0, nums);
+        int max = Integer.MIN_VALUE;
+        for(int a : al){
+            if(max < a){
+              max = a;
+            }
+        }
+        return max;
+    }
+    public void getSubArray(ArrayList<Integer>sub, ArrayList<Integer> curr, int index, int[] arr){
+        if(curr.size() == 2){
+            int x = curr.get(0) ^ curr.get(1);
+            sub.add(x);
+            return;
+        }
+        for( int i = index; i<arr.length; i++){
+            curr.add(arr[i]);
+            getSubArray(sub, curr, i + 1, arr);
+            curr.remove(curr.size()-1);
+        }
+    }
+}-------------
+correct : ------------
+class Solution {
+    public int findMaximumXOR(int[] nums) {
+        int mask = 0 , max= 0;
+        for(int i = 31; i >= 0;i--){
+            mask = mask | (1<<i);
+            Set<Integer> set = new HashSet();
+            for(int num : nums){
+                set.add(mask & num);
+            }
+            int temp = max | ( 1<<i);
+            for(int prefix : set){
+                if(set.contains(temp ^ prefix)){
+                    max = temp;
+                    break;
+                }
+            }
+        }
+        return max;
+    }
+}

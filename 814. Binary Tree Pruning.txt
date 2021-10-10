@@ -1,0 +1,69 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class ReturnNode{
+    TreeNode node = null;
+    boolean isOnePresent = false;
+    ReturnNode(){
+        
+    }
+    ReturnNode(TreeNode n, boolean isPresent){
+        node = n;
+        isOnePresent = isPresent;
+    }
+}
+class Solution {
+    public TreeNode pruneTree(TreeNode root) {
+       ReturnNode r = prune(root);
+        return r.isOnePresent ? r.node : null;
+    }
+    public ReturnNode prune(TreeNode root){
+        if(root == null){
+            return new ReturnNode();
+        }
+        ReturnNode left = prune(root.left);
+        ReturnNode right = prune(root.right);
+        if(!left .isOnePresent){
+            root.left = null;
+        }
+        if(!right .isOnePresent){
+            root.right = null;
+        }
+        return new ReturnNode(root, (root.val == 1 || left .isOnePresent  || right .isOnePresent));
+    }
+}
+--------------
+videshi sol-------------------------
+class Solution {
+
+    // TC : O(n)
+    // SC : O(H = logn)
+    public TreeNode pruneTree(TreeNode root) {
+        if (root == null) return null;
+        root.left = pruneTree(root.left);
+        root.right = pruneTree(root.right);
+
+        if (canDeleteNode(root)) return null;
+        return root   ;
+    }
+
+    private boolean canDeleteNode(TreeNode root){
+        if(root.left == null && root.right == null && root.val == 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+}

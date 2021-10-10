@@ -1,0 +1,22 @@
+class Solution {
+    public int numberOfArithmeticSlices(int[] nums) {
+        int apSubSeqCount = 0;
+        Map<Integer, Integer> diffFreqMap[] = new HashMap[nums.length];
+        for(int right = 0; right < nums.length; right++){
+            diffFreqMap[right] = new HashMap<Integer, Integer>();
+            for(int left = 0; left < right; left++){
+                long difff = (long)(nums[left]) - nums[right];
+                if(difff <= Integer.MIN_VALUE || difff >= Integer.MAX_VALUE){
+                  continue;
+                }
+                int diff = (int) difff;
+                int rightFreq = diffFreqMap[right].getOrDefault(diff, 0);
+                int leftFreq = diffFreqMap[left].getOrDefault(diff, 0);
+                apSubSeqCount += leftFreq;
+                int totalFreq = rightFreq + leftFreq + 1;
+                diffFreqMap[right].put(diff, totalFreq);
+            }
+        }
+        return apSubSeqCount;
+    }
+}

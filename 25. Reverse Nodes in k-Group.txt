@@ -1,0 +1,93 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        int count = 1, len = findLen(head);
+        ListNode curr = head, prevHead = head, prev = null;
+        for(int i = 1; i<= len/k && curr != null; ){
+            if(count == k){
+                ListNode next = curr.next;
+                curr.next = null;
+                i++;
+                ListNode n = reverse(prevHead);
+                   prevHead.next = next;
+                if(prev != null){
+                    prev.next = n;
+                }
+                   prev = prevHead;
+                   prevHead = next;
+                if(i == 2){
+                    head = n;
+                }
+               
+                curr = next; count = 1;
+            }else{
+                count++;
+                curr = curr.next;
+            }
+        }
+        return head;
+    }
+    public ListNode reverse(ListNode head){
+        ListNode curr = head, prev  = null;
+        while(curr != null){
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+    public int findLen(ListNode head){
+        int len = 0;
+        // Node curr = head;
+        while(head != null){
+            head = head.next;
+            len++;
+        }
+        return len;
+    }
+}
+-------------------------------------------------------------------
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode curr  = head;
+        int  i =0;
+        while(curr != null && i !=k){
+            curr = curr.next;
+            i++;
+        }
+        if(i == k){
+           curr = reverseKGroup(curr,k);
+            while(i>0){
+                ListNode n = head.next;
+                head.next = curr;
+                curr = head;
+                head  = n;
+                i--;
+            }
+            head = curr;
+        }
+        return head;
+        
+        // return prev;
+    }
+}

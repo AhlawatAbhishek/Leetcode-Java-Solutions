@@ -1,0 +1,50 @@
+class Solution {
+    public int maxEnvelopes(int[][] envelope) {
+        Arrays.sort(envelope, (a, b)->a[0]-b[0]);
+        // int n = envelope.length;
+        // int tail[][] = new int[n][2];
+        // tail[0][1] = envelope[0][1];
+        // tail[0][0] = envelope[0][0];
+        // int len = 1;
+        // for(int i = 1; i<envelope.length; i++){
+        //     if(envelope[i][0] > tail[len-1][0] && envelope[i][1] > tail[len-1][1]){
+        //         tail[len][0] = envelope[i][0];
+        //         tail[len][1] = envelope[i][1];
+        //         len++;
+        //     }else{
+        //         int indx = ceil(envelope, 0, len-1, envelope[i][0], envelope[i][1]);
+        //         tail[indx][0] = envelope[i][0];
+        //         tail[indx][1] = envelope[i][1];
+        //     }
+        // }
+        // return len;
+        int sol[] = new int[envelope.length];
+        Arrays.fill(sol, 1);
+        for(int i = 0; i<sol.length; i++){
+            for(int j =0; j<i; j++){
+                if(envelope[j][0] < envelope[i][0] && envelope[j][1] < envelope[i][1]){
+                    sol[i] = Math.max(sol[i], sol[j]+1);
+                }
+            }
+        }
+        int max = 0;
+        for(int i = 0; i<sol.length; i++){
+            if(sol[i]>max){
+                max = sol[i];
+            }
+        }
+        return max;  
+        
+    }
+    // public int ceil(int arr[][], int l, int r, int x, int y){
+    //     while(l < r){
+    //         int m = r + (l-r) / 2;
+    //         if(arr[m][0] >= x && arr[m][1] >= y){
+    //            r = m;
+    //         }else{
+    //             l = m+1;
+    //         }
+    //     }
+    //     return r;
+    // }
+}

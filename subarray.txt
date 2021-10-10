@@ -1,0 +1,32 @@
+/*package whatever //do not write package name here */
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class GFG {
+	public static void main (String[] args)throws Exception {
+		//code
+		int arr[] = {1,2,3};
+	    List<List<Integer>> al = new ArrayList<>();
+        getSubArray(al,  arr);
+        System.out.println(al);
+	}
+ public static void getSubArray(List<List<Integer>>sub,  int [] arr){
+        int n = arr.length;
+         for (int i=0; i <n; i++) 
+        { 
+            // Pick ending point 
+            for (int j=i; j<n; j++) 
+            { 
+                List<Integer> al = new ArrayList<>();
+                // Print subarray between current starting 
+                // and ending points 
+                for (int k=i; k<=j; k++){
+                  al.add(arr[k]);   
+                }
+                sub.add(al); 
+            } 
+        }
+    }
+}

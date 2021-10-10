@@ -1,0 +1,29 @@
+class Solution {
+    public TreeNode sortedListToBST(ListNode head) {
+        if(head == null){
+            return null;
+        }
+        if(head.next == null){
+            return new TreeNode(head.val);
+        }
+        
+       return  constructTree(head, null);
+    }
+    public TreeNode constructTree(ListNode start, ListNode end){
+        if(start == end){
+            return null;
+        }
+        ListNode fast = start, slow = start;
+        while(fast != end && fast.next !=end){
+            fast = fast.next;
+            if(fast.next != null){
+                fast = fast.next;
+            }
+            slow = slow.next;
+        }
+        TreeNode root = new TreeNode(slow.val);
+        root.left = constructTree(start, slow);
+        root.right = constructTree(slow.next, end);
+        return root;
+    }
+}

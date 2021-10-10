@@ -1,0 +1,60 @@
+class SegmentTreeNode{
+    int start, end, sum;
+    SegmentTreeNode left = null, right = null;
+    SegmentTreeNode(int s, int e){
+        this.start = s;
+        this.end = e;
+        this.sum = 0;
+    }
+}
+class NumArray {
+    private SegmentTreeNode root = null;
+    public NumArray(int[] nums) {
+        root = buildSegTree(nums, 0, nums.length-1);
+    }
+    private SegmentTreeNode buildSegTree(int nums[], int start, int end){
+        if(start > end){
+          return null;   
+        }else{
+            SegmentTreeNode node = new SegmentTreeNode(start, end);
+            if(start == end){
+                node.sum = nums[start];
+            }else{
+                int mid = start + (end - start)/2;
+                node.left = buildSegTree(nums, start, mid);
+                node.right = buildSegTree(nums, mid+1, end);
+                int currNodeSum = 0;
+                currNodeSum += (node.left == null ? 0 : node.left.sum) + (node.right == null ? 0 : node.right.sum);
+                node.sum = currNodeSum;
+            }
+            return node;
+        }
+        
+    }
+    public int sumRange(int left, int right) {
+       return sumRangeHelper(root, left, right);
+    }
+    public int sumRangeHelper(SegmentTreeNode root, int left, int right){
+         if(root == null) return 0;
+         if(root.start == left && root.end == right){
+            return root.sum;
+        }else{
+            int mid = root.start + (root.end - root.start) /2;
+            if(mid >= right){
+                return sumRangeHelper(root.left, left, right);
+            }else if(left >= mid+1){
+                return sumRangeHelper(root.right, left, right);
+            }else{
+               return sumRangeHelper(root.left, left, mid) + 
+                sumRangeHelper(root.right, mid+1, right);
+            }
+            
+        }
+    }                    
+}
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray obj = new NumArray(nums);
+ * int param_1 = obj.sumRange(left,right);
+ */

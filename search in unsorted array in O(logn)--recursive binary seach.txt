@@ -1,0 +1,29 @@
+class Solution {
+    public int search(int[] nums, int target) {
+        int res = find(nums,0,nums.length-1,target);
+        return res;
+    }
+    public int find(int nums[],int si, int ei, int target){
+        if(si>ei){
+            return -1;
+        }
+        if(si == ei){
+            if(nums[ei] == target){
+                return ei;
+            }else{
+                return -1;
+            }
+        }
+        int mid = (si + ei)/2; 
+        int i = find(nums, si, mid, target);
+        if(i!= -1){
+            return i;
+        }
+        
+        int j = find(nums, mid+1, ei, target);
+        if(j!= -1){
+            return j;
+        }
+        return -1;
+    }
+}

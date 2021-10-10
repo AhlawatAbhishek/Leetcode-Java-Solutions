@@ -1,0 +1,45 @@
+class Solution {
+    public int trap(int[] height) {
+        if(height.length <=2){
+            return 0; 
+        }
+        int n = height.length, left[] = new int[n], right[] = new int[n];
+        left[0] = height[0];
+        right[n-1] = height[n-1];
+        for(int indx = 1; indx<n; indx++){
+            left[indx] = Math.max(left[indx-1] , height[indx]);
+        }
+        for(int indx = n-2; indx>=0; indx--){
+            right[indx] = Math.max(right[indx+1], height[indx]);
+        }
+        int totalWater = 0;
+        for(int indx= 0; indx<n; indx++){
+            totalWater += Math.abs(height[indx] - Math.min(left[indx], right[indx]));
+        }
+        return totalWater;
+    }
+}
+------------------
+class Solution {
+    public int trap(int[] height) {
+        if(height.length <=2){
+            return 0; 
+        }
+        int n = height.length;
+        Stack<Integer> st = new Stack<>();
+        int totalWater = 0;
+        int indx= 0;
+        while(indx<n){
+            if(st.isEmpty() || height[indx] <= height[st.peek()]){
+                st.push(indx++);
+            }else{
+                int currBlockIndx = st.pop();
+                if(!st.isEmpty()){
+                  totalWater +=  (Math.min(height[st.peek()], height[indx]) - height[currBlockIndx]) * 
+                    (indx - st.peek() - 1);
+                }   
+            }
+        }
+        return totalWater;
+    }
+}

@@ -1,0 +1,45 @@
+class Solution {
+    int mod = 1000000007;
+    HashMap<String, Long> map= new HashMap<>();
+    char ch[] = null;
+    public int countVowelPermutation(int n) {
+        if(n == 1){
+            return 5;
+        }
+        char ch[] = new char[5];
+        ch[0] = 'a';
+        ch[1] = 'e';
+        ch[2] = 'i';
+        ch[3] = 'o';
+        ch[4] = 'u';
+        long res = 0;
+        for(char i :  ch){
+            res = (res + findPermu(n-1, i)) % mod;
+        }
+        return (int)res;
+    }
+    public long findPermu(int n, char prev){
+        if(n == 0){
+            return 1;
+        }
+        String key = n+""+prev;
+        if(map.containsKey(key)){
+            return map.get(key);
+        }
+            long res = 0;
+            char c = prev;
+            if(c == 'a'){
+                res = findPermu( n-1, 'e') % mod;
+            }else if(c == 'e'){
+                res = (findPermu( n-1, 'a') + findPermu( n-1, 'i'))% mod;
+            }else if(c == 'i'){
+                res = (findPermu( n-1, 'a')+ findPermu( n-1, 'e')+ findPermu( n-1, 'o')+ findPermu( n-1, 'u'))% mod;
+            }else if(c == 'o'){
+                res = (findPermu( n-1, 'i')+findPermu( n-1, 'u'))% mod;
+            }else{
+                res = (findPermu( n-1, 'a'))% mod;
+            }
+        map.put(key, res);
+        return res;
+    }
+}

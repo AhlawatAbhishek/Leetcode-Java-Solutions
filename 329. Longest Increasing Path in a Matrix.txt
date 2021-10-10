@@ -1,0 +1,39 @@
+class Solution {    
+    public int longestIncreasingPath(int[][] matrix) {
+        int memo[][] =  new int[matrix.length][matrix[0].length];
+        for(int o[] : memo){
+            Arrays.fill(o, -1);
+        }
+        int maxSoFar = Integer.MIN_VALUE;
+       for(int  i = 0; i<matrix.length; i++){
+           for(int j = 0; j<matrix[0].length; j++){                 
+              maxSoFar = Math.max(maxSoFar, findLongest(matrix, i, j, -1, memo));
+           }
+       }
+        return maxSoFar;
+    }
+    public int findLongest(int[][]matrix, int row, int col, int prev, int[][]memo){
+        if(isSafe(matrix, row, col, prev)){
+            int val = matrix[row][col];
+            if(memo[row][col] != -1){
+                return memo[row][col];
+            }
+            matrix[row][col] = -10;
+            int res = 1;
+        if(isSafe(matrix, row+1, col, val)) res = Math.max(res,  1+ findLongest(matrix, row+1, col, val,  memo));
+        if(isSafe(matrix, row-1, col, val)) res = Math.max(res, 1+ findLongest(matrix, row-1, col, val,  memo));
+        if(isSafe(matrix, row, col+1, val)) res = Math.max(res, 1+ findLongest(matrix, row, col+1, val,  memo));
+        if(isSafe(matrix, row, col-1, val)) res = Math.max(res, 1+ findLongest(matrix, row, col-1, val,  memo));
+        memo[row][col] = res;
+            matrix[row][col] = val;
+            return res;
+        }
+        return 0;
+    }
+    public boolean isSafe(int matrix[][], int row, int col, int prev){
+        if(row < 0 || row >= matrix.length || col<0 || col >= matrix[0].length || matrix[row][col] == -10|| (prev != -1 && matrix[row][col] <= prev)){
+            return false;
+        }
+        return true;
+    }
+}

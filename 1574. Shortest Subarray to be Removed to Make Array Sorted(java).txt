@@ -1,0 +1,39 @@
+class Solution {
+    public int findLengthOfShortestSubarray(int[] arr) {
+        int n = arr.length;
+        int curr = -1;
+        for (int c : arr) {
+            if (c<curr) {
+                curr=-1;
+                break;
+            }
+            curr=c;
+        }
+        if (curr!=-1)
+            return 0;
+        TreeMap<Integer, Integer> fs = new TreeMap<>();
+        fs.put(-1, 0);
+        int ans = n;
+        for (int i = 0; i < n; ++i) {
+            int c = arr[i];
+            if (c<curr) {
+                curr=-1;
+                break;
+            }
+            curr=c;
+            fs.put(c,i+1);
+            ans = n-(i+1);
+        }
+        curr = 1000000007;
+        for (int i = n-1; i >= 0; --i) {
+            int c = arr[i];
+            if (c>curr) {
+                curr=-1;
+                break;
+            }
+            curr=c;
+            ans = Math.min(ans, i-fs.floorEntry(c).getValue());
+        }
+        return ans;
+    }
+}

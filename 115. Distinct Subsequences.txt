@@ -1,0 +1,43 @@
+    public ArrayList<String> getPemutations(String s){
+        if(s.length() == 0){
+            ArrayList<String> base = new ArrayList<>();
+            base.add("");
+            return base;
+        }
+        ArrayList<String> res = new ArrayList<>();
+        char cc = s.charAt(0);
+        String ros = s.substring(1);
+        ArrayList<String> rest = getSS(ros);
+        for(String ss : rest){
+            for(int indx=0; indx<ss.length(); indx++){
+                String newStr = ss.substring(0, indx) + cc + ss.substring(indx);
+                res.add(newStr);
+            } 
+        }
+        return res;
+    }
+}
+-------------------------------
+// Time complexity : O(lenght of s * length of t), for the two for loops;
+// Auxiliary space : O(lenght of s * length of t). for the two dp arrays;
+class Solution {
+    public int numDistinct(String s, String t) {
+        int dp[][] = new int[s.length()+1][t.length()+1];
+//      If t is empty string then whaterver be the length of s it is always gonna have that empty string as a subsequence
+        for(int indx = 0; indx<dp.length-1; indx++){
+            dp[indx][0] = 1;
+        }   
+        for(int sIndx = 1; sIndx < dp.length; sIndx++){
+            for(int tIndx = 1; tIndx < dp[0].length; tIndx++){
+//     If values are matching the take then new count of the subsequences woulb be subseq. count for sIndx-1 for first string plus subseq. count for one index less for both pattern and the first string
+                if(s.charAt(sIndx-1) == t.charAt(tIndx-1)){
+                    dp[sIndx][tIndx] = dp[sIndx-1][tIndx] + dp[sIndx-1][tIndx-1];
+                }else{
+//     If values pf charcters are not matching the we only have subseq. count equal to one length less for the first string    
+                    dp[sIndx][tIndx] = dp[sIndx-1][tIndx];
+                }
+            }
+        }
+        return dp[s.length()][t.length()];
+    }
+}

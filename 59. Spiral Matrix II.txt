@@ -1,0 +1,95 @@
+class Solution {
+    public int[][] generateMatrix(int n) {
+        if(n == 1){
+            int arr[][] = {{1}};
+            return arr;
+        }
+        int count = n*n;
+        int num = 1;
+        int arr[][] = new int[n][n];
+        int top = 0, bottom = arr.length-1, left = 0, right = arr[0].length-1, dir = 1;
+        while(top<=bottom && left<=right){
+            if(dir == 1 && count > 0){
+                for(int i = left;i<=right; i++){
+                    arr[top][i] = num++;
+                    count--;
+                }
+                dir = 2;
+                top++;
+            }
+             if(dir == 2 && count > 0){
+                for(int i = top;i<=bottom; i++){
+                    arr[i][right] = num++;
+                    count--;
+                }
+                dir = 3;
+                right--;
+            }
+             if(dir == 3 && count > 0){
+                for(int i = right;i>=left; i--){
+                    arr[bottom][i] = num++;
+                    count--;
+                }
+      
+                dir = 4;
+                bottom--;
+            }
+             if(dir == 4 && count > 0){
+                for(int i = bottom;i>=top; i--){
+                    arr[i][left] = num++;
+                    count--;
+                }
+                dir = 1;
+                left++;
+            }
+        }
+        return arr;
+    }
+}
+-----------------------------------------------
+class Solution {
+    public int[][] generateMatrix(int n) {
+        if(n == 1){
+            int arr[][] = {{1}};
+            return arr;
+        }
+        int count = n*n;
+        int num = 1;
+        int arr[][] = new int[n][n];
+        int top = 0, bottom = arr.length-1, left = 0, right = arr[0].length-1, dir = 1;
+        while(num <= count){
+      
+                for(int i = left;i<=right; i++){
+                    arr[top][i] = num++;
+
+                }
+
+                top++;
+
+
+                for(int i = top;i<=bottom; i++){
+                    arr[i][right] = num++;
+
+                }
+
+                right--;
+
+
+                for(int i = right;i>=left; i--){
+                    arr[bottom][i] = num++;
+
+                }
+
+
+                bottom--;
+
+                for(int i = bottom;i>=top; i--){
+                    arr[i][left] = num++;
+
+                }
+
+                left++;
+        }
+        return arr;
+    }
+}

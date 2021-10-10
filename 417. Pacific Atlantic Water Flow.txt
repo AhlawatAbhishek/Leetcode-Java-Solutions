@@ -1,0 +1,49 @@
+class Solution {
+//TC : O(n^2)
+//SC : O(n^2)
+    public List<List<Integer>> pacificAtlantic(int[][] matrix) {
+       List<List<Integer>> al = new ArrayList<>();
+        if(matrix == null || matrix.length ==0 || matrix[0].length ==0) {
+            return al;
+        }
+        int row = matrix.length;
+        int col = matrix[0].length;
+        boolean [][]atlantic = new boolean[row][col];
+        boolean [][]pacific = new boolean[row][col];
+      
+        for(int i = 0; i<col; i++){
+            dfs(matrix, atlantic, row-1, i,  Integer.MIN_VALUE);
+            dfs(matrix, pacific, 0, i,  Integer.MIN_VALUE);
+        }
+        for(int i = 0; i<row; i++){
+            dfs(matrix, pacific, i, 0, Integer.MIN_VALUE);
+            dfs(matrix, atlantic, i, col-1, Integer.MIN_VALUE);
+        }
+        // List<List<Integer>> al = new ArrayList<>();
+        for(int i = 0 ; i< row; i++){
+            for(int j = 0; j<col ; j++){
+                if(pacific[i][j] && atlantic[i][j]){
+                    List<Integer> li = new ArrayList<>();
+                    li.add(i);
+                    li.add(j);
+                    al.add(li);
+                }
+            }
+        }
+        return al;
+    }
+    public void dfs(int [][] matrix, boolean[][]visited, int row, int col, int prev){
+        if(row < 0 || row>= matrix.length || col < 0 || col>=matrix[0].length){
+            return;
+        }
+        if(visited[row][col] || matrix[row][col] < prev){
+            return;
+        }
+        visited[row][col] = true;
+        dfs(matrix, visited, row, col+1, matrix[row][col]);
+        dfs(matrix, visited, row, col-1, matrix[row][col]);
+        dfs(matrix, visited, row-1, col, matrix[row][col]);
+        dfs(matrix, visited, row+1, col, matrix[row][col]);
+    }
+    
+}

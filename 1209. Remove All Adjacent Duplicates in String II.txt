@@ -1,0 +1,38 @@
+class Solution {
+    public String removeDuplicates(String s, int k) {
+
+        Stack<Pair<Character, Integer>> st = new Stack<>();
+         for(int i = 0; i<s.length(); i++){
+                  char c = s.charAt(i);
+//              if stack is not empty and last character is same as current character
+            if(!st.isEmpty() && st.peek().getKey() == c){
+//                 Updating previous frequency of charcter
+                Pair<Character, Integer> p = new Pair<>(c , st.peek().getValue() + 1);
+                st.pop();
+//                 Inserting updated frequency pair
+                st.push(p);
+//              checking if current frequency is equal to k if equal then remove then pair                  
+                if(st.peek().getValue() == k){             
+                        st.pop();
+                 }
+            }else{//if stack is empty or last character is not same as current character
+                Pair<Character, Integer> p = new Pair<>(c, 1);
+                st.push(p);           
+            }
+        }  
+        // if there is nothing left in the stack, return empty string
+        if(st.isEmpty()){
+            return "";
+        }
+//         building answer in case stack is not empty
+        StringBuilder answer = new StringBuilder();
+        while(!st.isEmpty()){
+            Pair<Character, Integer> p = st.pop();
+            int count = p.getValue();
+//             appending char of pair its frequency times to answer
+            while(count-->0)answer.append(p.getKey());
+        }     
+//         reversing answer before returning as storing in stack causes answer to be reversed
+        return answer.reverse().toString();
+    }
+}

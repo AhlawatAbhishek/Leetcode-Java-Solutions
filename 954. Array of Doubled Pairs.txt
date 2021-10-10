@@ -1,0 +1,17 @@
+class Solution {
+    public boolean canReorderDoubled(int[] arr) {
+        Map<Integer, Integer> freq = new TreeMap<>();
+        for(int i : arr){
+            freq.put(i, freq.getOrDefault(i, 0)+1);
+        }
+        for(int i : freq.keySet()){
+           int currEle = i;
+            if(freq.get(currEle) == 0) continue;
+           int target = currEle < 0 ? currEle /2 : currEle*2;
+           if(currEle < 0 && currEle % 2 != 0) return false;
+           if(freq.get(currEle) > freq.getOrDefault(target, 0)) return false;
+           freq.replace(target, freq.get(target) - freq.get(currEle));
+        }
+        return true;
+    }
+}

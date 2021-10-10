@@ -1,0 +1,78 @@
+// Time complexity : O(3*3), you can also take it as constant as it would always be same
+// Auxiliary Space : O(3^2) for the additional grid array
+class Solution {
+    public String tictactoe(int[][] moves) {
+//         make and array say board or grid 
+        int grid[][] = new int[3][3];
+//         fill it with -1, it will help to determine if the board or grid is still empty after all the moves in moves array
+        for(int arr[] : grid){
+            Arrays.fill(arr, -1);
+        }
+//         if indx is even fill 1 for A and if index is odd then fill 2 for B
+        for(int indx = 0; indx<moves.length; indx++){
+          int r = moves[indx][0], c = moves[indx][1];
+          if(indx % 2 == 0){ 
+            grid[r][c] = 1;
+          }else{
+              grid[r][c] = 2;
+          }      
+        }
+//         check the game status and return answer accordingly
+        return checkMatchStatus(grid);
+    }
+    public String checkMatchStatus(int grid[][]){
+//         check rowWise
+       for(int r =0; r<grid.length; r++){
+             int aCount = 0, bCount =0;
+          for(int c = 0; c<grid[0].length; c++){
+            if(grid[r][c] == 1){
+                aCount++;
+            }else if(grid[r][c] == 2){
+                bCount++;
+            }
+        }
+        if(aCount == 3) return "A";
+        if(bCount == 3) return "B";    
+      }
+//        check Column Wise 
+      for(int c = 0; c<grid[0].length; c++){
+             int aCount = 0, bCount =0;
+          for(int r =0; r<grid.length; r++){
+            if(grid[r][c] == 1){
+                aCount++;
+            }else if(grid[r][c] == 2){
+                bCount++;
+            }
+        }
+        if(aCount == 3) return "A";
+        if(bCount == 3) return "B";    
+      }
+//         Check for left to right diagonal
+      if((grid[0][0] == 1 && grid[1][1] == 1 && grid[2][2] == 1)){
+          return "A";
+      }  
+      if((grid[0][0] == 2 && grid[1][1] == 2 && grid[2][2] == 2)){
+          return "B";
+      } 
+//       Check for right to left diagonal  
+      if((grid[0][2] == 1 && grid[1][1] == 1 && grid[2][0] == 1)){
+          return "A";
+      }  
+      if((grid[0][2] == 2 && grid[1][1] == 2 && grid[2][0] == 2)){
+          return "B";
+      }
+// Check If board or say grid is still Empty
+      int emptyCount = 0;  
+      for(int r =0; r<grid.length; r++){
+          for(int c = 0; c<grid[0].length; c++){
+            if(grid[r][c] == -1){
+                emptyCount++;
+            }
+        }
+      }
+      if(emptyCount > 0) return "Pending";
+//         return draw if the board is not empty and nobody wins
+        return "Draw";
+    }
+    
+}

@@ -1,0 +1,15 @@
+class Solution {
+    public int leastInterval(char[] tasks, int n) {
+        int []char_map = new int[26];
+        for(char c : tasks){
+            char_map[c- 'A']++;
+        }
+        Arrays.sort(char_map);
+        int max = char_map[25] - 1;
+        int idleSlots = max * n;
+        for(int i = 24; i>=0; i--){
+            idleSlots -= Math.min(char_map[i], max); 
+        }
+        return idleSlots > 0 ? tasks.length + idleSlots : tasks.length;
+    }
+}

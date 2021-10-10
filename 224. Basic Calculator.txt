@@ -1,0 +1,53 @@
+// Time complexity : O(N) as we are doing a single pass
+// Auxiliary space : O(N) , upper bound as we are storing this much characters, although it would be less than N
+// , where N is length of the given experssion string
+class Solution {
+    public int calculate(String s) {
+//         we are going to evaluate this expression using stack
+        Stack<Integer>st = new Stack<>();
+//         since only plus and minus operators are there therefore we are using sign to indicate add or substract
+        int currNum = 0, ans = 0, sign = 1;
+        for(int indx = 0; indx<s.length(); indx++){
+//             curr character under consideration
+            char c = s.charAt(indx);
+//             if it is a digit
+            if(Character.isDigit(c)){
+                currNum = c-'0';
+//                 form the complete num in case it is more than one digit number
+                while(indx + 1<s.length() && Character.isDigit(s.charAt(indx+1))){
+                    currNum = currNum*10 + s.charAt(indx+1) -'0';
+                    indx++;
+                }
+//                 now add the sign to the number
+                currNum = currNum * sign;
+//                 change the sign to postivie now
+                sign  = 1;
+//                 add currNum to final ans 
+                ans += currNum;
+//                 change currNum to zero as we would require it to be zero next time
+                currNum = 0;
+            }else if(c == '('){
+//                 if opening brace then add ans and present sign before it
+                st.push(ans);
+                st.push(sign);
+//                 set ans to zero as at next step we have to take it as zero
+                ans = 0;
+                sign = 1;
+//                 change sign if its plus or minus accordingly
+            }else if(c == '+'){
+                sign = 1;
+            }if(c == '-'){
+                sign = -1;
+//                 if it is a closing brace mulitply the current ans with the sign stored previously
+            }else if(c == ')'){
+               int prevSign = st.pop();
+                ans *= prevSign;
+                int prevAns = st.pop();
+//                 add the prevAns to final ans
+                ans = ans + prevAns; 
+            }
+        }
+        // return final answer
+        return ans;
+    }
+}

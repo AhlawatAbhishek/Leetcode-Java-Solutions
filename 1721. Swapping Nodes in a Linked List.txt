@@ -1,0 +1,78 @@
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    // TC : O(n)
+    // SC : O(1)
+    public ListNode swapNodes(ListNode head, int k) {
+        k = k-1;
+        ListNode firstN = head;
+        while(k>0){
+            firstN = firstN.next;
+            k--;
+        }
+
+        ListNode f = firstN;
+        ListNode secondN = head;
+        while(f.next!=null){
+            secondN = secondN.next;
+            f = f.next;
+        }
+
+        int temp = firstN.val;
+        firstN.val = secondN.val;
+        secondN.val = temp;
+
+        return head;
+
+
+    }
+}
+---------------------------------------
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode swapNodes(ListNode head, int k) {
+        Stack<ListNode> st = new Stack<>();
+        ListNode temp = head;
+        int idx = 1;
+        ListNode two = null;
+        while(temp != null){
+            if(idx == k){
+                two = temp;
+            }
+            st.add(temp);
+            temp = temp.next;
+            idx++;
+        }
+        int index = 0;
+        ListNode one = null;
+        while(!st.isEmpty()){
+            index ++;
+            ListNode tempt = st.pop();
+            if(index == k){
+                one = tempt;
+            }
+        }
+        int tt = two.val;
+        two.val = one.val;
+        one.val = tt;
+        return head;
+    }
+}

@@ -1,0 +1,39 @@
+class Solution {
+    public boolean isAlienSorted(String[] words, String order) {
+        if(words == null || words.length == 1){
+            return true;
+        }
+        int map[] = new int[26];
+        for(int i = 0; i<order.length(); i++){
+            int x =  order.charAt(i) - 'a';
+            map[x] = i; 
+        }
+        for(int i = 1; i<words.length; i++){
+            char[] curr = words[i].toCharArray();
+            char[] prev = words[i-1].toCharArray();
+          
+            int indx1 = 0, indx2 = 0;
+            boolean isEqual = false;
+            while(indx1 <curr.length && indx2 < prev.length){
+                int cr = curr[indx1] - 'a';
+                int pr = prev[indx2] - 'a';
+                int c = map[cr];
+                int p = map[pr];
+                if(c < p){
+                    return false;
+                }else if(c == p){
+                    isEqual = true;
+                }else{ 
+                    isEqual = false; 
+                    break;
+                }
+                indx1++;
+                indx2++;
+            }
+            if(isEqual && prev.length > curr.length){
+                return false;
+            }
+        }
+        return true;
+    }
+}

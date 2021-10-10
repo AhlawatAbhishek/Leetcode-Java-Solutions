@@ -1,0 +1,18 @@
+import java.util.*;
+class Solution {
+    public int maxArea(int[] height) {
+        int max_area = 0;
+        int ptr1 = 0;
+        int ptr2 = height.length-1;
+        while(ptr1 < ptr2){
+            if(height[ptr1]<height[ptr2]){
+                max_area = Math.max(max_area,height[ptr1] * (ptr2 - ptr1));
+                ptr1++;
+            }else{
+                max_area = Math.max(max_area,height[ptr2] * (ptr2 - ptr1));
+                ptr2--; 
+            }
+        }
+        return max_area;
+    }
+}

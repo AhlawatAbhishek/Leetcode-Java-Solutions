@@ -1,0 +1,48 @@
+/*package whatever //do not write package name here */
+
+import java.io.*;
+
+import java.util.*;
+class Solution {
+    public static void main(String args[]){
+        int num[] = {0, -1, 1};
+        List<List<Integer>> al = permute(num);
+        System.out.println(al);
+    }
+    public static List<List<Integer>> permute(int[] nums) {
+        String str = "";
+        for(int i = 0;i<nums.length;i++){
+            str = str + nums[i];
+        }
+        List<String> al = permute2(str);
+		List<List<Integer>> f = new ArrayList<>();
+		for(String s : al){
+		    List<Integer> l = new ArrayList<>(); 
+		    for(int i = 0;i<s.length();i++){
+		        char c = s.charAt(i);
+		        int x = Integer.parseInt(""+c);
+		        l.add(x);
+		    }      
+		    f.add(l);
+		}
+		return f;
+    }
+   public static List<String> permute2(String str){
+        if(str.length() == 0){
+            List<String> br = new ArrayList<String>();
+            br.add("");
+            return br;
+        }
+        char cc = str.charAt(0);
+        String ros = str.substring(1);
+        List<String> a = permute2(ros);
+        List<String> f = new ArrayList<String>();
+        for(String rr : a){
+            for(int i  = 0;i<=rr.length();i++){
+                String r = rr.substring(0,i)+ cc + rr.substring(i);
+                f.add(r);
+            }
+        }
+        return f;
+    }
+}

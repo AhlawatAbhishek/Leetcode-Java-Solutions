@@ -1,0 +1,21 @@
+class Solution {
+    public List<Integer> findDisappearedNumbers(int[] nums) {
+        List<Integer> al = new ArrayList<>();
+        int n = nums.length;   
+        HashMap<Integer, Integer> hmap = new HashMap<>();
+        for(int i = 0 ;i< nums.length; i++){
+            if(!hmap.containsKey(nums[i])){
+                hmap.put(nums[i], 1);
+            }else{
+                int oldVal = hmap.get(nums[i]);
+                hmap.replace(nums[i], oldVal +1);
+            }
+        }
+        for (int i = 1; i <= n; i++){
+            if(!hmap.containsKey(i)){
+               al.add(i);
+            }
+        }
+        return al;
+    }
+}

@@ -1,0 +1,126 @@
+class Pos{
+    int xCo, yCo;
+    public Pos(int xCo, int yCo){
+        this.xCo = xCo;
+        this.yCo = yCo;
+    }
+}
+class Solution {
+    public int[][] updateMatrix(int[][] mat) {
+        int m = mat.length, n = mat[0].length;
+        boolean visited[][] = new boolean[m][n];
+        Queue<Pos> queue = new LinkedList<>();
+        for(int i = 0; i<m; i++){
+            for(int j = 0; j<n; j++){
+                if(mat[i][j] == 0){
+                    queue.offer(new Pos(i, j));
+                }else{
+                    mat[i][j] = -1;
+                }
+            }
+        }
+        int dir[][] = {{1, 0}, {0,1}, {-1, 0}, {0, -1}};
+        int level = 0;
+        while(!queue.isEmpty()){
+            level++;
+            int size = queue.size();
+            while(size-->0){
+                Pos currPos = queue.poll();
+                int x = currPos.xCo, y = currPos.yCo;
+                for(int i[]:dir){
+                    int currX = x+i[0], currY = y+i[1];
+                    if(currX < 0 || currY < 0 || currX >= m || currY >= n|| mat[currX][currY] != -1){
+                        continue;
+                    }
+                    mat[currX][currY] = level;
+                    queue.offer(new Pos(currX,currY));                    
+                }
+            }
+        }
+        return mat;
+    }
+}
+---------------------------------------------------
+class Pos{
+    int xCo, yCo;
+    public Pos(int xCo, int yCo){
+        this.xCo = xCo;
+        this.yCo = yCo;
+    }
+}
+class Solution {
+    public int[][] updateMatrix(int[][] mat) {
+        int m = mat.length, n = mat[0].length;
+        boolean visited[][] = new boolean[m][n];
+        // for(int i[] : visited){
+        //     Arrays.fill(i, -5);
+        // }
+        Queue<Pos> queue = new LinkedList<>();
+        for(int i = 0; i<m; i++){
+            for(int j = 0; j<n; j++){
+                if(mat[i][j] == 0){
+                    queue.offer(new Pos(i, j));
+                    visited[i][j] = true;
+                }
+            }
+        }
+        int dir[][] = {{1, 0}, {0,1}, {-1, 0}, {0, -1}};
+        int level = 0;
+        while(!queue.isEmpty()){
+            level++;
+            int size = queue.size();
+            while(size-->0){
+                Pos currPos = queue.poll();
+                int x = currPos.xCo, y = currPos.yCo;
+                // visited[x][y] = -1;
+                for(int i[]:dir){
+                    int currX = x+i[0], currY = y+i[1];
+                    if(currX < 0 || currY < 0 || currX >= m || currY >= n|| visited[currX][currY]){
+                        continue;
+                    }
+                    visited[currX][currY] = true;
+                    mat[currX][currY] = level;
+                    queue.offer(new Pos(currX,currY));                    
+                }
+               
+            }
+        }
+        return mat;
+    }
+}
+-----------------------------------------
+class Solution {
+    public int[][] updateMatrix(int[][] matrix) {
+          int m = matrix.length, n = matrix[0].length;
+        Queue<int[]> q = new LinkedList<>();
+        boolean[][] visited = new boolean[m][n];
+        for(int i = 0; i<m; i++){
+            for(int j = 0; j<n; j++){
+                if(matrix[i][j] == 0){
+                    q.offer(new int[]{i, j});
+                    visited[i][j] = true;
+                }
+            }
+        }
+        final int[][] dirs = {{0,1},{0,-1},{1,0},{-1, 0}};
+        while(!q.isEmpty()){
+            int size = q.size();
+            for(int i = 0; i<size; i++){
+                int curr[] = q.poll();
+                int currX = curr[0];
+                int currY = curr[1];
+                for(int []dir: dirs){
+                    int x = currX + dir[0];
+                    int y = currY + dir[1];
+                    if(x<0 || x>m-1 || y<0 || y>n-1 || visited[x][y]){
+                        continue;
+                    }
+                    matrix[x][y] = matrix[currX][currY] + 1;
+                    q.offer(new int[]{x, y});
+                    visited[x][y] = true;
+                }
+            }
+        }
+        return matrix;
+    }
+}

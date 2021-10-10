@@ -1,0 +1,187 @@
+class Solution {
+    public List<List<Integer>> palindromePairs(String[] words) {
+        List<List<Integer>> res = new ArrayList<>();
+        for(int i = 0; i<words.length; i++){
+            String s = words[i];
+            for(int j = i+1; j<words.length; j++){
+                String sb = s + words[j];
+                String sb2 = words[j] + s;
+                if(isPalindrome(sb)){
+                    List<Integer> li = new ArrayList<>();
+                    li.add(i);
+                    li.add(j);
+                    res.add(li);
+                }
+                if(isPalindrome(sb2)){
+                    List<Integer> li = new ArrayList<>();
+                    li.add(j);
+                    li.add(i);
+                    res.add(li);
+                }
+            }
+        }
+        return res;
+    }
+    public boolean isPalindrome(String s){
+        int l = 0, r = s.length() -1 ;
+        while(l < r){
+            if(s.charAt(l) != s.charAt(r)){
+                return false;
+            }
+            l++;
+            r--;
+        }
+        return true;
+    }
+}
+----------------------------------------
+class Solution {
+    public List<List<Integer>> palindromePairs(String[] words) {
+        List<List<Integer>> res = new ArrayList<>();
+        Map<String, Integer> map = new HashMap<>();
+        for(int i = 0; i<words.length; i++){
+            map.put(words[i], i);
+        }
+//         String itself is a palindrome and map contain an empty string
+        for(int i = 0; i<words.length; i++){
+            if(map.containsKey("") && map.get("") != i){
+                if(isPalindrome(words[i])){
+                    List<Integer> li = new ArrayList<>();
+                    li.add(i);
+                    li.add(map.get(""));
+                    res.add(li);
+                    List<Integer> li1 = new ArrayList<>();
+                    li1.add(map.get(""));
+                    li1.add(i);
+                    res.add(li1);
+                }
+            }
+        }
+//         Reflection exists in the map
+        for(int i = 0; i<words.length; i++){
+            StringBuilder sb = new StringBuilder(words[i]);
+            String s = sb.reverse().toString();
+            if(map.containsKey(s) && map.get(s) != i){
+                    List<Integer> li = new ArrayList<>();
+                    li.add(i);
+                    li.add(map.get(s));
+                    res.add(li);
+            }
+        }
+//         left part of string is palindrome and right part's reverse exists in the map
+        for(int i = 0; i<words.length; i++){
+            String s = words[i];
+            for(int j = 1; j<s.length(); j++){
+                String left = s.substring(0, j);
+                String right = s.substring(j);
+                if(isPalindrome(left)){
+                    StringBuilder sb = new StringBuilder(right);
+                    sb.reverse();
+                    if(map.containsKey(sb.toString())){
+                        List<Integer> li = new ArrayList<>();
+                        li.add(map.get(sb.toString()));
+                        li.add(i);                        
+                        res.add(li);
+                    }
+                }
+                if(isPalindrome(right)){
+                    StringBuilder sb = new StringBuilder(left);
+                    sb.reverse();
+                    if(map.containsKey(sb.toString())){
+                        List<Integer> li = new ArrayList<>();
+                         li.add(i);   
+                        li.add(map.get(sb.toString()));
+                                            
+                        res.add(li);
+                    }
+                }
+            }
+        }
+        return res;
+    }
+    public boolean isPalindrome(String s){
+        int l = 0, r = s.length() -1 ;
+        while(l < r){
+            if(s.charAt(l) != s.charAt(r)){
+                return false;
+            }
+            l++;
+            r--;
+        }
+        return true;
+    }
+}
+-------------------------------
+Best----------
+class Solution {
+    static class TrieNode{
+        TrieNode children[] = new TrieNode[26];
+        List<Integer> list = new ArrayList<>();
+        int index;
+        TrieNode(){
+            index = -1;
+        }
+    }
+     TrieNode root = new TrieNode();
+     List<List<Integer>> res = new ArrayList<>();
+     
+    public List<List<Integer>> palindromePairs(String[] words) {
+        for(int i = 0; i<words.length; i++){
+            addWord(words[i], i);
+        }
+        for(int i = 0; i<words.length; i++){
+            searchWord(words[i], i);
+        }
+        return res;
+    }
+    public void addWord(String s, int wordIndex){
+        TrieNode curr = root;
+        for(int i = s.length() - 1; i>= 0; i--){
+            int j = s.charAt(i) - 'a';
+//             left part is palindrome
+            if(isPalindrome(s, 0, i)){
+                curr.list.add(wordIndex);
+            }
+            if(curr.children[j] == null){
+                curr.children[j] = new TrieNode();
+            }
+            curr = curr.children[j];
+        }
+        curr.index = wordIndex;
+    }
+    public void searchWord(String s, int wordIndex){
+        char ch[] = s.toCharArray();
+        TrieNode curr = root;
+        for(int i = 0; i<s.length(); i++){
+            int j = ch[i] - 'a';
+//             remaining right part is palindrome and left part's reverse exists
+            if(curr.index != -1 && isPalindrome(s, i, ch.length-1)){
+                res.add(Arrays.asList(wordIndex, curr.index));
+            }
+            if(curr.children[j] == null){
+                return;
+            }
+            curr = curr.children[j];
+        }
+//         whole string mirror exists
+        if(curr.index != -1 && curr.index != wordIndex){
+            res.add(Arrays.asList(wordIndex, curr.index));
+        }
+//         let given word in arguments : zya and another word exits in trie llzya now in this case z in 
+//         another word have index or that word in the list of z
+        for(int j : curr.list){
+            res.add(Arrays.asList(wordIndex, j));
+        }
+        
+    }
+    public boolean isPalindrome(String s, int l, int r){
+        while(l < r){
+            if(s.charAt(l) != s.charAt(r)){
+                return false;
+            }
+            l++;
+            r--;
+        }
+        return true;
+    }
+}

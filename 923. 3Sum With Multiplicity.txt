@@ -1,0 +1,29 @@
+class Solution {
+    public int threeSumMulti(int[] arr, int target) {
+        Map<Integer,  Long> freqMap = new HashMap<>();
+        for(int i : arr){
+            freqMap.put(i, freqMap.getOrDefault(i, 0l)+1l);
+        }
+        long ans = 0;
+        for(int e1 : freqMap.keySet()){
+            for(int e2 : freqMap.keySet()){
+                int e3 = target - e1 - e2;
+                if(freqMap.containsKey(e3)){
+                    long f1 = freqMap.get(e1);
+                    long f2 = freqMap.get(e2);
+                    long f3 = freqMap.get(e3);
+                    if(e1<e2 && e2 < e3){
+                        ans += (f1*f2*f3);
+                    }else if(e1 == e2 && e2 != e3){
+                        ans += (f3 * ((f1 * (f1 -1))/ 2));
+                    }else if(e1 == e2 && e2 == e3){
+                        ans += (f1 * (f2-1) * (f3-2))/ 6;
+                    }
+                }
+            }
+        }
+           return (int)(ans % 1000000007);              
+    }
+               
+  } 
+    

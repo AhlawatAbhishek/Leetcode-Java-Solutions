@@ -1,0 +1,22 @@
+class Solution {
+    public int numPairsDivisibleBy60(int[] time) {
+        int count[] = new int[60];
+        
+        for(int i : time){
+            count[i%60]++;
+        }
+        int pair =0 ;
+        for(int i =1; i <= 29; i++){
+            pair += count[i] * count[60-i];
+        }
+        int zero = 0;
+        int thirty = 0;
+        zero = countException(count[0]);   
+        thirty = countException(count[30]);
+        pair += zero + thirty; 
+        return pair;
+    }
+    private int countException(int n){
+        return n*(n-1)/2;
+    }
+}

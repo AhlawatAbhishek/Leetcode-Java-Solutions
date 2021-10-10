@@ -1,0 +1,72 @@
+class Solution {
+    public boolean carPooling(int[][] trips, int capacity) {
+        
+        Arrays.sort(trips,Comparator.comparingInt(a->a[1]));
+        
+        int index=0;
+        
+        int ccapacity = 0;
+        
+        PriorityQueue<int[]> pq = new PriorityQueue<>((z,y)->z[2]-y[2]);
+        
+        int size = trips.length;
+        
+        while(index<size) {
+            
+            while(!pq.isEmpty() && pq.peek()[2]<=trips[index][1]) {
+                ccapacity = ccapacity-pq.poll()[0];
+            }
+            
+            if(ccapacity+trips[index][0]>capacity) {
+                return false;
+            }
+            
+            pq.add(trips[index]);
+            
+            ccapacity = trips[index][0] + ccapacity;
+            index++;
+            
+        }
+        
+        return true;
+        
+    }
+}
+-----------------
+class Solution {
+    public boolean carPooling(int[][] trips, int capacity) {
+        
+        int bucket[] = new int[1001];
+        
+        int max = Integer.MIN_VALUE;
+        int min = Integer.MAX_VALUE;
+        
+        
+        for(int[] trip : trips) {
+            
+            bucket[trip[1]] += trip[0];
+            
+            bucket[trip[2]] -= trip[0];
+            
+            max = Math.max(max,trip[2]);
+            
+            min = Math.min(min,trip[1]);
+            
+            
+            
+            
+        }
+        
+        int tempCapcity = 0;
+        
+        for(int i=min;i<=max;i++) {
+                tempCapcity += bucket[i];
+            
+            if(tempCapcity>capacity) {
+                return false;
+            }
+            }
+        
+        return true;
+    }
+}

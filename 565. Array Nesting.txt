@@ -1,0 +1,19 @@
+class Solution {
+    public int arrayNesting(int[] nums) {
+        int maxLen = Integer.MIN_VALUE;
+        for(int indx =0 ; indx<nums.length; indx++){
+            if(nums[indx] < 0)
+                continue;
+            maxLen = Math.max(maxLen, findLen(nums, indx));
+        }
+        return maxLen;
+    }
+    public int findLen(int nums[], int start){
+        if(start == nums.length || start < 0 || nums[start] < 0){
+            return 0;
+        }
+          int nextStart = nums[start];
+          nums[start] = Integer.MIN_VALUE;
+        return 1+findLen(nums, nextStart);
+    }
+}

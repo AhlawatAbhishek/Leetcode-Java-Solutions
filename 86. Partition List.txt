@@ -1,0 +1,68 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode partition(ListNode head, int x) {
+        if(head != null && head.next == null){
+            return head;
+        }
+        if(head == null){
+            return head;
+        }
+        int size = 0;
+        ListNode newHead = null, currHead = null, tail = null , temp = head;
+        while(temp != null){
+            if(currHead != null  && currHead.next == null && size == 1){
+                newHead = currHead;
+            }
+            ListNode newNode = new ListNode(temp.val);
+            if(temp.val < x){                
+              if(currHead !=null){
+                if(currHead.val < x){
+                    newNode.next = currHead.next;
+                    currHead.next = newNode;  
+                    if(tail == currHead){
+                        tail = newNode;
+                    }
+                    currHead = newNode;
+                }else{
+                    newNode.next = currHead;
+                    
+                        currHead = newNode; 
+                        newHead = currHead;
+                   
+                }
+                  
+               }else{
+                  currHead = newNode;
+              }     
+                if(tail == null){
+                    tail = currHead;
+                }
+            }else{
+               if(tail != null){
+                   if(currHead.next == null){
+                       currHead.next = newNode;
+                   }
+                  tail.next = newNode;
+                  tail = newNode;
+               }else{
+                   tail = newNode;
+               }
+               if(currHead == null){
+                   currHead = newNode;
+               }
+            }
+            size++;
+            temp = temp.next;
+        }
+        return newHead;
+    }
+}

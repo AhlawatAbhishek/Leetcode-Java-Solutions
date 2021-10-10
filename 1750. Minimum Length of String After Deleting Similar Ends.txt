@@ -1,0 +1,24 @@
+class Solution {
+    public int minimumLength(String s) {
+        if(s.length() == 1){
+            return 1;
+        }
+        int size = s.length();
+        int left = 0, right = s.length()-1;
+        while(left < right && (s.charAt(left) == s.charAt(right)) && size>0){
+            char c = s.charAt(left);
+            while(left <= right && s.charAt(left) == c ){
+                left++;
+                size --;
+            }
+            while(left <= right && s.charAt(right) == c ){
+                right--;
+                size--;
+            }
+
+            // left++;
+            // right--;
+        }
+        return size;
+    }
+}

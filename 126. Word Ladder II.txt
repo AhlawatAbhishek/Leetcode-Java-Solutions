@@ -1,0 +1,64 @@
+class Node{
+    Node previous = null;
+    String data;
+    public Node(String d){
+        data = d;
+    }
+    public Node(String data, Node prev){
+        this.data = data;
+        previous = prev;
+    }
+}
+class Solution {
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+           List<List<String>> res =  new ArrayList<>();
+           Set<String> wordSet = new HashSet<>(wordList);
+           if(!wordSet.contains(endWord)) return res;
+           Queue<Node> queue = new LinkedList<>();
+           queue.offer(new Node(beginWord));
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            while(size-->0){
+                Node head = queue.poll();
+                for(String neighbourStr : getNeighBours(wordSet, head.data)){
+                   Node neighbour =  new Node(neighbourStr, head);
+                    if(neighbour.data.equals(endWord)){
+                        addResult(res,neighbour);
+                        break;
+                    }
+                    queue.offer(neighbour);
+                }
+            }
+            if(res.size() > 0) break;
+        }
+        return res;
+    }
+    public Set<String> getNeighBours(Set<String>wordSet, String head){
+        wordSet.remove(head);
+        Set<String> res = new HashSet<>();
+        char ch[] = head.toCharArray();
+        for(int i = 0; i<ch.length; i++){
+            for(char c = 'a'; c<='z'; c++){
+                if(c == ch[i])continue;
+                else{
+                    char temp = ch[i];
+                    ch[i] = c;
+                    String s = new String(ch);
+                    if(wordSet.contains(s)){
+                        res.add(s);
+                    }
+                    ch[i] = temp;
+                }
+            }
+        }
+        return res;
+    }
+    public void addResult(List<List<String>> res, Node curr){
+        LinkedList<String> li = new LinkedList<>();
+        while(curr != null){
+            li.addFirst(curr.data);
+            curr = curr.previous;
+        }
+        res.add(li);
+    }
+}

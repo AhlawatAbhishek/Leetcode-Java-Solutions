@@ -1,0 +1,93 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode addOneRow(TreeNode root, int v, int d) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        if(d == 1){
+            TreeNode node = new TreeNode(v);
+             node.left = root;
+            // if(root.val < node.val )
+            //     node.left = root;
+            // else
+            //    node.right = root;
+            return node;
+        }
+        queue.add(root);
+        int level = 1;
+       ArrayList<ArrayList<TreeNode>> al = new ArrayList<>();
+        ArrayList<TreeNode> a = new ArrayList<TreeNode>();
+        a.add(root);
+        al.add(a);
+        while(!queue.isEmpty()){
+          ArrayList<TreeNode> li = new ArrayList<>();
+          if(level+1 == d){
+                
+                ArrayList<TreeNode> l = al.get(level-1);
+                 int size = l.size();
+           for(int index = 0; index < size; index++){
+                
+                TreeNode n = l.get(index);
+                 TreeNode node = new TreeNode(v);
+                if(n.left != null){                  
+                   node.left = n.left;               
+                }
+               n.left = node;
+                 TreeNode nod = new TreeNode(v);
+                if(n.right != null){                  
+                    nod.right = n.right;                   
+                }
+                n.right = nod;
+            }
+               return root;
+          }
+            int size = queue.size();
+            while(size--> 0){
+                TreeNode n = queue.poll();
+                if(n.left != null){
+                    queue.add(n.left);
+                       li.add(n.left);
+                }
+                if(n.right != null){
+                    queue.add(n.right);
+                    li.add(n.right);
+                }
+            }
+            al.add(li);
+            level++;
+        }
+            if(level == d){
+                
+                ArrayList<TreeNode> l = al.get(level-1);
+                 int size = l.size();
+           for(int index = 0; index < size; index++){
+                
+                TreeNode n = l.get(index);
+                 TreeNode node = new TreeNode(v);
+                if(n.left != null){                  
+                   node.left = n.left;               
+                }
+               n.left = node;
+                 TreeNode nod = new TreeNode(v);
+                if(n.right != null){                  
+                    nod.right = n.right;                   
+                }
+                n.right = nod;
+            }
+               return root;
+          }
+        return root;
+    }
+}

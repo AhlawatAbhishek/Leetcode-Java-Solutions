@@ -1,0 +1,31 @@
+// Time complexity : O(N), N is length of the string
+// Auxiliary Space : O(1), if we are not considering the charArr space used
+class Solution {
+    public String breakPalindrome(String palindrome) {
+//         if length of string is 1 then it will remain as it is as it would not be possible to make it non palindrome by replacement
+        if(palindrome.length() == 1) return "";
+        int n = palindrome.length(), mid = -1;
+        boolean nonAFound = false;
+//         if the length is odd then find the index of the mid
+        if(n % 2 != 0){
+            mid = (int) (n / 2);
+        }
+        char charArr[] = palindrome.toCharArray();
+        for(int indx = 0; indx<n; indx++){
+//             if length is odd and its mid index skip it as replacing it would not have any effect
+            if(mid != -1 && indx == mid) continue;
+//             find first non 'a' and make it 'a', also set nonAfound true
+            if(charArr[indx] != 'a'){
+                charArr[indx] = 'a';
+                nonAFound = true;
+                break;
+            }
+        }
+//         if non a found is not true then replace last character with b to get smallest possible answer lexicographically
+        if(!nonAFound){
+            charArr[n-1] = 'b';
+        }
+//         return the new string
+        return new String(charArr);
+    }
+}

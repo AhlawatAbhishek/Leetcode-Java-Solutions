@@ -1,0 +1,19 @@
+class Solution {
+    public int numTrees(int n) {
+       return catalan(n);
+    }
+    public int catalan(int num){
+        if(num<= 1){
+            return 1;
+        }
+        int sol[] = new int[num+1];
+        Arrays.fill(sol, 0);
+        sol[0] = sol[1] = 1;
+        for(int index = 2; index <= num; index++){
+            for(int j = 0; j<index; j++){
+                sol[index] += sol[j]*sol[index-j-1];
+            }
+        }
+        return sol[num];
+    }
+}

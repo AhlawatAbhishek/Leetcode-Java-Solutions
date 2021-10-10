@@ -1,0 +1,91 @@
+class TrieNode{
+    TrieNode children[] = new TrieNode[26];
+    boolean isEnd;
+    int weight;
+}
+class MapSum {
+    private TrieNode root = null;
+    /** Initialize your data structure here. */
+    public MapSum() {
+        root = new TrieNode();
+    }
+    
+    public void insert(String key, int val) {
+        insertTrie(key, val, this.root);
+    }
+    
+    private void insertTrie(String key, int val, TrieNode root){
+        TrieNode curr = root;
+        for(int i = 0; i<key.length(); i++){
+            char c = key.charAt(i);
+            int index = c - 'a';
+            if(curr.children[index] == null){
+                curr.children[index] = new TrieNode();
+            }
+            curr = curr.children[index];
+        }
+        curr.isEnd = true;
+        curr.weight = val;
+    }
+    
+    public int sum(String prefix) {
+ 
+        return searchAndAdd(prefix,this.root);
+     
+    }
+    private int searchAndAdd(String key, TrieNode root){
+        TrieNode curr = root;
+        int sum = 0;
+        for(int i = 0; i<key.length(); i++){
+            char c = key.charAt(i);
+            int index = c - 'a';
+            if(curr.children[index] == null){
+               return 0;
+            }
+           curr = curr.children[index];
+        }
+        sum += dfs(curr); 
+       return sum;
+    }
+    
+    private int dfs(TrieNode curr){
+        if(curr == null) return 0;
+        int sum = 0;
+        if(curr.isEnd) sum += curr.weight;
+        for(int i = 0; i<26; i++){
+            if(curr.children[i] != null){
+                sum += dfs(curr.children[i]);
+            }       
+        }
+        return sum;
+    }
+}
+------------------------------------------------------------------------
+class MapSum {
+    private HashMap<String, Integer> freqMap = null;
+    /** Initialize your data structure here. */
+    public MapSum() {
+        freqMap = new HashMap<>();
+    }
+    
+    public void insert(String key, int val) {
+        freqMap.put(key, val);
+    }
+    
+    public int sum(String prefix) {
+        int sum = 0;
+        for(Map.Entry<String, Integer> entry : this.freqMap.entrySet()){
+            if(entry.getKey().startsWith(prefix)){
+                sum += entry.getValue();
+            }
+        }
+        return sum;
+    }
+}
+
+/**
+ * Your MapSum object will be instantiated and called as such:
+ * MapSum obj = new MapSum();
+ * obj.insert(key,val);
+ * int param_2 = obj.sum(prefix);
+ */

@@ -1,0 +1,19 @@
+class Solution {
+    public String orderlyQueue(String s, int k) {
+        if(k > 1){
+            char ch[] = s.toCharArray();
+            Arrays.sort(ch);
+            return new String(ch);
+        }else if(k == 1){
+            String ans = s;
+            for(int indx = 1; indx<s.length(); indx++){
+                String newString = s.substring(indx) + s.substring(0, indx);
+                if(ans.compareTo(newString) > 0){
+                    ans = newString;
+                }
+            }
+            return ans;
+        }
+        return s;
+    }
+}

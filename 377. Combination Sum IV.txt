@@ -1,0 +1,42 @@
+class Solution {
+
+    int targetArr[];
+    public int combinationSum4(int[] nums, int target) {
+            targetArr = new int[target+1];
+        Arrays.fill(targetArr, -1);
+        targetArr[0] = 1;
+        findCombinations(nums, target);
+    
+        return targetArr[target];
+    }
+    public int findCombinations(int []nums, int target){
+   
+        if(targetArr[target] > -1){
+            return targetArr[target];
+        }
+        int res =0;
+        for(int i = 0; i<nums.length; i++){
+            // curr.add(nums[i]);
+           if(target - nums[i] >= 0) res +=  findCombinations(nums, target-nums[i]);
+            // curr.remove(curr.size()-1);
+        }
+        targetArr[target] = res;
+        return targetArr[target];
+    }
+}
+----------------------------------
+class Solution {  
+    public int combinationSum4(int[] nums, int target) {
+        int targetArr[] = new int[target+1];
+        targetArr[0] = 1;  
+        for(int i = 1; i<targetArr.length; i++){
+            for(int j = 0; j<nums.length; j++){
+                if(i - nums[j] >=0){
+                    targetArr[i] += targetArr[i - nums[j]];
+                }
+            }
+        }   
+        return targetArr[target];
+    }
+
+}

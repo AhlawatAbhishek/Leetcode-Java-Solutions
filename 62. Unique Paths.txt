@@ -1,0 +1,41 @@
+class Solution {
+    public int uniquePaths(int m, int n) {
+        boolean visited[][] = new boolean[m+1][n+1];
+        return countPath(0, 0, m, n, visited);
+    }
+    public int countPath(int row, int col, int totalRows, int totalCol, boolean [][] visited){
+       if(row == totalRows -  1 && col == totalCol -1){
+           return 1;
+       }
+       if(row >= totalRows && col >= totalCol){
+           return 0;
+       } 
+        int horizontal = 0, down = 0;
+       if(!visited[row][col]){
+           visited[row][col] = true;
+          horizontal += countPath(row, col+1, totalRows, totalCol, visited);
+          down += countPath(row + 1, col, totalRows, totalCol, visited);
+           visited[row][col] = false;
+       } 
+        return horizontal + down;
+    }
+}
+---------------------
+working and dp solution;
+class Solution {
+    public int uniquePaths(int m, int n) {
+       int [][] dp = new int[m][n];
+        for(int rows = 0; rows<dp.length; rows++){
+            dp[rows][0] = 1;
+        }
+        for(int cols  = 0; cols < dp[0].length; cols++){
+            dp[0][cols] = 1;
+        }
+        for(int rows = 1; rows < dp.length; rows++){
+            for(int cols = 1; cols < dp[rows].length; cols++){
+                dp[rows][cols] = dp[rows-1][cols] + dp[rows][cols-1];
+            }
+        }
+        return dp[m-1][n-1];
+    }
+}

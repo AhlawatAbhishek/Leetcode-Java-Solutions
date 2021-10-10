@@ -1,0 +1,21 @@
+class Solution {
+
+    public int rob(int[] nums) {
+        if(nums == null){
+            return 0;
+        }
+        if(nums.length == 1){
+            return nums[0];
+        }
+       return Math.max(robb(nums, 0, nums.length -1), robb(nums, 1, nums.length));
+    }
+    private int robb(int []nums, int start, int end){
+      int prevTwo = 0, prevOne = 0 ,  max = 0;
+        for(int i = start; i<end; i++){
+            max = Math.max(prevTwo + nums[i], prevOne);
+            prevTwo = prevOne;
+            prevOne = max;
+        }
+        return max;
+    }
+}

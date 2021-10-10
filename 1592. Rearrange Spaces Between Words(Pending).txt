@@ -1,0 +1,183 @@
+class Solution {
+    public String reorderSpaces(String text) {
+        String s = text;
+        int count  = 0;
+        for(int i = 0 ; i< s.length(); i++){
+            char ch = s.charAt(i);
+            if(ch == ' '){
+                count++;
+            }
+        }
+        String st = text;
+        String str[] = st.split(" ");
+        ArrayList<String> al = new ArrayList();
+        for(String x : str){
+            if(x != " "){
+                al.add(x);
+            }
+        }
+        int noOfWords  = al.size();
+         StringBuilder sb = new StringBuilder();
+        int z =count;
+        if(noOfWords == 1){         
+            while(z-->0){
+                sb.append(" ");
+            }
+              sb.append(al.get(0));
+            return sb.toString();
+        }
+        int spaceInBetween = count / (noOfWords-1);
+        int remainingSpace = count % (noOfWords -1);
+        // int x = spaceInBetween;
+        // while(x-->0){
+        //     sb.append(" ");
+        // }    
+       
+        for(int i = 0; i<al.size()-1; i++){
+            int y = spaceInBetween;
+            sb.append(al.get(i));
+            while(y-->0){
+             sb.append(" ");
+            }    
+        }
+        sb.append(al.get(al.size()-1));
+        if(remainingSpace > 0){
+            while(remainingSpace-->0){
+                sb.append(" ");
+            }
+        }
+        return sb.toString();
+    }
+}------------------
+correct
+class Solution {
+		public String reorderSpaces(String text) {
+			char[] s = text.toCharArray();
+			int sp = 0;
+			for(char c : s){
+				if(c == ' '){
+					sp++;
+				}
+			}
+			String[] li = text.split(" ");
+			String[] oo = new String[li.length];
+			int p = 0;
+			for(String o : li){
+				if(o.length() > 0){
+					oo[p++] = o;
+				}
+			}
+			li = Arrays.copyOf(oo, p);
+			int u = li.length-1;
+			int max = u == 0 ? 0 : sp/u;
+			StringBuilder sb = new StringBuilder();
+			int rem = sp;
+			for(String o : li){
+				sb.append(o);
+				int use = Math.min(rem, max);
+				for(int i = 0;i < use;i++){sb.append(" ");}
+				rem -= use;
+			}
+			for(int i = 0;i < rem;i++){sb.append(" ");}
+			return sb.toString();
+		}
+	}
+---------------------
+import java.util.Arrays;
+
+public class Solution {
+    public String reorderSpaces(String text) {
+        String[] part = text.split("\\s+");
+        part = Arrays.stream(part).filter(x -> !x.isEmpty()).toArray(i -> new String[i]);
+        int len = Arrays.stream(part).mapToInt(x -> x.length()).sum();
+        int space = text.length() - len;
+        int avg = part.length == 1 ? 0 : space / (part.length - 1);
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < part.length; i++) {
+            builder.append(part[i]);
+            if (i != part.length - 1) {
+                for (int j = 0; j < avg; j++) {
+                    builder.append(' ');
+                }
+            } else {
+                for (int j = avg * (part.length - 1); j < space; j++) {
+                    builder.append(' ');
+                }
+            }
+        }
+        return builder.toString();
+    }
+}
+----------------------------
+class Solution {
+    public String reorderSpaces(String t) {
+        char s[] = t.toCharArray();
+        int ct = 0;
+        int tot = s.length;
+        char lst = ' ';
+        int dc = 0;
+        for(char c:s){
+            if(c!=' '){
+                ct++;
+            }
+            if(lst==' '&&c!=' '){
+                dc++;
+            }
+            lst = c;
+        }
+        int kb = tot - ct;
+        if(dc==1){
+            int j = 0;
+            StringBuilder sb  =new StringBuilder();
+            for(char c:s){
+            if(c!=' '){
+                sb.append(c);
+            }else{
+                j++;
+            }
+            }
+            for(int i=0;i<j;++i){
+                sb.append(' ');
+            }
+            return sb.toString();
+            
+            
+        }else{
+            
+            StringBuilder sb  =new StringBuilder();
+            int sp = kb/(dc-1);
+           // int sy = kb%sp;
+            
+            for(int i=0;i<s.length;){
+                if(s[i]==' '){
+                    i++; continue;
+                }
+                int j  = i;
+                while(j<s.length&&s[j]!=' '){
+                    sb.append(s[j]);
+                    ++j;
+                }
+                i = j;
+                dc--;
+                if(dc>0){
+                for(int m=0;m<sp;++m){
+                    sb.append(' ');
+                }
+                }
+                
+            }
+            int sy = tot - sb.length();
+            for(int m=0;m<sy;++m){
+                    sb.append(' ');
+                }
+            return sb.toString();
+            
+            
+        }
+        
+        
+        
+        
+        
+    }
+}

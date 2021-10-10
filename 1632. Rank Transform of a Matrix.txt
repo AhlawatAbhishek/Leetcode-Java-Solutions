@@ -1,0 +1,327 @@
+class Solution {
+    Pair par[][];
+    int rank[][];
+    public int[][] matrixRankTransform(int[][] matrix) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+        par = new Pair[n][m];
+        rank = new int[n][m];
+        int ans[][] = new int[n][m];
+        for(int i =0;i<n;i++){
+            for(int j =0;j<m;j++){
+                par[i][j] = new Pair(i,j);
+                rank[i][j] = 1;
+            }
+        }
+        
+        //row
+        for(int i =0;i<n;i++){
+            Map<Integer,Pair> map = new HashMap();
+            for(int j =0;j<m;j++){
+                if(map.get(matrix[i][j])!=null){
+                    union(map.get(matrix[i][j]),par[i][j]);
+                }else map.put(matrix[i][j],par[i][j]);
+            }
+        }
+        
+        //col
+        for(int j =0;j<m;j++){
+            Map<Integer,Pair> map = new HashMap();
+            for(int i =0;i<n;i++){
+                if(map.get(matrix[i][j])!=null){
+                    union(map.get(matrix[i][j]),par[i][j]);
+                }else map.put(matrix[i][j],par[i][j]);
+            }
+        }
+        
+        List<Pair> v[][] = new ArrayList[n][m];
+        for(int i =0;i<n;i++){
+            for(int j=0;j<m;j++){
+                v[i][j] = new ArrayList();
+            }
+        }
+        
+        for(int i =0;i<n;i++){
+            for(int j =0;j<m;j++){
+                Pair x = find(par[i][j]);
+                v[x.first][x.second].add(new Pair(i,j));
+            }
+        }
+        TreeMap<Integer,List<List<Pair>>> map = new TreeMap(); // value versus all unions possible 
+        for(int i =0;i<n;i++){
+            for(int j =0;j<m;j++){
+                List<List<Pair>> list = map.getOrDefault(matrix[i][j] , new ArrayList());
+                list.add(v[i][j]);
+                map.put(matrix[i][j],list);
+            }
+        }
+        
+        int row[] = new int[n];
+        int col[] = new int[m];
+        
+        for(int key : map.keySet()){
+            List<List<Pair>> list = map.get(key);
+            for(List<Pair> u : list){
+                int x = 0;
+                for(Pair a : u){
+                    x = Math.max(x,Math.max(row[a.first],col[a.second])+1);
+                }
+                for(Pair a : u){
+                    ans[a.first][a.second] = x;
+                    row[a.first] = x;
+                    col[a.second] = x;
+                }
+            }
+            
+        }
+        return ans;
+    }
+    private Pair find(Pair a){
+        Pair pair = par[a.first][a.second];
+        if(pair.first==a.first&&pair.second==a.second) return pair;
+        return par[a.first][a.second] = find(par[a.first][a.second]);
+    }
+    private void union(Pair a , Pair b){
+        a = find(a);
+        b = find(b);
+        
+        if(rank[a.first][a.second]>rank[b.first][b.second]){
+            par[b.first][b.second] = a;
+        }
+        else if(rank[a.first][a.second]<rank[b.first][b.second]){
+            par[a.first][a.second] = b;
+        }else{
+            par[a.first][a.second] = b;
+            rank[b.first][b.second]++;
+        }
+    }
+}
+class Pair{
+    int first;
+    int second;
+    
+    public Pair(int first , int second){
+        this.first = first;
+        this.second = second;
+    }
+}
+---------------------------------------------------
+Steps:
+
+Group {x,y} by val matrix[x][y] using TreeMap
+Traverse the sorted TreeMap from smallest to largest val
+--3. For each key of TreeMap, split {x,y} into groups using UnionFind
+--4. Traverse each group we grouped using UnionFind
+----5. find rank for such group using max(minRank(col), minRank(row)) of every {x,y}
+----6. set max for every {x,y} of the group, update minRank for every col,row of the group
+class Solution {
+    int[] parent;
+    public int[][] matrixRankTransform(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[][] answer = new int[m][n];
+        
+        // GROUP BY MATRIX VAL -> {X,Y}
+        TreeMap<Integer, List<int[]>> map = new TreeMap<>();
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                int[] xy = {i,j};
+                int val = matrix[i][j];
+                if(map.get(val) == null)
+                    map.put(val, new ArrayList<>());
+                map.get(val).add(xy);
+            }
+        }
+        
+        
+        // INITIALIZE MIN-RANK ARRAY FOR EVERY COL/ROW
+        int[] minX = new int[m];
+        int[] minY = new int[n];
+        
+        for(Integer key : map.keySet()){
+            List<int[]> list = map.get(key);
+            
+            // SPLIT TO GROUPS USING UNION FIND FOR VALs IN SAME COL/ROW
+            int lSize = list.size();
+            parent = new int[lSize];
+            for(int i = 0; i < lSize; i++)
+                parent[i] = i;
+            
+            // Group the xy by col and row then union by row & by col
+            HashMap<Integer, List<Integer>> xMap = new HashMap<>();
+            HashMap<Integer, List<Integer>> yMap = new HashMap<>();
+            for(int i = 0; i < lSize; i++){
+                int[] xy = list.get(i);
+                int x = xy[0];
+                int y = xy[1];
+                
+                if(xMap.get(x) == null)
+                    xMap.put(x, new ArrayList<>());
+                if(yMap.get(y) == null)
+                    yMap.put(y, new ArrayList<>());
+                xMap.get(x).add(i);
+                yMap.get(y).add(i);
+            }
+            
+            // union by X
+            for(Integer xKey : xMap.keySet()){
+                List<Integer> xList = xMap.get(xKey);
+                for(int i = 1; i < xList.size(); i++){
+                    union(xList.get(i-1), xList.get(i));
+                }
+            }
+            
+            
+            // union by Y
+            for(Integer yKey : yMap.keySet()){
+                List<Integer> yList = yMap.get(yKey);
+                for(int i = 1; i < yList.size(); i++){
+                    union(yList.get(i-1), yList.get(i));
+                }
+            }
+            
+            HashMap<Integer, List<int[]>> group = new HashMap<>();
+            for(int i = 0; i < lSize; i++){
+                int grp = find(i);
+                if(group.get(grp) == null)
+                    group.put(grp, new ArrayList<>());
+                group.get(grp).add(list.get(i));
+            }
+            
+            
+            // SET ANSWER FOR EACH GROUP
+            for(Integer grpKey : group.keySet()){
+                int max = 1;
+                List<int[]> sublist = group.get(grpKey);
+                
+                // FIND MAX-RANK FOR THIS GROUP
+                for(int[] xy : sublist){
+                    int x = xy[0];
+                    int y = xy[1];
+                
+                    max = Math.max(max, Math.max(minX[x], minY[y]));
+                }
+            
+                // UPDATE ANSWER = MAX-RANK AND SET NEW MIN-RANK FOR ROW/COL = MAX-RANK+1
+                for(int[] xy : sublist){
+                    int x = xy[0];
+                    int y = xy[1];
+                    answer[x][y] = max;
+                    minX[x] = max+1;
+                    minY[y] = max+1;
+                }     
+            }
+        }
+        return answer;
+    }
+    
+    
+    // UNION FIND IMPL
+    void union(int a, int b){
+        int pa = find(a);
+        int pb = find(b);
+        parent[pb] = pa;
+    }
+    
+    int find(int a){
+        int pa = parent[a];
+        if(pa != a){
+            parent[a] = find(pa);
+            return parent[a];
+        } else
+            return a;
+    }
+}
+Old union that caused TLE O(n^2):
+
+            // SPLIT TO GROUPS USING UNION FIND
+            int lSize = list.size();
+            int[] parent = new int[lSize];
+            for(int i = 0; i < lSize; i++)
+                parent[i] = i;
+            
+            for(int i = 0; i < lSize; i++){
+                for(int j = i+1; j < lSize; j++){
+                    int[] a = list.get(i);
+                    int[] b = list.get(j);
+                    if(a[0] ==  b[0] || a[1] == b[1])
+                        union(i, j, parent);
+                }
+            }
+---------------------------------------------
+Algorithm:
+
+Build a map, where key is some number in a matrix and value is a list of cells that have this value.
+For each value find all the graphs of connected cells(have the same row or column) and calculate their rank.
+The rank of the cell is the maximum rank in row or column it belongs to plus one.
+The rank of the graph of connected cells is the maximum rank among them.
+class Solution {
+    public int[][] matrixRankTransform(int[][] m) {
+        int M = m.length, N = m[0].length;
+        int[][] a = new int[M][N];
+        int[] maxRankRow = new int[M];
+        int[] maxRankCol = new int[N];
+        TreeMap<Integer, List<int[]>> map = new TreeMap<>();
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                map.putIfAbsent(m[i][j], new ArrayList<>());
+                map.get(m[i][j]).add(new int[] { i, j });
+            }
+        }
+        
+        // go from the lowest value key to the highest
+        for (int k : map.keySet()) {
+            // repeat for each value until we used all cells with the same number
+            // on each step we find cells connected by row/column and calculate their rank
+            while (map.get(k).size() > 0) {
+                Set<Integer> rowsUsed = new HashSet<>();
+                Set<Integer> colsUsed = new HashSet<>();
+                List<int[]> allSame = map.get(k);
+                
+                // get the first cell as the root and find all connected cells
+                int[] root = allSame.get(0);
+                rowsUsed.add(root[0]);
+                colsUsed.add(root[1]);
+                boolean[] used = new boolean[allSame.size()];
+                used[0] = true;
+                // continue until we found all connected 
+                while (true) {
+                    int added = 0;
+                    for (int i = 1; i < allSame.size(); i++) {
+                        int[] n = allSame.get(i);
+                        if (used[i]) continue;
+						// if the cell is in the same row or column with the root or any one that is already connected with the root
+                        if (rowsUsed.contains(n[0]) || colsUsed.contains(n[1])) {
+                            rowsUsed.add(n[0]);
+                            colsUsed.add(n[1]);
+                            used[i] = true;
+                            added++;
+                        }
+                    }
+                    if (added == 0) break;
+                }
+                List<int[]> connected = new ArrayList<>();
+                List<int[]> left = new ArrayList<>();
+                for (int i = 0; i < allSame.size(); i++) {
+                    if (used[i]) connected.add(allSame.get(i));
+                    else left.add(allSame.get(i));
+                }
+                // put all that are not connected back to the map
+                map.put(k, left);
+
+                int rank = Integer.MIN_VALUE;
+                
+                // calculate the maximum rank of all connected cells
+                for (int[] n : connected) {
+                    rank = Math.max(rank, Math.max(maxRankRow[n[0]], maxRankCol[n[1]]) + 1);
+                }
+                // update maxRank for all cols and rows and set the rank as answer for each connected cell
+                for (int[] n : connected) {
+                    maxRankRow[n[0]] = maxRankCol[n[1]] = rank;
+                    a[n[0]][n[1]] = rank;
+                }
+            }
+        }
+        return a;
+    }
+}

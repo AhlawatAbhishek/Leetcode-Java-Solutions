@@ -1,0 +1,28 @@
+class Solution {
+    public int minMoves2(int[] nums) {
+        Arrays.sort(nums);
+        int median = 0;
+        int f = nums.length / 2;
+        if(nums.length % 2 == 0){
+            median = (nums[f] + nums[f - 1])/2;
+        }else{
+            median = nums[f];
+        }
+        int res = 0;
+        for(int i = 0; i<nums.length; i++){
+            res += Math.abs(nums[i] - median); 
+        }
+        return res;
+    }
+}
+--------------------------
+class Solution {
+    public int minMoves2(int[] nums) {
+        Arrays.sort(nums);        
+        int res = 0, l = 0, r = nums.length-1;
+        while(l < r){
+            res += nums[r--] - nums[l++];
+        }
+        return res;
+    }
+}

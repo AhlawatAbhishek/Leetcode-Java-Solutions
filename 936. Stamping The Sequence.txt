@@ -1,0 +1,47 @@
+class Solution {
+    public int[] movesToStamp(String stamp, String target) {
+        // char stm [] = stamp.toCharArray();
+       char curr[] = target.toCharArray();
+       List<Integer> reverseArray = new ArrayList<>();
+       char targetArray[] = new char[target.length()];
+        Arrays.fill(targetArray, '*');
+       while(!Arrays.equals(targetArray, curr)){
+           int stampIndex = findStampIndex(curr, stamp);
+           if(stampIndex < 0){
+               return new int[0];
+           }else{
+               updateCurr(curr, stampIndex, stamp);
+           }
+           reverseArray.add(stampIndex);
+       }
+       int indicies[] = new int[reverseArray.size()];
+        int indx = reverseArray.size() - 1;
+        for(int i = 0; i<indicies.length; i++){
+            indicies[i] = reverseArray.get(indx--);
+        }
+        return indicies;
+    }
+    public void updateCurr(char[] curr, int indx, String stamp){
+        for(int i = 0; i<stamp.length(); i++){
+            curr[indx+ i] = '*';
+        }
+    }
+    public int findStampIndex(char curr[], String stamp){
+        for(int i = 0; i<curr.length; i++){
+            int s = i; 
+            int j = 0;
+            boolean isNonStar = false;
+            while(j<stamp.length() && s<curr.length && (curr[s] == '*' || curr[s] == stamp.charAt(j))){
+                if(curr[s] != '*'){
+                    isNonStar = true;
+                }
+                s++;
+                j++;
+            }
+            if(j == stamp.length() && isNonStar){
+                return i;
+            }
+        }
+        return -1;
+    }
+}

@@ -1,0 +1,39 @@
+class Solution {
+    public int reachableNodes(int[][] edges, int maxMoves, int n) {
+        int reachableNodes = 0;
+        int graph[][] = new int[n][n];
+        for(int arr[] : graph){
+            Arrays.fill(arr, -1);
+        }
+        for(int edge[] : edges){
+            int u = edge[0] , v = edge[1], dist = edge[2];
+            graph[u][v] = dist;
+            graph[v][u] = dist;
+        }
+        boolean visited[] = new boolean[n];
+        PriorityQueue<int[]> leastDistQueue = new PriorityQueue<>((a, b) -> b[1] - a[1]);
+        leastDistQueue.add(new int[]{0, maxMoves});
+        while(!leastDistQueue.isEmpty()){
+            int []presentNodePair = leastDistQueue.poll();
+            int src = presentNodePair[0];
+            int maxSrcMoves = presentNodePair[1];
+            if(visited[src]){
+                continue;
+            }
+            visited[src] = true;
+            reachableNodes++;
+            for(int neigh =0;neigh < n; neigh++){
+                if(graph[src][neigh] != -1){
+                    if(!visited[neigh] && maxSrcMoves >= graph[src][neigh] + 1){
+                        leastDistQueue.offer(new int[]{neigh, maxSrcMoves - graph[src][neigh] - 1});
+                    }
+                    int pathCost = Math.min(maxSrcMoves, graph[src][neigh]);
+                    graph[src][neigh] -= pathCost;
+                    graph[neigh][src] -= pathCost;
+                    reachableNodes += pathCost;
+                }
+            }
+        }
+        return reachableNodes;
+    }
+}

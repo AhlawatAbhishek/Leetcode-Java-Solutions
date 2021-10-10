@@ -1,0 +1,48 @@
+class Solution {
+    public int openLock(String[] deadends, String target) {
+        Set<String> set = new HashSet<>();
+        for(String s : deadends){
+            set.add(s);
+        }
+        Queue<String> queue = new LinkedList<>();
+        if(!set.contains("0000"))queue.offer("0000");
+        int level = 0;
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            while(size-->0){
+                String s = queue.poll();
+                 if(set.contains(s)){                   
+                    continue;
+                }
+                if(target.equals(s)){
+                    return level;
+                }
+                if(!set.contains(s)){                   
+                    for(String s1 : getCombinations(s)){
+                        if(!set.contains(s1))queue.offer(s1);
+                    }
+                }
+                set.add(s);
+            }
+            level++;
+        }
+        return -1;
+    }
+    public Set<String> getCombinations(String s){
+        char []ch = s.toCharArray();
+        Set<String> set = new HashSet<>();
+        for(int i = 0; i<4; i++){
+            char c = ch[i];
+            int x = c - '0';
+//             clockwise
+            ch[i] =  c == '9' ? '0' : (char) (x+1+'0');
+            set.add(new String(ch));
+            // ch[i] = c;
+            //          anti---   clockwise
+            ch[i] = c == '0' ? '9' : (char) (x-1+'0');
+            set.add(new String(ch));
+            ch[i] = c;
+        }
+        return set;
+    }
+}

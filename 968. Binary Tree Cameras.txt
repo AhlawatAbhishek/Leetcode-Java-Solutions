@@ -1,0 +1,70 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    int camCount = 0;
+    public int minCameraCover(TreeNode root) {
+        if(root == null){
+            return 0;
+        }
+        int ans = dfs(root);
+        return (ans == 1 || ans == 2) ? camCount : camCount+1;
+    }
+//     1 -> covered but doesnot has camera itself
+//     2 -> covered and has camera itself
+//     0 -> not covered
+    public int dfs(TreeNode root){
+        if(root == null){
+            return 1;
+        }
+        int left = dfs(root.left);
+        int right = dfs(root.right);
+        if(left == 0 || right == 0){
+            camCount++;
+            return 2;
+        }else if(right == 2 || left == 2){
+            return 1;
+        }else{
+            return 0;
+        }
+    } 
+}
+-------------------------------
+class Solution {
+    int camCount = 0;
+    HashSet<TreeNode> set = new HashSet<>();
+    public int minCameraCover(TreeNode root) {
+        if(root == null){
+            return 0;
+        }
+        set.add(null);
+        dfs(root, null);
+        return camCount;
+    }
+    public void dfs(TreeNode root, TreeNode parent){
+        if(root != null){
+          dfs(root.left, root);
+          dfs(root.right, root);
+           if((!set.contains(root) && parent == null)||!set.contains(root.left) || !set.contains(root.right)){
+               camCount++;
+               set.add(root);
+               set.add(root.left);
+               set.add(root.right);
+               set.add(parent);
+               return;
+           } 
+        }
+    } 
+}

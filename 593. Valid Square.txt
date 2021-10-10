@@ -1,0 +1,20 @@
+class Solution {
+    public boolean validSquare(int[] p1, int[] p2, int[] p3, int[] p4) {
+        HashSet<Integer> set = new HashSet<>();
+        if(!findLength(p1, p2, set) || !findLength(p2, p3,set) || !findLength(p3, p4,set) || !findLength(p4, p1,set) || !findLength(p2, p4,set)){
+            return false;
+        }
+       return set.size() == 2 ? true : false;       
+    }
+    public boolean findLength(int []p1, int[]p2, HashSet<Integer> set){
+       if(p1[0] == p2[0] && p2[1] == p1[1]){
+           return false;
+       }
+       int x = Math.abs(p1[0] - p2[0]);
+       int y = Math.abs(p1[1] - p2[1]);
+       int x2 = x * x;
+       int y2 = y * y;
+       set.add(x2+y2);
+        return true;
+    }
+}

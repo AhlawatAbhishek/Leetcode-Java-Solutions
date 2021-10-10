@@ -1,0 +1,20 @@
+class Solution {
+    public char slowestKey(int[] releaseTimes, String keysPressed) {
+        char ch[] = keysPressed.toCharArray();
+        int longest = releaseTimes[0];
+        char ans = ch[0];
+        for(int indx = 1; indx<releaseTimes.length; indx++){
+            int diff = releaseTimes[indx] - releaseTimes[indx-1];
+            if(longest <= diff){
+                if(longest == diff && Character.valueOf(ans).compareTo(Character.valueOf(ch[indx])) < 0){
+                    ans = ch[indx];
+                }else if(longest <diff){
+                     ans = ch[indx];
+                }
+                 longest = diff;
+            }            
+        }
+        // System.out.println(longest);
+        return ans;
+    }
+}

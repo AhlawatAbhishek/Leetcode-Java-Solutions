@@ -1,0 +1,16 @@
+class Solution {
+    public int minCostToMoveChips(int[] position) {
+      int evenParity  = 0, oddParity =0;
+      for(int x : position){
+         if(x % 2== 0){
+             evenParity++;
+         }else{
+             oddParity++;
+         }
+      }
+        if(oddParity == position.length || evenParity == position.length){
+            return 0;
+        }
+        return Math.min(oddParity, evenParity);
+    }
+}

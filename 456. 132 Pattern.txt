@@ -1,0 +1,17 @@
+class Solution {
+    public boolean find132pattern(int[] nums) {
+        if(nums.length < 3){
+            return false;
+        }
+        int leftMin = nums[0];
+        for(int j = 1; j<nums.length; j++){
+            for(int k = j + 1 ; k < nums.length; k++){
+                if(leftMin < nums[k] && nums[j] > nums[k]){
+                    return true;
+                }
+            }
+            leftMin = Math.min(leftMin, nums[j]);
+        }
+        return false;
+    }
+}

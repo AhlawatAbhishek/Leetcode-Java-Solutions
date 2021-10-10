@@ -1,0 +1,24 @@
+class Solution {
+    public int numDecodings(String s) {
+        int dp[] = new int[s.length()];
+        if(s.charAt(0) == '0') return 0;
+        dp[0] = 1;
+        for(int indx = 1; indx<s.length(); indx++){
+            int ones = s.charAt(indx) - '0';
+            int  tens = s.charAt(indx-1) - '0';
+            if(ones == 0 && (tens != 1 && tens != 2))return 0;
+            int no = tens*10+ones;
+            if(no <= 26 && no >= 10){
+               if(indx >= 2) dp[indx] += dp[indx-2];
+                else
+                   dp[indx] += 1; 
+            }
+            if(no!= 10 && no != 20){
+                 dp[indx] += dp[indx-1];
+            }
+           
+            
+        }
+        return dp[s.length()-1];
+    }
+}

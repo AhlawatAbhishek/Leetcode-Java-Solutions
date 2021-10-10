@@ -1,0 +1,29 @@
+//num = Convert.ToInt32(123123123344);
+            //Along with datatype the size is also inferred at the time of array
+            //initialization
+            var c = new[] { "","D" };
+            Console.WriteLine(c.Length);
+            c[0] = "A";
+            c[1] = "B";
+            //c[2] = "C";
+            //c[3] = "D";
+            Console.WriteLine(c.Length);
+            for (int i = 0; i < c.Length; i++)
+            {
+                Console.WriteLine(c[i]);
+            }
+            
+            dynamic d = "d";
+            Console.WriteLine(d.ToUpper());
+            //var n1 = new var[];
+            dynamic e = d + 100;
+            Console.WriteLine(e);
+            dynamic n = new dynamic[] {"r",4,6};
+            Console.WriteLine(n.Length);
+            n[0] = "fg";
+            n[1] = "df";
+            n[2] = 45;
+            for (int i = 0; i < n.Length; i++)
+            {
+                Console.WriteLine(n[i]);
+            }

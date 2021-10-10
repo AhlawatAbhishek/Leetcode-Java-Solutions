@@ -1,0 +1,32 @@
+class Solution {
+//     TC: O(R^2*C*Logn) & auxiliary space : O(1);
+    public int maxSumSubmatrix(int[][] matrix, int k) {
+        int row = matrix.length, col = matrix[0].length;
+        int res = Integer.MIN_VALUE;
+        for(int i = 0; i<row; i++){
+            int colSum[] = new int[col];
+            for(int j = i; j<row; j++){
+                for(int c = 0; c<col; c++){
+                   colSum[c] += matrix[j][c];
+                }
+                res = Math.max(res, OneDMaxSumSubmatrix(colSum, k));
+            }
+        }
+        return res;
+    }
+// //     TC: O(n*Logn) & auxiliary space : O(n);    
+    public int OneDMaxSumSubmatrix(int arr[], int k){
+        TreeSet<Integer> set = new TreeSet<>();
+        set.add(0);
+        int res = Integer.MIN_VALUE, preSum = 0;
+        for(int i = 0; i<arr.length; i++){
+            preSum += arr[i];
+            Integer target = set.ceiling(preSum - k);
+            if(target != null){
+                res = Math.max(res, preSum - target);
+            }
+            set.add(preSum);
+        }
+        return res;
+    }
+}

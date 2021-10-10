@@ -1,0 +1,29 @@
+class Solution {
+    public List<List<String>> partition(String s) {
+        List<List<String>> list = new ArrayList<>();
+        getPalindromicSubstring(list, new ArrayList<>(), s);
+        return list;
+    }
+    public void getPalindromicSubstring(List<List<String>> result, List<String> curr,  String s){
+        if(s.isEmpty()){
+            result.add(curr);
+        }
+        for(int i = 1; i <= s.length(); i++){
+            String left = s.substring(0, i);
+            String right = s.substring(i);
+            if(isPalindrome(left)){
+                List<String> copyList = new ArrayList(curr);
+                copyList.add(left);
+                getPalindromicSubstring(result, copyList, right);
+            }
+        }
+    }
+    private boolean isPalindrome(String s){
+        int l = 0, r = s.length() -1;
+        while(l <= r && s.charAt(l) == s.charAt(r)){
+            l++;
+            r--;
+        }
+        return l >= r;
+    }
+}

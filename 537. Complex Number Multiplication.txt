@@ -1,0 +1,47 @@
+class ComplexNumber{
+    int rNo;
+    int iNo;
+    ComplexNumber(int rNo, int iNo){
+        this.rNo = rNo;
+        this.iNo = iNo;
+    }
+}
+class Solution {
+    public String complexNumberMultiply(String num1, String num2) {
+        ComplexNumber cNum1 = parseString(num1);
+        ComplexNumber cNum2 = parseString(num2);
+        int rNo = (cNum1.rNo * cNum2.rNo) - (cNum1.iNo * cNum2.iNo);
+        int cNo = (cNum1.rNo * cNum2.iNo) + (cNum2.rNo * cNum1.iNo);
+        return rNo + "+" + cNo+"i";
+    }
+    private ComplexNumber parseString(String num){
+        boolean isRNeg = false, isCNeg = false;
+        int indx =0;
+        if(num.charAt(indx) == '-'){
+            isRNeg = true;
+            indx++;
+        }
+        int r = 0;
+        while(num.charAt(indx) != '+'){
+            r = r*10+(num.charAt(indx) - '0');
+            indx++;
+        }
+        indx++;
+        if(num.charAt(indx) == '-'){
+            isCNeg = true;
+            indx++;
+        } 
+        int c = 0;
+        while(num.charAt(indx) != 'i'){
+             c = c*10+(num.charAt(indx) - '0');
+            indx++;
+        }
+        if(isRNeg){
+            r = -r;
+        }
+        if(isCNeg){
+            c = -c;
+        }
+        return new ComplexNumber(r, c);
+    }
+}

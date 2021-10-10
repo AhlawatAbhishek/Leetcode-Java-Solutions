@@ -1,0 +1,47 @@
+class Solution {
+    public int createSortedArray(int[] instructions) {
+        int max = 0;
+        for(int i : instructions){
+            if(max < i){
+                max = i;
+            }
+        }
+        Fenwick fen = new Fenwick(max+2);
+        int res =0;
+        for(int i = 0; i<instructions.length; i++){
+            int curr = instructions[i];
+            int lower = fen.sumRange(0, curr-1);
+            int higher = fen.sumRange(curr+1, max);
+            res += Math.min(lower, higher);
+            res  %= 1000000007;
+            fen.updateCount(curr, 1);
+            
+        }
+        return res;
+    }
+}
+class Fenwick{
+    int [] arr;
+    Fenwick(int len){
+        this.arr = new int[len];
+    }
+    public int sumRange(int beg, int end){
+        return sum(end+1) - sum(beg);
+    }
+    public int sum(int i ){
+        int sum = 0;
+        while(i>0){
+            sum = sum+ arr[i];
+            i = i - (i & -i);
+        }
+        return sum;
+        
+    }
+    public void updateCount(int i, int val){
+        i++;
+        while(i < arr.length){
+            arr[i] = arr[i] + val;  
+            i = i + (i & -i);
+        }
+    }
+}

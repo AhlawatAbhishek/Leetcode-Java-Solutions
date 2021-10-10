@@ -1,0 +1,27 @@
+class Solution {
+    public List<String> findAndReplacePattern(String[] words, String pattern) {
+        List<String> res = new ArrayList<>();
+        for(String word : words){
+          HashMap<Character, Character> pToW = new HashMap<>();
+          HashMap<Character, Character> wToP = new HashMap<>();
+           if(pattern.length() == word.length()){
+               boolean flag = true;
+               for(int i = 0; i<pattern.length(); i++){
+                   char p = pattern.charAt(i);
+                   char w = word.charAt(i);
+                   if((pToW.containsKey(p) && pToW.get(p) != w) || (wToP.containsKey(w) && wToP.get(w) != p)){
+                       flag = false;
+                       break;
+                   }else{
+                       pToW.put(p, w);
+                       wToP.put(w, p);
+                   }
+               }
+               if(flag){
+                   res.add(word);
+               }
+           } 
+        }
+        return res;
+    }
+}

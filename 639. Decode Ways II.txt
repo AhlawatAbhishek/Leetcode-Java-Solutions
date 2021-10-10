@@ -1,0 +1,56 @@
+class Solution {
+    public int numDecodings(String s) {
+        int n = s.length();
+        long dp[] = new long[n+1];
+        dp[0] = 1;
+        dp[1] = oneChar(s.charAt(0));
+        for(int i = 2; i<=n; i++){
+            char currChar = s.charAt(i-1);
+            char prevChar = s.charAt(i-2);
+            dp[i] += dp[i-1] * oneChar(currChar);
+            dp[i] += dp[i-2] * twoChar(prevChar, currChar);
+            dp[i] = dp[i] % 1000000007;
+        }
+        return (int)dp[n];
+    }
+    public int oneChar(char curr){
+        if(curr == '*'){
+            return 9;
+        }else if(curr == '0'){
+            return 0;
+        }else{
+            return 1;
+        }
+    }
+    public int twoChar(char first, char sec){
+        switch(first){
+            case '*':
+                if(sec== '*'){
+                    return 15;
+                }else if(sec >= '0' && sec <= '6'){
+                    return 2;
+                }else{
+                    return 1;
+                }
+                
+            case '1':
+                if(sec == '*'){
+                    return 9;
+                }else{
+                    return 1;
+                }
+            
+         
+            case '2':
+                if(sec == '*'){
+                    return 6;
+                }else if(sec >= '0' && sec <= '6'){
+                    return 1;
+                }else{
+                    return 0;
+                }
+            default:
+                return 0;
+        }
+    }
+}

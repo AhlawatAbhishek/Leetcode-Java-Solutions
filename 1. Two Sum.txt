@@ -1,0 +1,51 @@
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        int copy[] = new int[nums.length];
+        for(int i = 0; i<copy.length; i++){
+            copy[i] = nums[i];
+        }
+        Arrays.sort(nums);
+        int left = 0, right = nums.length-1;
+        while(left < right){
+            int sum = nums[left] + nums[right];
+            if(sum == target){
+              break;
+            }else if(sum > target){
+                right--;
+            }else{
+                left++;
+            }
+        }
+        if(left < right){
+            boolean findNext = false;
+            int indx1 = search(copy, nums[left], findNext);
+            if(nums[left] == nums[right])findNext = true;
+            int indx2 = search(copy, nums[right], findNext);
+            return new int[]{indx1, indx2};
+        }
+        return new int[]{};
+    }
+    public int search(int nums[], int key, boolean findNext){
+        for(int i = 0; i<nums.length; i++){
+            if(nums[i] == key && !findNext){
+                return i;
+            }else if(nums[i] == key && findNext){
+                findNext = false;
+                continue;
+            }
+        }
+        return -1;
+    }
+}
+--------------------------------------------------
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i = 0; i< nums.length; i++){
+            int complement = target - nums[i];
+            if(map.containsKey(complement)) return new int[]{i, map.get(complement)};
+            map.put(nums[i], i);
+        }
+        return new int[]{};
+    }
+}

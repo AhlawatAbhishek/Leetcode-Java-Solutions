@@ -1,0 +1,19 @@
+class Solution {
+    public int minPatches(int[] nums, int n) {
+        int patches = 0, indx = 0, len = nums.length;
+        long reach = 0;
+        while(reach < n){
+            if(indx >= len){
+                reach += (reach+1);
+                patches++;
+            }else if(indx < len && nums[indx] <= (reach+1)){
+                reach += nums[indx];
+                indx++;
+            }else{
+                reach += (reach+1);
+                patches++;
+            }
+        }
+        return patches;
+    }
+}

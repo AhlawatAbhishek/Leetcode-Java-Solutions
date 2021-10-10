@@ -1,0 +1,58 @@
+class Solution {
+    public int scheduleCourse(int[][] courses) {
+        Arrays.sort(courses, (a, b)-> {
+                                        if(a[1]-b[1] != 0) 
+                                            return a[1] - b[1];
+                                        else 
+                                            return a[0] - b[0];
+                                      }
+        );
+        int currTime  =0;
+        PriorityQueue<Integer> queue = new PriorityQueue<>((a, b) -> b -a);
+        for(int course[] : courses){
+              if(course[0] + currTime <= course[1]){
+                 queue.offer(course[0]);
+                 currTime += course[0];
+               }else{
+                if(!queue.isEmpty() && queue.peek() > course[0]){
+                    currTime = currTime - queue.poll() + course[0];
+                    queue.offer(course[0]);
+                }
+               } 
+        }
+        return queue.size();
+    }
+}
+------------------------------------------------------
+
+
+class Solution {
+//Time complexity : O(NlogN)--because of sorting used;
+//Auxiliary Space : O(N)--for the priority queue used;
+    public int scheduleCourse(int[][] courses) {
+//Sorting courses array according to asscending finish times 
+//and if finish times are equal then in asscending duration of courses. 
+        Arrays.sort(courses, (a, b)-> {
+                                        if(a[1]-b[1] != 0) 
+                                            return a[1] - b[1];
+                                        else 
+                                            return a[0] - b[0];
+                                      }
+        );
+        int currTime  =0;
+//Using priority queue to store duration of courses in descending order,
+//which would help to find the longest duration course if conflict occurs.         
+        PriorityQueue<Integer> queue = new PriorityQueue<>((a, b) -> b -a);
+        for(int course[] : courses){
+             queue.offer(course[0]);
+             currTime += course[0];
+//If adding current course causes it to increase the deadline of the
+//current course than remove longest duration course             
+              if(currTime > course[1]){
+                currTime = currTime - queue.poll();
+              }
+        }
+//Return the number of courses in the priority queue currently
+        return queue.size();
+    }
+}

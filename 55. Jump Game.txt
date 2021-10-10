@@ -1,0 +1,33 @@
+class Solution {
+    public boolean canJump(int[] nums) {
+//         logic here is we are traversing backwards if the curr index + the value of jumps allowed at current index is greater than or equal to the curr lastIndex then change the lastIndex to curr index
+        int n = nums.length, lastIndx = n-1; 
+        for(int indx = n-1; indx>=0; indx--){
+           if(nums[indx] + indx >= lastIndx){
+               lastIndx = indx;
+           }
+        }
+//         at the end return whether it is possible to reach the first index
+        return lastIndx == 0;
+    }
+}
+---------------
+another approach---------------
+class Solution {
+    public boolean canJump(int[] nums) {
+        if(nums.length==1){
+            return true;
+        }
+        int iMaxReach = nums[0];
+        int i = 1;
+        while(iMaxReach>=i) {
+            if(iMaxReach>=nums.length-1){
+                return true;
+            }
+            iMaxReach = Math.max(nums[i] +i , iMaxReach);
+            i++;
+
+        }
+        return false;
+    }
+}

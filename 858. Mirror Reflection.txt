@@ -1,0 +1,23 @@
+class Solution {
+//    extension * p = reflection * q
+    public int mirrorReflection(int p, int q) {
+       int ext  = q, ref = p;
+       while(ext % 2 == 0 && ref % 2 == 0){
+           ext /= 2;
+           ref /=2;
+       } 
+//     extension = even, reflection = odd;    
+       if(ext % 2 == 0 && ref %2 != 0){
+           return 0;
+       }
+        //     extension = odd, reflection = even;
+        if(ext % 2 != 0 && ref % 2 == 0){
+            return 2;
+        }
+        //     extension = odd, reflection = odd;
+        if(ext % 2 != 0 && ref%2 != 0){
+            return 1;
+        }
+        return -1;
+    }
+}

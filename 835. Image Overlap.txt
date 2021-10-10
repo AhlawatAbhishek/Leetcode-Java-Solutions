@@ -1,0 +1,27 @@
+class Solution {
+    public int largestOverlap(int[][] A, int[][] B) {
+        int length = A.length;
+        int result = 0;
+        for(int row = -length; row < length; row++){
+            for(int col = -length; col < length; col++){
+                result = Math.max(result, countOverlap(A, B, row, col)); 
+            }
+        }
+        return result;
+    }
+    public int countOverlap(int [][] A, int B[][], int r, int c){
+        int count = 0;
+        for(int row = 0; row < A.length; row++){
+            for(int col = 0; col < A.length; col++){
+                
+                if(row + r < 0 || row + r >= A.length || col + c < 0 || col + c >= A.length){
+                    continue;
+                }
+                if(A[row + r][col + c] == 1 && B[row][col] == 1){
+                    count ++ ;
+                }
+            }
+        }
+        return count;
+    }
+}

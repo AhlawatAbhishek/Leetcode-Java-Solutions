@@ -1,0 +1,124 @@
+
+class WordFilter {
+    private Trie pre = null, suff = null;
+    private String words[];
+    public WordFilter(String[] w) {
+        pre = new Trie();
+        suff = new Trie();
+        words = new String[w.length];
+        for(int i = 0; i<w.length; i++){
+            words[i] = w[i];
+            pre.insert(w[i], i);
+            suff.insert(new StringBuilder(w[i]).reverse().toString(), i);
+        }
+    }    
+    public int f(String prefix, String suffix) {
+          List<Integer> preIndicies = pre.startsWith(prefix);
+          List<Integer> sufIndicies = suff.startsWith(new StringBuilder(suffix).reverse().toString());
+        int preIdx = preIndicies.size()-1, sufIdx = sufIndicies.size()-1;
+        while(preIdx >= 0 && sufIdx >= 0){
+            if(Objects.equals(preIndicies.get(preIdx), sufIndicies.get(sufIdx)) ){
+                return preIndicies.get(preIdx);
+            }else if(preIndicies.get(preIdx) > sufIndicies.get(sufIdx)){
+                preIdx--;
+            }else{
+                sufIdx--;
+            }
+        }
+        return -1;
+    }
+}
+class Trie{
+    private Trie[] t;
+    private List<Integer> indicies;
+    Trie(){
+        t = new Trie[26];
+        indicies = new ArrayList<>();
+    }
+    public void insert(String words, int index){
+       Trie tObj = this;
+        char wrds[] = words.toCharArray();
+        for(char c : wrds){
+            if(tObj.t[c - 'a'] == null){
+                tObj.t[c-'a'] = new Trie(); 
+            }
+            tObj = tObj.t[c-'a'];
+            tObj.indicies.add(index);                       
+        }        
+    }
+    public List<Integer> startsWith(String word){
+       Trie tObj = this;
+        List <Integer> res = null;
+        char[] ch = word.toCharArray();
+        for(char c : ch){
+            if(tObj.t[c - 'a'] == null){
+                return new ArrayList<Integer>();
+            }
+            tObj = tObj.t[c - 'a'];        
+        }
+        return tObj.indicies;
+    }
+}
+/**
+ * Your WordFilter object will be instantiated and called as such:
+ * WordFilter obj = new WordFilter(words);
+ * int param_1 = obj.f(prefix,suffix);
+ */
+------------------------------------------------------------------------------
+//just a tryout not corrected till now
+class WordFilter {
+    int firstIndex = -1, lastIndex = -1;
+    private String[]words;
+    public WordFilter(String[] words) {
+        this.words = words;
+    }
+    
+    public int f(String prefix, String suffix) {
+        return firstOccur(this.words, prefix, suffix);
+    }
+    public int firstOcurr(String word, String prefix, String suffix){
+        char []wrd = word.toCharArray();
+        char pr[] = prefix.toCharArray();
+        char sf[] = suffix.toCharArray();
+        int idxPr = pr.length-1, idxSf = 0, currIndex = wrd.length-1;
+        while(currIndex >= 0 && idxPr >= 0){
+            if(wrd[currIndex] == pr[idxPr]){
+               if(idxPr >= 0) 
+                   idxPr--;
+               else
+                   break;
+            }else{
+                idPr = pr.length-1;
+            }
+            currIndex--;
+        }        
+        if(idxPr != -1 || currIndex == -1){
+            return -1;
+        }
+        int currIdx =0 ,ans = -1;
+        while(currIdx < currIndex+1 && idxSf < sf.length){
+            if(wrd[currIdx] == sf[idxSf]){
+                if(idxSf == 0)ans = currIdx;
+                if(idxSf < sf.length){
+                    idxSf++;
+                }else{
+                    break;
+                }
+            }else{
+                idxSf = 0;
+            }
+            currIdx++;
+        }
+        if(idxSf == sf.length){
+            return ans;
+        }else{
+            return -1;
+        }
+    }
+}
+
+/**
+ * Your WordFilter object will be instantiated and called as such:
+ * WordFilter obj = new WordFilter(words);
+ * int param_1 = obj.f(prefix,suffix);
+ */

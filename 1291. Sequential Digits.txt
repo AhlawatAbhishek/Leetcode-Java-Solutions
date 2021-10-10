@@ -1,0 +1,54 @@
+class Solution {
+    public List<Integer> sequentialDigits(int low, int high) {
+      List<Integer> al = new ArrayList<>();
+      for(int i = low; i<=high; i++){
+          if(isValid(i)){
+              al.add(i);
+          }
+      }   
+      Collections.sort(al);
+      return al;  
+    }
+    public boolean isValid(int y){
+        String str = Integer.toString(y);
+        for(int i = 1; i<str.length(); i++){
+            char ch = str.charAt(i);
+            char ch1 = str.charAt(i-1);
+            int x = Integer.parseInt(ch+"");
+            int x1 = Integer.parseInt(ch1+"");
+            if(x1 + 1 == x){
+                continue;
+            }else{
+                return false;
+            }
+        }
+        return true;
+    }
+}---------------------
+correction solution that doesn't give tle on large input::::::::
+class Solution {
+    public List<Integer> sequentialDigits(int low, int high) {
+        
+        List<Integer> list = new ArrayList<>();
+        
+        for(int i=1;i<9;i++) {
+            
+            int next = 0;
+            
+            for(int j=i;j<10;j++) {
+                next = next*10+j;
+                if(next>=low && next<=high) {
+                    list.add(next);
+                } else if(next>high) {
+                    break;
+                }
+            }
+            
+        }
+        
+        Collections.sort(list);
+        
+        return list;
+        
+    }
+}            

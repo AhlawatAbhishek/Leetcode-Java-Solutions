@@ -1,0 +1,19 @@
+class Solution {
+    public String shiftingLetters(String s, int[] shifts) {
+//      convert string to char array
+        char ch[] = s.toCharArray();
+//         initialize a shift variable to store the shifts required for each index in string
+        int shift = 0;
+//         iteratre from right so that at each step we have exact number of shifts required for that character
+        for(int indx = shifts.length-1; indx>=0; indx--){
+                shift = (shifts[indx] + shift)%26;
+                int factor = ch[indx] + shift;
+//             see how far the factor becomes from 'a' after adding the shift and take modulo 26 to convert
+//             it into the range of 0 to 25 now add 'a' to it. It will give you the exact character needed.
+                factor = (factor - 'a' )%26+'a';
+                ch[indx] = (char)(factor);
+        }
+        // return the newly formed char array in the form of string
+        return new String(ch);
+    }
+}

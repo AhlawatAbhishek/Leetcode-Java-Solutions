@@ -1,0 +1,41 @@
+ class Solution {
+    public  int compareVersion(String version1, String version2) {
+        String str1[] = version1.split("[.]"), str2[] = version2.split("[.]");
+        ArrayList<String> al1 = new ArrayList<>();
+        ArrayList<String> al2 = new ArrayList<>();
+        for(String s : str1){
+            al1.add(s);
+        }
+        for(String s : str2){
+            al2.add(s);
+        }
+        int i = 0 , j = 0;
+        while(i < al1.size() && j  <al2.size()){
+            i++;
+            j++;
+        }
+        if(i  <al1.size()){
+            while( i < al1.size()){
+                al2.add("0");
+                i++;
+            }
+        }else if(j  <al2.size()){
+            while( j < al2.size()){
+                al1.add("0");
+                j++;
+            }
+        }
+        for(int z = 0 ; z < al1.size(); z++){
+            int ver1 = Integer.parseInt(al1.get(z));
+            int ver2 = Integer.parseInt(al2.get(z));
+            if(ver1 == ver2){
+                continue;
+            }else if(ver1 > ver2){
+                return 1;
+            }else{
+                return -1;
+            }
+        }
+        return 0;
+    }
+}

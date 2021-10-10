@@ -1,0 +1,30 @@
+class Solution {
+    public int numMatchingSubseq(String s, String[] words) {
+        int count = 0;
+        HashMap<Character, Queue<String>> map = new HashMap<>();
+        for(char c : s.toCharArray()){
+            map.put(c, new LinkedList<>());
+        }
+        for(String s1 : words){
+            char c = s1.charAt(0);
+            if(map.containsKey(c)){
+                map.get(c).offer(s1);
+            }
+        }
+        for(char c : s.toCharArray()){
+            int size = map.get(c).size();
+            Queue<String> q = map.get(c);
+            while(size-->0){
+                String s1 = q.poll();
+                if(s1.substring(1).length() == 0){
+                    count++;
+                }else{
+                    if(map.containsKey(s1.charAt(1))){
+                        map.get(s1.charAt(1)).offer(s1.substring(1));
+                    }
+                }
+            }
+        }
+        return count;
+    }
+}

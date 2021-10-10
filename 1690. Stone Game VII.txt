@@ -1,0 +1,24 @@
+class Solution {
+    public int stoneGameVII(int[] stones) {
+        int sum = 0, n = stones.length; 
+        int dp[][] = new int[n][n];
+        for(int i : stones){
+            sum += i;
+        }
+        for(int i[] : dp){
+            Arrays.fill(i, -1);
+        }
+        return sol(stones, 0, stones.length-1, sum ,dp);
+    }
+   public int sol(int arr[], int i, int j, int sum, int [][] dp) {
+		if (j == i + 1) {
+			return Math.max(arr[i], arr[j]);
+		}
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+		return dp[i][j] = Math.max( sum - arr[i] - sol(arr, i + 1, j, sum - arr[i], dp),
+				sum - arr[j] - sol(arr, i, j - 1, sum - arr[j], dp));
+
+	}
+}

@@ -1,0 +1,40 @@
+class Solution {
+    int count = 0;
+    public int totalNQueens(int n) {
+        int board[][] = new int[n][n];
+        solveBoardRec(board, 0);
+        return count;
+    }
+    public boolean isSafe(int[][]board, int row, int col){
+        for(int c = 0; c<col; c++){
+            if(board[row][c] == 1){
+                return false;
+            }
+        }
+        for(int r = row, c = col; c>=0 && r >=0; r--, c --){
+            if(board[r][c] == 1){
+                return false;
+            }
+        }
+        for(int r = row, c = col; c>=0 && r<board.length; c--, r++){
+            if(board[r][c] == 1){
+                return false;
+            }
+        }
+        return true;
+    }
+    public boolean solveBoardRec(int board[][], int col){
+        if(col == board.length){
+            count++;
+            return true;
+        }
+        for(int i = 0; i<board.length; i++){
+            if(isSafe(board, i, col)){
+                board[i][col] = 1;
+                solveBoardRec(board, col+1);
+                board[i][col] = 0;
+            }
+        }
+        return false;
+    }
+}

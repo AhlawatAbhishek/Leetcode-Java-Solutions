@@ -1,0 +1,47 @@
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> children;
+
+    public Node() {}
+
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, List<Node> _children) {
+        val = _val;
+        children = _children;
+    }
+};
+*/
+
+class Solution {
+    public List<List<Integer>> levelOrder(Node root) {
+        List<List<Integer>> result = new ArrayList<>();
+        //If root is null return empty list of list of integers
+        if(root == null) return result;
+//         Here we are going to do bfs traversal of N-ary Tree. Thus queue would be suitable for it.
+        Queue<Node> queue = new LinkedList<>();
+        queue.offer(root);
+        while(!queue.isEmpty()){
+//             At each point of time the queue's present size would be equal to number of nodes in the current level
+            List<Integer> li = new ArrayList<>();
+             int size = queue.size();
+            while(size-->0){
+                Node n = queue.poll();
+                li.add(n.val);
+//Inserting children of the current level nodes to make up next level
+                for(Node c : n.children){
+                    if(c != null){
+                        queue.offer(c);
+                    }
+                }
+            }
+            if(li.size()>0)result.add(li);
+        }
+//        returning the result 
+        return result;
+    }
+}

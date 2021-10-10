@@ -1,0 +1,19 @@
+// Time complexity : O(N), N is nums length
+// Auxiliary space : O(1)
+class Solution {
+    public List<Integer> findDuplicates(int[] nums) {
+        List<Integer> res = new ArrayList<>();
+        for(int indx = 0; indx<nums.length; indx++){
+//             find the absolute of the present number
+            int num = Math.abs(nums[indx]);
+            // if nums[num-1] is < 0, then we have seen this number before
+            if(nums[num-1] < 0){
+                res.add(num);
+            }else{
+//          else make nums[num-1] < 0   
+                nums[num-1] *= -1; 
+            }
+        }
+        return res;
+    }
+}

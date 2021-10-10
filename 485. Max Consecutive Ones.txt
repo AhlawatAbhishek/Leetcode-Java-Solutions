@@ -1,0 +1,47 @@
+// TIme complexity : O(N), N is the length of the num array
+// Auxiliary Space : O(1)
+class Solution {
+    public int findMaxConsecutiveOnes(int[] nums) {
+//         Using Two pointer approach
+        int start = 0, end = 0;
+        int maxConsecOnes = 0, len =nums.length;
+        while(start < len){
+//             increment start till it reach a 1
+            while(start < len && nums[start]!= 1){
+                start++;
+            }
+//             if it goes out of the bounds of the array then break the loop 
+            if(start >= len){
+                break;
+            }
+//             set end to start
+            end = start;
+            while(end < len && nums[end] == 1){
+                end++;
+            }
+//             onesLen for the current window
+            int onesLen = end - start;
+//             update maxConsecOnes till now
+            maxConsecOnes = Math.max(maxConsecOnes, onesLen);
+            start = end+1;
+        }
+//         return maxConsecOnes
+        return maxConsecOnes;
+    }
+}
+---------------
+
+class Solution {
+    public int findMaxConsecutiveOnes(int[] nums) {
+
+        int mxCount = nums[0];
+        for(int i=1;i<nums.length;i++){
+            if(nums[i]==1)  {
+                nums[i] += nums[i-1];
+            }
+            mxCount = Math.max(mxCount, nums[i]);
+        }
+
+        return mxCount;
+    }
+}

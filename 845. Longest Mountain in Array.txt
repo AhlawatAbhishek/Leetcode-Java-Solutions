@@ -1,0 +1,58 @@
+class Solution {
+    public int longestMountain(int[] A) {
+        if(A.length < 3 || A == null){
+            return 0;
+        }
+        int longestMountain = 0;
+        for(int i = 1; i<A.length-1; i++){
+            int left = 0;
+            int right = 0;
+            for(int j = i; j>0; j--){
+                if(A[j] > A[j-1]) left++;
+                else break;
+            }
+            for(int j = i; j<A.length-1; j++){
+                if(A[j]>A[j+1]){
+                    right++;
+                }else{
+                    break;
+                }
+            }
+            if(right!= 0 && left != 0){
+                longestMountain = Math.max(longestMountain, right+left+1);
+            }
+        }
+        return longestMountain;
+    }
+}
+---------
+Time Complexity : O(N) and Space Complexity O(1)
+
+class Solution {
+    public int longestMountain(int[] A) {
+       int res = 0;
+       int n = A.length;
+       for(int i = 1; i<n ; i++){
+           int count = 1;
+           boolean flag = false;
+           int j = i;
+//            Increasing Sequence
+           while(j<n && A[j]>A[j-1]){
+               j++;
+               count++;               
+           }
+//            decreasing sequence
+           while(i!= j  && j<n && A[j]<A[j-1]){
+               j++;
+               count++;
+               flag =true;
+           }
+           if(i != j  && flag && count>2){
+               res = Math.max(res, count);
+               j--;
+           }
+           i = j;
+       }
+        return res;
+    }
+}s

@@ -1,0 +1,85 @@
+class Solution {
+
+    public List<String> wordSubsets(String[] A, String[] B) {
+        List<String> ans = new ArrayList<>();
+        int[] maxFreqAcrossB = new int[26];
+        for(String bStr : B){
+            int[] freqCountBStr = freq(bStr);
+            for(int i=0;i<26;i++){
+                maxFreqAcrossB[i] = Math.max(maxFreqAcrossB[i], freqCountBStr[i]);
+            }
+        }
+
+        for(String aStr: A){
+            int[] freqCountAStr =freq(aStr);
+            boolean foundAllChar = true;
+            for(int i=0;i<26;i++){
+                if(freqCountAStr[i] < maxFreqAcrossB[i]){
+                    foundAllChar = false;
+                    break;
+                }
+            }
+
+            if(foundAllChar){
+                ans.add(aStr);
+            }
+        }
+
+        return ans;
+
+    }
+
+    // O(len(s))
+    private int[] freq(String s){
+        int[] freqCount = new int[26];
+        for(char c: s.toCharArray()){
+            freqCount[c-'a']++;
+        }
+
+        return freqCount;
+
+    }
+}
+------------------------------------
+class Solution {
+    public List<String> wordSubsets(String[] A, String[] B) {
+        ArrayList<HashMap<Character, Integer>> list = new ArrayList<>();
+        ArrayList<HashMap<Character, Integer>> list1 = new ArrayList<>();
+        for(String s : A){
+            char ch[] = s.toCharArray();
+            HashMap<Character, Integer> hmap = new HashMap<>();
+            for(char c : ch){
+                hmap.put(c, hmap.getOrDefault(c, 0) +1 );
+            }
+            list.add(hmap);
+        }
+      
+          for(String s : B){
+            char ch[] = s.toCharArray();
+              HashMap<Character, Integer> hmap = new HashMap<>();
+            for(char c : ch){
+                hmap.put(c, hmap.getOrDefault(c, 0) +1 );
+            }
+            list1.add(hmap);
+        }
+        List<String> ans = new ArrayList<>();
+        for(int j = 0; j<B.length; j++){
+       
+            HashMap<Character, Integer> hmap = list1.get(j);
+            for(int i = 0; i<A.length; i++){
+                HashMap<Character, Integer> h = list.get(i);
+                  boolean flag = true;
+              for(char c : hmap.keySet()){
+                if(!h.containsKey(c) || h.get(c) < hmap.get(c)){
+                    flag = false;
+                    break;
+                }
+               }
+               if(flag)ans.add(A[i]);
+            }
+             
+          
+        }
+        return ans;
+    }
+}

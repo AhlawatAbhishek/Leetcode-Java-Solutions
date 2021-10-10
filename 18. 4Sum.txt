@@ -1,0 +1,65 @@
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        Set<List<Integer>>set = new HashSet<>();
+        int n = nums.length;
+        for(int i = 0; i<n; i++){
+            int sum = 0;
+            for(int j = i+1; j<n; j++){
+                for(int z = j + 1; z<n; z++){
+                    for(int y = z+1; y<n; y++){
+                        if(nums[i]+nums[j]+nums[z]+nums[y] == target){
+                            List<Integer> li = Arrays.asList(nums[i], nums[j], nums[z], nums[y]);
+                              Collections.sort(li);
+                            set.add(li);
+                        }
+                    }
+                }
+            }
+        }
+        return new ArrayList<>(set);
+    }
+}
+-------------------------------
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> list = new ArrayList<>();
+        Arrays.sort(nums);
+        int n = nums.length;
+        for(int i = 0; i<n-3; i++){
+            if(i != 0 && nums[i-1] == nums[i]){
+                continue;
+            }
+            for(int j = i+1; j<n-2; j++){
+                if(j != i+1 && nums[j-1] == nums[j]){
+                   continue;
+                }
+                int left = j+1, right = n-1;
+                while(left < right){
+                    int sum = nums[i] + nums[j] + nums[left] + nums[right];
+                    if(sum > target){
+                        right--;
+                    }else if(sum < target){
+                        left++;
+                    }else{
+                         List<Integer> combination = new ArrayList<>();
+            combination.add(nums[i]);
+            combination.add(nums[j]);
+            combination.add(nums[left]);
+            combination.add(nums[right]);
+                        left++;
+                        right--;
+                        list.add(combination);
+                        while(left < right && nums[left] == nums[left-1]){
+                            left++;
+                        }
+                        while(right > left && nums[right] == nums[right+1]){
+                            right--;
+                        }
+                    }
+                }
+            }
+        }
+
+        return list;
+    }
+}

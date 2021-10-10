@@ -1,0 +1,27 @@
+class Solution {
+    public boolean canPartitionKSubsets(int[] nums, int k) {
+        boolean visited[] = new boolean[nums.length];
+        int totalSum  = 0, targetSum = 0;
+        for(int ele : nums){
+            totalSum += ele;
+        }
+         if(totalSum % k != 0 || nums.length < k) return false;
+        targetSum = totalSum / k; 
+        return isSolvable(nums, 0, k, 0, targetSum, visited);
+    }
+    public boolean isSolvable(int nums[], int startIndx, int k, int currSum, int targetSum, boolean visited[]){
+         if(k == 0) return true;
+        if(currSum > targetSum) return false;
+       
+        if(currSum == targetSum){
+            return isSolvable(nums, 0, k-1, 0, targetSum, visited);
+        }
+        for(int indx = startIndx; indx<nums.length; indx++){
+            if(visited[indx]) continue;
+            visited[indx] = true;
+            if(isSolvable(nums, indx+1, k, currSum+nums[indx], targetSum, visited)) return true;
+            visited[indx] = false;
+        }
+        return false;
+    }
+}

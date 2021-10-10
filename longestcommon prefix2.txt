@@ -1,0 +1,54 @@
+import java.util.*;
+class Main{
+    public static void main(String args[]){
+        String []arr = {"caa","","a","acb"};
+        // {"geeksforgeeks", "geeks", "geek", "geezer"};
+       String s = longestCommonPrefix(arr);
+       if(s.length()==0){
+           System.out.println("empty");
+       }else{
+           System.out.println(s);
+       }
+       
+    }
+      public static String longestCommonPrefix(String[] arr) {
+        if(arr.length == 1){
+            return arr[0];
+        }
+         String finalAns = "";
+        for(int i = 1;i<arr.length;i++){
+            String str1 = arr[i-1];
+            String str2 = arr[i];
+            if(str1==""||str2==""){
+                return "";
+            }
+            int j  = 0;
+            String ans = "",prevAns="";
+            while(j<str1.length()&&j<str2.length()){
+                 if(str1.charAt(j) == str2.charAt(j)){
+                      ans = ans + str1.charAt(j);
+                      j++;
+                 }else{
+                    break;
+                 }
+            }
+            if(i == 1){
+                prevAns = ans;
+            }
+            if(prevAns.length()<ans.length()){
+                finalAns = prevAns;
+            }else{
+                finalAns = ans;
+            }
+            prevAns = ans;
+            finalAns = prevAns;
+        
+        }
+        if(finalAns.length()==0){
+            return "";
+        }else{
+           return finalAns;
+        }
+        
+    }
+}

@@ -1,0 +1,25 @@
+class Solution {
+    public int[] advantageCount(int[] A, int[] B) {
+        int len = A.length;
+        int []res = new int[len];
+        PriorityQueue<int[]> queue = new PriorityQueue<>((a, b) -> b[1] - a[1]);      
+        for(int i = 0; i<B.length; i++){
+             queue.offer(new int[] {i, B[i]});
+        }
+        Arrays.sort(A);
+        int low = 0, high = len -1;
+       
+         while(!queue.isEmpty()){
+            int b[] = queue.poll();
+             int val = b[1];
+            int ind = b[0];
+            if(A[high] > val){
+ 
+                res[ind] = A[high--];
+            }else{
+                res[ind] = A[low++];
+            }            
+        }
+        return res;
+    }
+}

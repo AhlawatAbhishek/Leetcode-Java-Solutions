@@ -1,0 +1,25 @@
+class Solution {
+    Long dp[][][] = null;
+    public int findPaths(int m, int n, int maxMove, int startRow, int startColumn) {
+        int grid[][] = new int[m][n];
+        dp = new Long[m+1][n+1][maxMove+1];
+       long ans = dfs(grid, maxMove, startRow, startColumn);
+        return (int)ans;
+        
+    }
+    public long dfs(int [][]grid, int maxMove, int r, int c){
+        if(maxMove < 0){
+            return 0;
+        }
+        if(r < 0 || c<0 || r>= grid.length || c >= grid[0].length){
+            return 1;
+        }
+            if(dp[r][c][maxMove] != null){
+                return dp[r][c][maxMove];
+            }
+           return dp[r][c][maxMove] = (dfs(grid, maxMove-1, r, c+1)+
+            +dfs(grid, maxMove-1, r+1, c)+
+            dfs(grid, maxMove-1, r-1, c)+
+            dfs(grid, maxMove-1, r, c-1))% 1000000007;
+    }
+}

@@ -1,0 +1,28 @@
+class Solution {
+    double a , b, r;
+
+    public Solution(double radius, double x_center, double y_center) {
+        this.r = radius;
+        this.b = y_center;
+        this.a = x_center;
+    }
+    
+    public double[] randPoint() {
+        double x = getPoint(r, a);
+        double y = getPoint(r, b);
+        while((x - a) * (x - a) + (y-b) * (y-b) >= r*r){
+            x = getPoint(r, a);
+            y = getPoint(r, b);
+        }
+        return new double[]{x , y};
+    }
+    public double getPoint(double r, double y){
+        return (y - r) + Math.random() * (2 * r);
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(radius, x_center, y_center);
+ * double[] param_1 = obj.randPoint();
+ */

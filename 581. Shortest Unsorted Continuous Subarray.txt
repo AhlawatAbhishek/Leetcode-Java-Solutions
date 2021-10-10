@@ -1,0 +1,36 @@
+class Solution {
+    public int findUnsortedSubarray(int[] nums) {
+        boolean flag = false;
+        int max = Integer.MIN_VALUE, min = Integer.MAX_VALUE;
+        
+        for(int i = 1 ; i<nums.length; i++){
+            if(nums[i] < nums[i-1]){
+                flag = true;
+            }
+            if(flag){
+                min = Math.min(min, nums[i]);
+            }
+        }
+        flag = false;
+        for(int j = nums.length -2; j >= 0; j--){
+            if(nums[j] > nums[j+1]){
+                flag = true;
+            }
+            if(flag){
+                max = Math.max(max, nums[j]);
+            }
+        }
+        int left, right;
+        for(left = 0; left < nums.length; left++){
+            if(min < nums[left]){
+                break;
+            }
+        }
+        for(right = nums.length -1; right>= 0; right--){
+            if(max > nums[right]){
+                break;
+            }
+        }
+        return right - left < 0 ? 0 : right - left +1;
+    }
+}

@@ -1,0 +1,31 @@
+class Solution {
+    public boolean makesquare(int[] sticks) {
+      if(sticks.length < 4){
+          return false;
+      }
+      int perimeter = 0;
+      for(int i : sticks){
+          perimeter += i;
+      }
+      if(perimeter % 4 != 0){
+          return false;
+      }
+      int p = perimeter / 4;
+      int matches[] = new int[] {p, p, p, p};
+      return isSqPossible(matches, sticks, 0);
+    }
+    public boolean isSqPossible(int matches[], int sticks[], int index){
+        if(index == sticks.length){
+          return matches[0] == 0 && matches[1] == 0 && matches[2] == 0 && matches[3] == 0;
+        }
+        for(int j = 0; j<4 ;j++){
+            if(matches[j] < sticks[index]){
+                continue;
+            }
+            matches[j] -= sticks[index];
+            if(isSqPossible(matches, sticks, index+1)) return true;
+            matches[j] += sticks[index];
+        }
+        return false;
+    }
+}

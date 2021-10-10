@@ -1,0 +1,17 @@
+class Solution {
+    public int reverse(int d) {
+        int sum = 0;
+        int z = d;
+        while(d!=0){
+            int x = d % 10;
+            if(sum>Integer.MAX_VALUE/10||sum==Integer.MAX_VALUE/10 && x >7)return 0;
+            if(sum<Integer.MIN_VALUE/10||sum==Integer.MIN_VALUE/10 && x < -8)return 0;
+            sum  = sum * 10+x;
+            d = d /10;
+        }
+         return sum;  
+    }
+}----------------Max_value is 2147483647 and out equation is reversed =  reversed*10+pop.
+ If reversed == 214748364(2147483648/10) and pop == 8( greater than 7) then you'll exceeds the boundary 
+and error will occur. The same thing is for min_value (-2147483648)
+

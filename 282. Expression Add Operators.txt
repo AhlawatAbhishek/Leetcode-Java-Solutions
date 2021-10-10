@@ -1,0 +1,26 @@
+class Solution {
+     List<String> permutations = new ArrayList<>();
+    public List<String> addOperators(String num, int target) {
+        getPermu("", 0, 0, 0, num, target);
+        return permutations;
+    }
+    public void getPermu(String exp, int ind, long currSum, long prevSum, String num, int target){
+       if(ind == num.length()){ 
+        if(currSum == target){
+            permutations.add(exp);
+        }
+         return;  
+       }    
+        for(int indx = ind; indx<num.length(); indx++){
+           if(indx > ind && num.charAt(ind) == '0') break;
+            long currNum = Long.parseLong(num.substring(ind, indx+1));
+           if(ind == 0){
+               getPermu(exp+currNum, indx+1, currNum, currNum, num, target);
+           }else{
+               getPermu(exp+ '+' +currNum, indx+1, currSum + currNum, currNum, num, target);
+               getPermu(exp+ '-' +currNum, indx+1, currSum - currNum, -currNum, num, target);
+               getPermu(exp+ '*' +currNum, indx+1, currSum -prevSum + prevSum * currNum, currNum * prevSum, num, target);
+           }
+        }
+    }
+}

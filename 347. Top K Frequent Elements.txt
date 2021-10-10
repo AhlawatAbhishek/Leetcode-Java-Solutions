@@ -1,0 +1,24 @@
+import java.util.*;
+import java.lang.*;
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        HashMap<Integer, Integer> hmap = new HashMap<>();
+        for(int n : nums){
+            if(!hmap.containsKey(n)){
+                hmap.put(n, 1);
+            }else{
+                int oldVal = hmap.get(n);
+                hmap.replace(n, oldVal+ 1);
+            }
+        }
+        Queue<Integer> pQ = new PriorityQueue<>((a,b) -> hmap.get(b) - hmap.get(a));
+        int res[] = new int[k];        
+         for (int x : hmap.keySet()) { 
+            pQ.add(x);
+        } 
+        for(int i = 0 ;i < k; i++){
+            res[i] = pQ.poll();
+        }
+        return res;
+    }
+}

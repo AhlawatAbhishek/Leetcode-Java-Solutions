@@ -1,0 +1,67 @@
+TC : O(N*F), where N is the number of unique elements in num1 and F is the greatest minimum freq of the intersection elements
+Auxiliary space : O(M), where M is the larger of number of unique elements in num1 and num2
+class Solution {
+    public int[] intersect(int[] nums1, int[] nums2) {
+//        Create two frequency maps using hashMap for two arrays. 
+        HashMap<Integer, Integer> freqMap1 = new HashMap<>();
+        HashMap<Integer, Integer> freqMap2 = new HashMap<>();
+//         Populate the two hashmaps
+        for(int ele : nums1){
+            freqMap1.put(ele, freqMap1.getOrDefault(ele, 0)+1);
+        }
+        for(int ele : nums2){
+             freqMap2.put(ele, freqMap2.getOrDefault(ele, 0)+1);
+        }
+//         create a answer arraylist since we donot know the answer size beforehand
+         ArrayList<Integer> resList = new ArrayList<>();
+        for(Map.Entry<Integer, Integer> entry : freqMap1.entrySet()){
+//             if element is present int both the arrays
+            if(freqMap2.containsKey(entry.getKey())){
+//                 take the minimum frequency of the element
+               int minFreq = Math.min(freqMap2.get(entry.getKey()), entry.getValue());
+//                 add this element that minFreq number of times
+               while(minFreq -- > 0) 
+                resList.add(entry.getKey());
+            }        
+        }
+       
+//       convert ans list to int array
+        int res[] = new int[resList.size()];
+        for(int indx = 0; indx <res.length; indx++){
+            res[indx] = resList.get(indx);
+        }
+        return res;
+    }
+}
+
+
+// ------------------------------------
+// Insted of HashMap We Can also use fixed size array 
+// TC : O(1001)
+// Auxiliary space : O(1001)
+class Solution {
+    public int[] intersect(int[] nums1, int[] nums2) {
+//        Create frequency array. 
+          int freq[] = new int[1001]; // to accomodate the range 1 to 1000
+//         Populate the freq array from nums1
+        for(int ele : nums1){
+            freq[ele]++;
+        }
+//         create a answer arraylist since we donot know the answer size beforehand
+         ArrayList<Integer> resList = new ArrayList<>();
+        for(int ele : nums2){
+//            consider only the intersection 
+             if(freq[ele] > 0){
+                 freq[ele]--;
+                 resList.add(ele);
+             }
+        }
+
+//       convert ans list to int array
+        int res[] = new int[resList.size()];
+        for(int indx = 0; indx <res.length; indx++){
+            res[indx] = resList.get(indx);
+        }
+        return res;
+    }
+}
