@@ -1,0 +1,6 @@
+1. Pick up the right language.
+2. Learn basics of programming : loops, functions, patterns etc.
+3. Learn about time and space complexity. Optimization.
+4. Learn differnet amount of data structures and algorithms.(major chunk for interview and online coding round).
+5. Give contest, test series of amazon, google etc.
+6. Give mock interviews, or explain the solution via youtube channel or dicuss post on leetcode. 

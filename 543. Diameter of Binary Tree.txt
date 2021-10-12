@@ -29,3 +29,41 @@ class Solution {
         return Math.max(leftHeight, rightHeight) + 1;
     }
 }
+--------------------------------------------
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+// Time complexity: O(n), n is number of nodes, because each node is visited only once
+// Auxiliary space : O(height of binary tree)
+class Solution {
+    int dia = Integer.MIN_VALUE;
+    public int diameterOfBinaryTree(TreeNode root) {
+        findDia(root);
+        return dia;
+    }
+//     simple dfs traversal returning the height of the tree at each step
+    public int findDia(TreeNode root){
+        if(root == null){
+            return 0;
+        }
+        int leftHeight = findDia(root.left);
+        int rightHeight = findDia(root.right);
+        // The length of a path between two nodes is represented by the number of edges between them not by the number of nodes therefore not adding the current node i.e. doing +1 in currDia.
+        int currDia = leftHeight + rightHeight;
+        dia = Math.max(currDia, dia);
+//         for height return max of left and right height plus +1 for curr node.
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
+}
