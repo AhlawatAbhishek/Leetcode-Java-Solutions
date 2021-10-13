@@ -1,0 +1,85 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    HashMap<Integer, Integer> preMap = new HashMap<>();
+    public TreeNode bstFromPreorder(int[] preorder) {
+        int n = preorder.length;
+        // inOrd[] = new int[n];
+        // for(int indx = 0; indx<n; indx++){
+        //     inOrd[indx] = preorder[indx];
+        // }
+        for(int indx = 0; indx<n; indx++){
+            preMap.put(preorder[indx], indx);
+        }
+        Arrays.sort(preorder);
+        
+        return buildBST(preorder, 0, n-1);
+    }
+    private TreeNode buildBST(int in[], int start, int end){
+        if(start > end) return null;
+        if(start == end){
+            return new TreeNode(in[start]);
+        }
+        int minIndx = Integer.MAX_VALUE, location = -1;
+        for(int indx = 0; indx<in.length; indx++){
+            if(preMap.get(in[indx]) < minIndx){
+                location = indx;
+                minIndx = preMap.get(in[indx]);
+            }
+        }
+        TreeNode root = new TreeNode(in[location]);
+        root.left = buildBST(in, start, location-1);
+        root.right = buildBST(in, location+1, end);
+        return root;
+    }
+}
+------------------
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode bstFromPreorder(int[] preorder) {
+        int n = preorder.length;
+        return buildBST(preorder, 0, n-1);
+    }
+    private TreeNode buildBST(int pre[], int start, int end){
+        if(start > end) return null;
+        if(start == end){
+            return new TreeNode(pre[start], null, null);
+        }
+        int mid  = start;
+        int currVal = pre[start];
+        while(mid < pre.length && pre[mid] <= currVal){
+            mid++;
+        }
+        TreeNode root = new TreeNode(currVal);
+        root.left = buildBST(pre, start+1, mid-1);
+        root.right = buildBST(pre, mid, end);
+        return root;
+    }
+}

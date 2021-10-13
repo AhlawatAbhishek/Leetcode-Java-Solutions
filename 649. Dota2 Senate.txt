@@ -1,0 +1,61 @@
+class Solution {
+    public String predictPartyVictory(String senate) {
+        int rCount = 0, dCount = 0, rVote =0, dVote =0;
+        Queue<Integer> dQ = new LinkedList<>();
+        Queue<Integer> rQ = new LinkedList<>();
+        int n = senate.length();
+        for(int indx =0; indx<n; indx++){
+            char c = senate.charAt(indx);
+            if(c == 'R'){
+                rQ.offer(indx);
+            }else{
+                dQ.offer(indx);  
+            }
+        }
+       while(!dQ.isEmpty() && !rQ.isEmpty()){
+           int r = rQ.poll();
+           int d = dQ.poll();
+           if(r < d){
+               rQ.offer(r+n);
+           }else{
+               dQ.offer(d+n);
+           }    
+       }
+        return !dQ.isEmpty() ? "Dire" : "Radiant";
+    }
+}
+--------------------------------------
+class Solution {
+    public String predictPartyVictory(String senate) {
+        char sen[] = senate.toCharArray();
+          char currChar = sen[0];
+            int count = 0;
+        int n = senate.length();
+        while(true){
+            for(int indx =0; indx<n; indx++){
+                if(sen[indx] == '0') continue;
+                if(sen[indx] == currChar){
+                    count++;
+                }else{
+                    count--;
+                    if(count < 0){
+                        count = 1;
+                        currChar = sen[indx];
+                    }else{
+                        sen[indx] = '0';
+                    }
+                }
+            }
+            int rCount = 0, dCount =0;
+            for(int indx =0; indx<n; indx++){
+                if(sen[indx] == 'R'){
+                    rCount++;
+                }else if(sen[indx] == 'D'){
+                    dCount++;
+                }
+            }
+            if(dCount == 0) return "Radiant";
+            if(rCount == 0) return "Dire";
+        }
+    }
+}

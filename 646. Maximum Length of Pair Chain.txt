@@ -1,0 +1,15 @@
+class Solution {
+    public int findLongestChain(int[][] pairs) {
+        Arrays.sort(pairs, (a, b) -> a[1] - b[1]);
+        int prevIndx = 0;
+        int toBeRemoved = 0;
+        for(int indx = 1; indx<pairs.length; indx++){
+            if(pairs[prevIndx][1] >= pairs[indx][0]){
+                toBeRemoved++;
+            }else{
+                prevIndx = indx;
+            }
+        }
+        return pairs.length - toBeRemoved;
+    }
+}
