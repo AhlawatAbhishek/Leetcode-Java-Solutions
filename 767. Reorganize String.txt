@@ -1,0 +1,45 @@
+class Solution {
+    class Ele{
+        char c;
+        int cnt;
+        public Ele(char ch, int ct){
+            c = ch;
+            cnt = ct;
+        }
+    }
+    public String reorganizeString(String s) {
+        int count[] = new int[26];
+        for(int indx =0; indx<s.length(); indx++){
+            char c = s.charAt(indx);
+            count[c-'a']++;
+        }
+         PriorityQueue<Ele> pq = new PriorityQueue<>((a,b) ->{
+        if(b.cnt == a.cnt){
+            return a.c - b.c;
+        }else{
+            return b.cnt - a.cnt;
+        }
+    });
+    
+    for(int indx = 0; indx<26; indx++){
+        if(count[indx] != 0){
+            pq.offer(new Ele((char)(indx+'a'), count[indx]));
+        }
+    }
+    StringBuilder ans = new StringBuilder();
+    Ele first = pq.poll();
+    ans.append(first.c);
+    first.cnt--;
+    while(!pq.isEmpty()){
+            Ele sc = pq.poll();
+                ans.append(sc.c);
+                sc.cnt--;
+            if(first.cnt >0){
+                pq.offer(first);
+            }
+           first = sc;
+    }    
+    if(first.cnt > 0) return "";
+    return ans.toString();
+  }     
+}

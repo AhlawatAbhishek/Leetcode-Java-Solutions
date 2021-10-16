@@ -1,0 +1,26 @@
+class Solution {
+    public boolean checkValidString(String s) {
+        int rightP = 0, leftP = 0;
+        int n = s.length();
+        for(int indx = 0; indx<s.length(); indx++){
+           char ch =  s.charAt(indx);
+           if(ch == '(' || ch == '*'){
+               leftP++;
+           }else{
+               leftP--;
+           }
+           if(leftP < 0) return false;
+        }
+        if(leftP == 0) return true;
+        for(int indx = n-1; indx>=0; indx--){
+            char ch = s.charAt(indx);
+            if(ch == ')' || ch == '*'){
+                rightP++;
+            }else{
+                rightP--;
+            }
+           if(rightP < 0) return false;
+        }
+        return true;
+    }
+}

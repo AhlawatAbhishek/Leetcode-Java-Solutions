@@ -1,0 +1,20 @@
+class Solution {
+    public int monotoneIncreasingDigits(int n) {
+        if(n<10) return n;
+        char ch[] = String.valueOf(n).toCharArray();
+        int indx =1;
+        while(indx<ch.length && ch[indx-1] <= ch[indx]){
+            indx++;
+        }
+        if(indx == ch.length)return n;
+        while(indx >0 && ch[indx]<ch[indx-1]){
+            ch[indx-1]--;
+            indx--;
+        }
+        indx++;
+        while(indx < ch.length){
+            ch[indx++] = '9';
+        }
+        return Integer.valueOf(String.valueOf(ch));
+    }
+}

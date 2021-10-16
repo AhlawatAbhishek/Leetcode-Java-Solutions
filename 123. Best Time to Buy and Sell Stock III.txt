@@ -1,0 +1,25 @@
+// Time complexity: O(n), is the length of the prices array
+// Auxiliary space: O(1)
+class Solution {
+    public int maxProfit(int[] prices) {
+//Intuition behind solution: for making maximum profit after two transactions we have to buy at minimum prices and sell at maximum, its pretty much obvious :)
+
+//now we would like to find the most suitable buy and sell prices for the 2 transactions from all the combinations available for them.
+
+//intialize the two buy variable and two profit variables         
+        int buy1 = Integer.MAX_VALUE, buy2 = Integer.MAX_VALUE, profit1 = 0, profit2 = 0;
+        
+        for(int price: prices){
+//take minimum from previous buy and current price to maximize the profit made on first sell             
+            buy1 = Math.min(buy1, price);
+//take the maximum value from the previous profit and the current profit           
+            profit1 = Math.max(profit1, price - buy1);
+//now since you would be having some profit made from the last sell decrease this much from current price and take minimum from previous buy2 and current effective buying price             
+            buy2 = Math.min(buy2, price-profit1);
+//take the maximum value from the previous profit and the current profit  
+            profit2 = Math.max(profit2, price-buy2);
+        }
+// return profit2 as this the final profit we would be making after the two transactions.        
+        return profit2;
+    }
+}

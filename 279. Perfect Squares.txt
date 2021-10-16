@@ -1,21 +1,77 @@
+// Time complexity: O(n*sqrt(n))
+// auxiliary space: O(n)
+class Solution {
+//     Intuition is to use bottom up dp for this question as we have to try all the possible combination of different numbers to form the given number till sqrt of the given number. It would be more clear in the recursive and memoization solution below this solution
+    public int numSquares(int n) {
+        int dp[] = new int[n+1];
+        
+        for(int indx = 0; indx<=n; indx++){
+            dp[indx] = indx;
+            for(int j = 1; j*j <= indx; j++){
+                dp[indx] = Math.min(dp[indx], dp[indx - j*j]+1);
+            }
+        }
+        return dp[n];
+    }
+}
+
+
+// ------------------------------------------------------
+// Time complexity:O(sqrt(n))
+// Auxiliary space: O(n), for the memo array used,for recursion stack it would be O(sqrt(n)), thus ignoring this lower order term. 
 class Solution {
     public int numSquares(int n) {
-        int []dp = new int[n+1];
-        Arrays.fill(dp, -1);
-        return f(n, dp);
+        int memo[] = new int[n+1];
+        Arrays.fill(memo, -1);
+        return numSq(n, memo);
     }
-    int f(int n, int[] dp){
-        if(dp[n] != -1){
-            return dp[n];
+    public int numSq(int n, int memo[]){
+//         if less than 3 then only 1 is there to make up the number and number of ones required would be same a the number itself. 
+        if(n <= 3){
+            return n; 
         }
-        if(n == 0){
-            return 0;
+//         return if memo[n] is calculated before
+        if(memo[n] != -1) return memo[n];
+        int res = Integer.MAX_VALUE;
+        for(int num = 1; num*num<=n; num++){
+            res = Math.min(res, numSq(n - num * num, memo)+1);
         }
-        int min = Integer.MAX_VALUE;
-        for(int i = 1; i * i <= n; i++ ){
-            int curr = f(n - i*i, dp) + 1;
-            min = Math.min(min, curr);
+        return memo[n] = res;
+    }
+}
+
+
+// ------------------------------------------------------
+// Time complexity: O(sqrt(N))
+// Auxiliary space: O(1)    
+
+// Legendre's 3-square therorem : if number is of form (4^a)*(8b + 7), then return 4, if perfect sqaure then 1,  if it can be divided in to two perfect sqaures then 2, ohterwise 3 
+class Solution {
+    public int numSquares(int n) {
+        return numSq(n);
+    }
+    public int numSq(int n){
+//         if number is a perfect square
+        if(Math.ceil(Math.sqrt(n)) == Math.floor(Math.sqrt(n))){
+            return 1;
         }
-        return dp[n] = min;
+//  Removing the 4^a part       
+        while(n % 4 == 0){
+            n /= 4;
+        }
+//         checking for the (8*b + 7) part
+        if(n % 8 == 7){
+            return 4;
+        }
+//         creating break points at perfect squares
+        for(int num = 1; num*num <= n; num++){
+//             checking it the remaining part is also a perfect square
+            int base = (int)Math.sqrt(n - num * num);
+//             If it can be splitted into two perfect squares
+            if(base*base == (n - num*num)){
+                return 2;
+            }
+        }
+        return 3;
     }
 }

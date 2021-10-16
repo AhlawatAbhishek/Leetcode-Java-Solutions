@@ -1,0 +1,29 @@
+class Solution {
+    public int maximumSwap(int num) {
+        List<Integer> digits = new ArrayList<>();
+        List<Integer> maxNumP = new ArrayList<>();
+        int maxNum = 0, pos = 0, temp = num, maxPos = 0;
+        while(temp > 0){
+            int dig = temp % 10;
+            if(maxNum <dig){
+                maxNum = dig;
+                maxPos = pos;
+            }
+            maxNumP.add(maxPos);
+            pos++;
+            digits.add(dig);
+            temp = temp/10;
+        }
+        int nu = 0;
+        boolean swapped = false;
+        for(int indx = digits.size() - 1; indx >= 0; indx--){
+            maxPos = maxNumP.get(indx);
+            if(!swapped && digits.get(maxPos) > digits.get(indx) && indx > maxPos){
+                Collections.swap(digits, indx, maxPos);
+                swapped = true;
+            }
+            nu = nu*10+digits.get(indx);
+        }
+        return nu;
+    }
+}
