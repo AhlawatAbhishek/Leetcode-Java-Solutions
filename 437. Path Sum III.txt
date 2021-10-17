@@ -39,3 +39,49 @@ class Solution {
        list.remove(list.size() - 1);
    }
 }
+---------------------------------------------------
+So the logic and intuition goes like this it would be really time consuming if we use recursion alone, so to reduce the time complexity we are making a trade of between storing preComputed preSum values and there corresponding frequencies in a hashmap.
+    
+Now the question comes that why use preSum and store frequencies. For that consider a small example:
+   Let array be: |1, 3, 4, 5, 11, 5, 3, 1| , targetSum = 9;
+   preSum of arr:|1, 4, 8, 13, 24, 29, 32, 33|
+   pointer loc  :|          ^               ^|
+   Answer : int totalPossComb = 0;    
+       
+   though we would be doing this operation for all the locations in preSum arr, but consider 13 and 33 as the answer lies here we check for the "currPreSum - targetSum" freq in hashmap so for 13 and 33 we would be checking (13-9 = 4) and (33 - 9 = 24) freq in map and adding that to totalPossComb += (1+1)
+       
+ thus total possible combinations comes to 2
+       
+ This whole process would be more clear in the code below      
+
+//  Time complexity: O(N), since each node is traversed only once
+// Auxiliary Space: O(N), as this much space is required by preMap, recursion stack space would be less or equal(in case of skewed binary tree) to preMap's
+class Solution {
+    int  pathCnt = 0;
+     Map<Integer, Integer> preMap = new HashMap<>();
+    public int pathSum(TreeNode root, int targetSum) {
+        int preSum = 0;
+        preMap.put(0, 1);
+        dfs(root, targetSum, preSum);
+        return pathCnt;
+    }
+    private void dfs(TreeNode root, int targetSum, int preSum){
+        if(root == null){
+            return;
+        }
+        preSum += root.val; 
+        if(preMap.containsKey(preSum - targetSum)){
+            pathCnt += preMap.get(preSum - targetSum);
+        }
+//         increament the currentPreSum freq in map
+        preMap.put(preSum, preMap.getOrDefault(preSum, 0)+1);
+//         recurse for the left and right subtree
+        dfs(root.left, targetSum, preSum);
+        dfs(root.right, targetSum, preSum);
+// here is a litte detail to notice:::: at the end the preSent value of preSum would be moving out of the recursion stack thus we are decreamenting it's freq in the hashmap        
+        if(preMap.get(preSum) - 1 > 0)
+         preMap.put(preSum, preMap.getOrDefault(preSum, 0)-1);
+        else
+         preMap.remove(preSum);   
+    }
+}
