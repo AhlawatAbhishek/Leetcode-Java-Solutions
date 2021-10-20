@@ -1,0 +1,51 @@
+class Solution {
+//     Treat if as you are traversing a trie
+// --for root not considering the zero as a number doesn't start with 0    
+               //root
+// 0, 1, 2, 3, ......, 9 
+//   0-9,0-9, 0-9, ----0-9 
+    List<Integer> res = new ArrayList<>();
+    public List<Integer> lexicalOrder(int n) {
+        // for root node
+        for(int dig = 1; dig<=9; dig++){
+            int currNode = dig;
+            dfs(currNode, n);
+        }
+        return res;
+    }
+    public void dfs(int currNode, int n){
+        if(currNode > n){
+            return;
+        }else{
+            res.add(currNode);
+        }
+//      traversing the digit
+        for(int dig = 0; dig<=9; dig++){
+            dfs(currNode * 10 + dig, n);
+        }
+    }
+}
+---------------
+// Time complexity: O(N), not sure though :)
+//Auxiliary space is : O(1) for sure
+class Solution {
+    public List<Integer> lexicalOrder(int n) {
+        List<Integer> res = new ArrayList<>();
+        int num = 1;
+        do{
+            res.add(num);
+//  get all the ones possible with zeroes           
+            if(num * 10 <=n){
+                num *= 10;
+                continue;
+            }
+// get the two series started after the one series and then other 3, 4, .. series
+// and finally stop at 9 at max            
+            while(num % 10 == 9 || num == n){
+                num /= 10;
+            }
+            num++;
+        }while(num != 1);
+        return res;
+    }
+}

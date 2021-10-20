@@ -1,0 +1,39 @@
+class Solution {
+    public String reverseWords(String s) {
+       StringBuilder res = new StringBuilder();
+       StringBuilder curr = new StringBuilder();
+       for(int indx = s.length()-1; indx>=0; indx--){
+           curr.setLength(0);
+           while(indx >= 0 && s.charAt(indx) != ' ' ){
+               curr.append(s.charAt(indx));
+               indx--;
+           }
+          if(curr.length() > 0){ 
+           String spc = res.length() == 0 ? "" : " ";
+           res.append(spc);
+           curr.reverse();
+           res.append(curr.toString());
+          }    
+       }
+        return res.toString();
+    }
+}
+-------------------------
+// Time complexity : O(N)
+// Auxiliary space: O(1)
+class Solution {
+    public String reverseWords(String s) {
+       StringBuilder res = new StringBuilder();
+//      remove trailing space from input string using trim and split with " ", also without a delimiter e.g. split(" ", 2), so that it splits string as many as times as possible based on space   
+        String strArr[] = s.trim().split(" ");
+// to get the reversed string traverse the input string backwards 
+       for(int indx = strArr.length-1; indx>=0; indx--){
+           if(strArr[indx].length() > 0){
+               res.append(strArr[indx]);
+//                If it is not the first index then add space to resultant string
+               if(indx > 0)res.append(" ");
+           }
+       }
+        return res.toString();
+    }
+}

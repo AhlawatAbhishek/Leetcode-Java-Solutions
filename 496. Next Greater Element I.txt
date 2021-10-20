@@ -1,0 +1,61 @@
+// Time complexity: O(N * M), N & M are the number of elements in bigger array nums2 & nums1 respectively
+// Auxiliary space: O(N)
+class Solution {
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        HashMap<Integer, Integer> indxMap = new HashMap<>();
+        for(int indx = 0; indx<nums2.length; indx++){
+            indxMap.put(nums2[indx], indx);
+        }
+// use nums1 as result array
+        for(int indx = 0; indx<nums1.length; indx++){
+            int num = nums1[indx];
+            int ind = indxMap.get(num);
+            boolean found = false;
+            ind++;
+// simply traverse ahead of the ind in nums2 to find next greater
+            for(;ind<nums2.length; ind++){
+                if(nums2[ind] > num){
+                    nums1[indx] = nums2[ind];
+                    found = true;
+                    break;
+                }
+            }
+            if(!found){
+                nums1[indx] = -1;
+            }
+        }
+        return nums1;
+    }
+}
+------------------------------------------------
+1 -- while stack is not empty and the top element is less than the curr element under consideration -> pop the top of stack and store curr element under consideration as the next greater element for all such indxed elements  
+
+
+2 -- Initially store -1 for all the present elements in the stack if at some point we find a greater value at right of this number than it would be update by above while loop
+
+
+3--         Simply store the correspoding hashmap enteries in the nums1 array
+// Time complexity: O(N), N is the number of elements in bigger array nums2
+// Auxiliary space: O(N)
+class Solution {
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        HashMap<Integer, Integer> indxMap = new HashMap<>();
+        Deque<Integer> st = new ArrayDeque<>();//stack
+        for(int indx = 0; indx<nums2.length; indx++){
+            int presentEle = nums2[indx];
+//     1--
+            while(!st.isEmpty() && nums2[st.peek()] < nums2[indx]){
+                int ind = st.pop();
+                indxMap.put(nums2[ind], presentEle);
+            }
+         // 2--
+            indxMap.put(presentEle, -1);
+            st.push(indx);
+        }
+// 3--
+        for(int indx = 0; indx<nums1.length; indx++){
+            nums1[indx] = indxMap.get(nums1[indx]);
+        }
+        return nums1;
+    }
+}

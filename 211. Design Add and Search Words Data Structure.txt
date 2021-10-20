@@ -1,0 +1,69 @@
+class TrieNode{
+    TrieNode children[];
+    boolean isEnd;
+    TrieNode(){
+        children = new TrieNode[26];
+        isEnd = false;
+    }
+}
+class WordDictionary {
+    private TrieNode root = null;
+    public WordDictionary() {
+        root = new TrieNode();
+    }
+    
+    public void addWord(String word) {
+        TrieNode curr = root;
+        for(char c : word.toCharArray()){
+            int indx = c - 'a';
+            if(curr.children[indx] == null){
+                curr.children[indx] = new TrieNode();
+            }
+            curr = curr.children[indx];
+        }
+        curr.isEnd = true;
+    }
+    
+    public boolean search(String word) {
+         TrieNode curr = root;
+        if(word.contains(".")){
+            return dfs(word, curr, 0);
+        }
+        for(char c : word.toCharArray()){
+            int indx = c - 'a';
+            if(curr.children[indx] == null){
+                return false;
+            }
+            curr = curr.children[indx];
+        }
+        return curr.isEnd == true;
+    }
+    public boolean dfs(String word, TrieNode curr, int indx){
+        if(indx > word.length())return false;
+        if(indx == word.length()){
+            return curr != null && curr.isEnd == true;
+        }
+        char c = word.charAt(indx);
+        if(c == '.'){
+            for(int ind = 0; ind<26; ind++){
+                if(curr.children[ind] != null){
+                    if(dfs(word, curr.children[ind], indx+1)){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }else{
+            int ind = c - 'a';
+            if(curr.children[ind] == null) return false;
+            return dfs(word, curr.children[ind], indx+1);
+        }
+    }
+}
+
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary obj = new WordDictionary();
+ * obj.addWord(word);
+ * boolean param_2 = obj.search(word);
+ */

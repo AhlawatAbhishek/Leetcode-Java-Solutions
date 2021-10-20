@@ -1,0 +1,55 @@
+class TrieNode{
+    TrieNode children[] = null;
+    boolean isEnd;
+    StringBuilder word;
+    TrieNode(){
+        children = new TrieNode[26];
+        isEnd = false;
+        word = null;
+    }
+}
+class Solution {
+    private TrieNode root = new TrieNode();
+    public String replaceWords(List<String> dictionary, String sentence) {
+        for(int indx = 0; indx<dictionary.size(); indx++){
+            add(dictionary.get(indx));
+        }
+        String str[] = sentence.split(" ");
+        for(int indx = 0; indx<str.length; indx++){
+            str[indx] = shorten(str[indx]);
+        }
+        StringBuilder ans = new StringBuilder(str[0]);
+        for(int indx = 1; indx<str.length; indx++){
+            ans.append(" "+str[indx]);
+        }
+        return ans.toString();
+    }
+    public void add(String str){
+        TrieNode curr = root;
+        for(char c : str.toCharArray()){
+            int indx = c - 'a';
+            if(curr.children[indx] == null){
+                curr.children[indx] = new TrieNode();
+            }
+            curr = curr.children[indx];
+        }
+        curr.word = new StringBuilder(str);
+        curr.isEnd = true;
+    }
+    public String shorten(String str){
+        TrieNode curr = root;
+        if(curr.children[str.charAt(0) - 'a'] == null){
+            return str;
+        }
+        for(char c : str.toCharArray()){
+            int indx = c -'a';
+            if(curr.children[indx] == null){
+                return str;
+            }else if(curr.children[indx] != null && curr.children[indx].isEnd){
+                return curr.children[indx].word.toString();
+            }
+            curr = curr.children[indx];
+        }
+        return str;
+    }
+}
