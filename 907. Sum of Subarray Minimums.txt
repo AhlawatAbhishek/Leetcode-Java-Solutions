@@ -1,0 +1,33 @@
+class Solution {
+    public int sumSubarrayMins(int[] A) {
+        int n = A.length;
+//left[i] is: (number of continuous occuring elements on left of arr[i] strictly bigger than arr[i])+1 
+        int left[] = new int[n];
+//right[i] is: (number of continuous occuring elements on right of arr[i] bigger than arr[i])+1         
+        int right[] = new int[n];
+           Stack<int[]> s1 = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            int count = 1;
+            while (!s1.isEmpty() && s1.peek()[0] > A[i]){
+                count += s1.pop()[1];
+            }   
+            left[i] = count;
+            s1.push(new int[] {A[i], count});
+        }
+        s1.clear();
+       for (int i = n - 1; i >= 0; i--) {
+            int count = 1;
+            while (!s1.isEmpty() && s1.peek()[0] >= A[i]){
+                count += s1.pop()[1];
+            }   
+           right[i] = count;
+            s1.push(new int[] {A[i], count});
+        }
+//now contribution of an array element in the array is: freq * A[i], freq is the number of time this element is minimum in the different windows of different sizes. And freq is equal to left[i] * right[i] for and ith element in arr/A
+        long res = 0,  mod = (int)1e9 + 7;
+        for(int indx = 0; indx<n; indx++){
+            res = (res + (long)A[indx]*left[indx] * right[indx]) %mod;
+        }
+        return (int)res;
+    }
+}

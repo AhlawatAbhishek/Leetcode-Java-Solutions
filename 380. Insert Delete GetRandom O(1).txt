@@ -1,0 +1,79 @@
+Intuition and idea behind this solution goes like this:
+ . first thing that comes in mind after reading the problem statement is that we can use a hasmap. 
+ . Now hashsetdoes have insert and remove methods but for getRandom method to be implemented we can use Random class in java
+ . But Now the problem is hashset doesn't have random access like array so we first convert it into ArrayList to get the random number
+     
+// Average Time Complexity: O(1), for each operation
+// Auixliary space required for getRandom is O(current hashset size), for rest is O(1)
+class RandomizedSet {
+    private Random r = null;
+    private HashSet<Integer> set = null;
+    public RandomizedSet() {
+        set = new HashSet<>();
+        r = new Random();
+    }
+//     Time complexity: O(1)
+    public boolean insert(int val) {
+        if(set.contains(val)) return false;
+        set.add(val);
+        return true;
+    }
+//     TC: O(1)
+    public boolean remove(int val) {
+        if(set.contains(val)){
+            set.remove(val);
+            return true;
+        }
+        return false;
+    }
+//  TC: O(1) but auxiliary space is the current size of the hashset   
+    public int getRandom() {
+        List<Integer> li = new ArrayList<>(set);
+        return li.get(r.nextInt(set.size()));
+    }
+}     
+-------------------------------------------------------------------
+Intuition and idea behind this solution goes like this:
+. to store the element we can maintain an array and an index variable.
+. now for checking presence of an element and getting its corresponding
+position in the array we can use hashmap.   
+    
+// Average Time Complexity: O(1), for each operation
+// Auixliary space is O(1) for each method
+class RandomizedSet {
+    private Random r = null;
+    private HashMap<Integer, Integer> indxMap = null;
+    private int []set = null;
+    private int indx;
+    public RandomizedSet() {
+//     taking the largest possible input size as the size of the array
+        set = new int[200002];
+        r = new Random();
+        indx = 0;
+        indxMap = new HashMap<>();
+    }
+    
+    public boolean insert(int val) {
+        if(indxMap.containsKey(val)) return false;
+        set[indx] = val;
+        indxMap.put(val, indx); 
+        indx++;
+        return true;
+    }
+//     this is the tricky part to remove an element replace it with the last element in the set/ array and do the appropriate changes to indexMap and index variable
+    public boolean remove(int val) {
+        if(indxMap.containsKey(val)){
+            int pos = indxMap.remove(val);
+            set[pos] =set[indx-1];
+           if(indxMap.containsKey(set[indx-1])) 
+             indxMap.put(set[indx-1], pos);
+            indx--;
+            return true;
+        }
+        return false;
+    }
+//     indx is the current size of the set / array
+    public int getRandom() {
+        return set[r.nextInt(indx)];
+    }
+}

@@ -1,0 +1,30 @@
+class StockSpanner {
+    Stack<int[]> stock = null;
+    public StockSpanner() {
+        stock = new Stack<>();
+    }
+    
+    public int next(int price) {
+        int span = 1;
+        while(!stock.isEmpty() && stock.peek()[0] <= price){
+            span += stock.pop()[1];
+        }
+        stock.push(new int[]{price, span}); 
+        return span;
+    }
+}
+
+/**
+ * Your StockSpanner object will be instantiated and called as such:
+ * StockSpanner obj = new StockSpanner();
+ * int param_1 = obj.next(price);
+ */
+------------
+1130. Minimum Cost Tree From Leaf Values
+907. Sum of Subarray Minimums
+901. Online Stock Span
+856. Score of Parentheses
+503. Next Greater Element II
+496. Next Greater Element I
+84. Largest Rectangle in Histogram
+42. Trapping Rain Water

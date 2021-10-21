@@ -1,0 +1,37 @@
+class Solution {
+    public int maxChunksToSorted(int[] arr) {
+        int chunkNo = 1, start = 0, split = -1, n = arr.length;
+        while(start < n){
+            if(split == -1){
+                split = start+1;
+            }
+            if(split == n){
+                break;
+            }
+            int max = getMax(arr, start, split-1);
+            int min = getMin(arr, split, n-1);
+            if(max+1 == min){
+                chunkNo++;
+                start = split;
+                split = -1;
+            }else{
+                split++;
+            }
+        }
+        return chunkNo;
+    }
+    private int getMin(int arr[], int st, int en){
+        int min = Integer.MAX_VALUE;
+        for(int indx = st; indx<=en; indx++){
+            min = Math.min(min, arr[indx]);
+        }
+        return min;
+    }
+     private int getMax(int arr[], int st, int en){
+        int max = Integer.MIN_VALUE;
+        for(int indx = st; indx<=en; indx++){
+            max = Math.max(max, arr[indx]);
+        }
+         return max;
+    }
+}
