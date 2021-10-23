@@ -1,0 +1,61 @@
+class HitCounter {
+    private Queue<Integer> counter = null;
+    public HitCounter() {
+        counter = new ArrayDeque<>();
+    }
+    
+    public void hit(int timestamp) {
+        counter.offer(timestamp);
+    }
+    
+    public int getHits(int timestamp) {
+        while(!counter.isEmpty() && timestamp - counter.peek() >= 300){
+            counter.poll();
+        }
+        return counter.size();
+    }
+}
+
+/**
+ * Your HitCounter object will be instantiated and called as such:
+ * HitCounter obj = new HitCounter();
+ * obj.hit(timestamp);
+ * int param_2 = obj.getHits(timestamp);
+ */
+-----------------------------
+class HitCounter {
+    int time[] = null;
+    int hits[] = null;
+    public HitCounter() {
+        time = new int[300];
+        hits = new int[300];
+    }
+//     TC : O(1) for single entry and O(N), for N entries, 
+    // Auxiliary Space: O(300)
+    public void hit(int timestamp) {
+        int indx = timestamp % 300;
+        if(time[indx] != timestamp){
+            time[indx] = timestamp;
+            hits[indx] = 1;
+        }else{
+            hits[indx]++;
+        }
+    }
+    //     TC : O(300) 
+    // Auxiliary Space: O(300)
+    public int getHits(int timestamp) {
+        int hitCount = 0;
+        for(int indx =0; indx<300; indx++){
+            if(timestamp - time[indx] < 300)
+                hitCount += hits[indx];
+        }
+        return hitCount;
+    }
+}
+
+/**
+ * Your HitCounter object will be instantiated and called as such:
+ * HitCounter obj = new HitCounter();
+ * obj.hit(timestamp);
+ * int param_2 = obj.getHits(timestamp);
+ */

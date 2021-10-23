@@ -1,0 +1,31 @@
+Intuition:
+   1.We are to put cards in slots of deck such that when the game is played according to rules then the order of the cards is increasing order after being revealed.
+       
+   2.If there are still cards in the deck then put the next top card of the deck at the bottom of the deck--This the crux of the problem
+   
+   3.arrange cards in descending order, cosider you have slots of deck each representing the index of the deck.
+   
+  4.apply this logic ->> take card from the sorted cards put it into first available slot in deck if there are slot remaining in deck pick the front available slot number of deck and place it at last. Why we are doing this---?????  -->>>> see point 2 :)
+      
+  5. We gonna be needing a data structure allowing insertion and deletion from both ends as fast as possible --> Deque-Doubly Ended queue    
+// Time complexity: O(n*logn) since sorting is used
+// Space complexity: O(n), n is length of the deck array
+class Solution {
+    public int[] deckRevealedIncreasing(int[] deck) {
+        Deque<Integer> dq = new ArrayDeque<>();
+        int n = deck.length;
+        for(int indx =0; indx<n; indx++){
+            dq.offerLast(indx);
+        }
+        int res[] = new int[n];
+        Arrays.sort(deck);
+        
+        for(int card : deck){
+            res[dq.pollFirst()] = card;
+            if(!dq.isEmpty()){
+                dq.offerLast(dq.pollFirst());
+            }
+        }
+        return res;
+    }
+}

@@ -1,0 +1,125 @@
+```
+Inuition: . Somehow store the frequencies pairs of each character in string
+in a data structure that gives priority to the higher frequency numbers somehow 
+
+and if in case the frequencies are equal then store them at same place
+, so we can use hasmap and bucket sort for that
+```
+```
+// Time complexity: O(N), N is the length of given string
+// Auxiliary Space: O(N), for bucket
+class Solution {
+    public String frequencySort(String s) {
+// Make character freq pairs        
+        HashMap<Character, Integer> freqMap = new HashMap<>();
+        for(char c : s.toCharArray()){
+            freqMap.put(c, freqMap.getOrDefault(c, 0)+1);
+        }
+//Applying bucket sort and size of bucket will be length of given string +1       
+        StringBuilder ans = new StringBuilder();
+        List<Character> bucket[] = new ArrayList[s.length()+1];
+        for(Map.Entry<Character, Integer> entry : freqMap.entrySet()){
+            char ch = entry.getKey();
+            int freq = entry.getValue();
+            if(bucket[freq] == null) bucket[freq] = new ArrayList<>();
+            bucket[freq].add(ch);
+            
+        }
+//Appending the characters to the ans         
+        for(int indx =bucket.length-1; indx>=0; indx--){
+            if(bucket[indx] != null){
+              for(int ind = 0; ind<bucket[indx].size(); ind++){
+                int freq = indx;
+                while(freq-->0){
+                    ans.append(bucket[indx].get(ind));
+                }
+              }    
+            }
+        }
+        return ans.toString();
+    }
+}
+
+```
+----------------------------------------------------------------------------
+```
+Inuition: . Somehow store the frequencies pairs of each character in string
+in a data structure that gives priority to the higher frequency numbers always 
+
+and if in case the frequencies are equal then thought not asked in question
+to do so but take the lexicographically smaller characters first. 
+```
+```
+//Time complexity:O(N): N, is length of the string. 
+//At max there can be 26 UpperCase and 26 LowerCase characters the the time
+// required to enter them into the priorityqueue would be O(n*1) instead of O(n*logn),
+// n being number of distinct characters.
+
+//Auxiliary Space: O(52)->O(1) at max
+class Solution {
+    public String frequencySort(String s) {
+// Make character freq pairs        
+        HashMap<Character, Integer> freqMap = new HashMap<>();
+        for(char c : s.toCharArray()){
+            freqMap.put(c, freqMap.getOrDefault(c, 0)+1);
+        }
+// store the char-freq pairs in max heap(PriorityQueue) and provide appropriate
+sorting condition;        
+        PriorityQueue<Map.Entry<Character, Integer>> pq = new PriorityQueue<>((a, b)->{
+            if(a.getValue() == b.getValue()){
+                return a.getKey() - b.getKey();
+            }else{
+                return b.getValue() - a.getValue();
+            }
+        });
+        pq.addAll(freqMap.entrySet());
+        StringBuilder ans = new StringBuilder();
+        while(!pq.isEmpty()){
+            Map.Entry<Character, Integer> entry = pq.poll();
+            int size = entry.getValue();
+            while(size-- > 0){
+                ans.append(entry.getKey());
+            }
+        }
+        return ans.toString();
+    }
+}
+// ---------------------------------------------
+```
+```
+Inuition: . Now some optimizations can be performed in aspect of space and time.
+    . Insertion in priorityqueue is log(n) theoritically so it can be reduced by randrom acess of chFreq array
+```
+```
+//Time complexity:O(N): N, is length of the string.
+//At max there can be 26 UpperCase and 26 LowerCase characters,
+// so there can be 256*52 iterations
+
+//Auxiliary Space: O(52)->O(1) at max
+class Solution {
+    public String frequencySort(String s) {
+        
+        int chFreq[] = new int[256]; 
+        for(char c : s.toCharArray()){
+            chFreq[c]++;
+        }
+        StringBuilder ans = new StringBuilder();
+        while(true){
+            int maxFreq = 0, indx = -1;
+            for(int ind = 0; ind < chFreq.length; ind++){
+                if(maxFreq < chFreq[ind]){
+                    indx = ind;
+                    maxFreq = chFreq[ind];
+                }
+            }
+            if(maxFreq == 0 && indx == -1){
+                return ans.toString();
+            }
+            chFreq[indx] = 0;
+            for(int ind = 0; ind<maxFreq; ind++){
+                ans.append((char)indx);
+            }
+        }
+    }
+}
+```
