@@ -1,0 +1,56 @@
+Intuition:
+ . we can use siliding window but we need to keep track of minimum and maximum in every window 
+ . treemap can be used for this purpose to keep track of min and max both
+// Time complexity: O(N*LogN), insertion in treeMap is logN and for N elements it is O(N*LogN)
+// Auxiliary Space: O(N), every key enters the map once and in worst case every key can be present with frequency one
+class Solution {
+    public int longestSubarray(int[] nums, int limit) {
+        TreeMap<Integer, Integer> freqMap = new TreeMap<>();
+        int right = 0, left = 0, n = nums.length;
+        while(right < n){
+            freqMap.put(nums[right], freqMap.getOrDefault(nums[right] , 0) + 1);
+            if(freqMap.lastEntry().getKey() - freqMap.firstEntry().getKey() > limit){
+                int leftFreq = freqMap.get(nums[left]);
+                if(leftFreq-1 > 0){
+                    freqMap.put(nums[left],leftFreq - 1);
+                }else{
+                    freqMap.remove(nums[left]);
+                }
+                left++;
+            }
+            right++;
+        }
+//return the length of the final sliding window         
+        return right - left;
+    }
+}
+------------------------------------------
+Intuition:
+ . we can use siliding window but we need to keep track of minimum and maximum in every window 
+ . 2 Deques can be used for this purpose to keep track of min and max.
+// Time complexity: O(N), N is number of elements in nums
+// Auxiliary Space: O(N)
+class Solution {
+    public int longestSubarray(int[] nums, int limit) {
+         Deque<Integer> minQ = new ArrayDeque<>(), maxQ = new ArrayDeque<>();
+        int right = 0, left = 0, n = nums.length;
+        while(right < n){
+            int rNum = nums[right];
+//to ensure that minQ have minimum element as head             
+            while(!minQ.isEmpty() && minQ.peekLast() > rNum) minQ.pollLast();
+//to ensure that maxQ have maximum element as head                
+            while(!maxQ.isEmpty() && maxQ.peekLast() < rNum) maxQ.pollLast();
+            minQ.offerLast(rNum);
+            maxQ.offerLast(rNum);
+//In case max-min is greater than the limit slide the left side or window         
+            if(maxQ.peekFirst() - minQ.peekFirst() > limit){
+                if(minQ.peekFirst() == nums[left])minQ.pollFirst();
+                if(maxQ.peekFirst() == nums[left])maxQ.pollFirst();
+                left++;
+            }
+            right++;
+        }
+//return the length of the final sliding window         
+        return right - left;
+    }
+}

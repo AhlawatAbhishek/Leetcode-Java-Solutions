@@ -1,0 +1,68 @@
+// Overall comlexity analysis:
+// Time complexity: O(Log^2(N)), N is number of nodes in the tree
+// Auxiliary Space: O(1)
+class Solution {
+    public int countNodes(TreeNode root) {
+        if(root == null) return 0;
+        int h = findHeight(root), factor = (int)Math.pow(2, h);
+//if there is only one level i.e. height is 0;         
+        if(h == 0) return 1;
+//number of nodes till h - 1 level         
+        int numNodesHL1 = factor - 1;
+//counting number of nodes for the last level
+//last level will have number of nodes in range between 1 to factor(both inclusive)
+        int lastLNodes = countLastLevel(root,1, factor, h);
+        return numNodesHL1 + lastLNodes;
+        
+    }
+    
+// ------------------------   
+//  leveraging the fact that the tree is complete binary tree. 
+//  Time complexity: O(log(n)), n is number of nodes of the tree, aux. space: O(1)   
+    private int findHeight(TreeNode root){
+        int height = 0;
+        while(root.left != null){
+            root = root.left;
+            height++;
+        }
+        return height;
+    }
+    
+// ------------------------
+//Two nested binary search countLastLevel and exits method
+//Therefore time complexity: O(logn*logn), n is number of nodes in last level,
+//Auxilliary space: O(1);     
+    private int countLastLevel(TreeNode root, int lo, int hi, int height){
+        int factor = hi;
+        while(lo <= hi){
+            int mid = lo + (hi-lo)/2;
+            if(exits(root, mid, height, factor)){
+                lo = mid+1;
+            }else{
+                hi = mid-1;
+            }
+        }
+//since we are doing lo = mid+1, thus lo would have one node extra for last level     
+        return lo-1;
+    }
+    
+// ------------------------
+//complexity: both time and space are same as above method     
+    private boolean exits(TreeNode root, int indx, int height, int factor){
+//same search space as above method         
+        int lo = 1, hi = factor;
+//checking till the height -1 level          
+        for(int h = 0; h<height; h++){
+             int mid = lo + (hi-lo)/2;
+            if(indx <= mid){
+                root = root.left;
+                hi = mid;
+            }else{
+                root = root.right;
+                lo = mid+1;
+            }
+        }
+//if current root/node is not null then this particular indx exists in the tree.         
+        return root != null;
+    }
+}
