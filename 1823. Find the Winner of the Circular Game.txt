@@ -1,0 +1,41 @@
+//Time complexity: O(n-1*k-1) ==>O(n*k)
+//Auxiliary Space: O(1)
+class Solution {
+    public int findTheWinner(int n, int k) {
+        Queue<Integer> circle = new LinkedList<>();
+        for(int frnd = 1; frnd<=n; frnd++){
+            circle.offer(frnd);
+        }
+        while(circle.size() > 1){
+            int saved = k-1;
+//K-1 people will be safe from current starting point, add them back to circle
+            while(saved -- > 0){
+                circle.offer(circle.poll());
+            }
+            circle.poll();
+        }
+        return circle.peek();
+    }
+}
+---------------------------
+Intuition: .Let us index the friends 0 to n-1,start from 0th friend/player 
+           .start counting from this 0th player when count reach k, remove this player.
+           . after removing this one player. All the remaining players will be re-indexed
+           .Next starter or 0th index player in a n player game would be (0+k)%n. This means if a player's index is i in present n player game then if this player makes it to the next round then his new index/position in that n-1 player game would be (x-k)%n
+    
+           .Or you can say (i+k)%n th player will be re-indexed to i in the next n-1 players game.
+           
+           .Dry run for this n = 5, k = 2 example test case keep doing (0+k)%n and then 
+             decreasing n i.e. n--. You will surely get this
+//Time complexity: O(N)
+//Auxiliary Space: O(1)
+class Solution {
+    public int findTheWinner(int n, int k) {
+        int winner = -1;
+        for(int frnds = 1; frnds <=n; frnds++){
+            winner = (winner + k)%frnds;
+        }
+//we are adding one beacuse we used 0 based index but in game its 1-based         
+        return winner+1;
+    }
+}

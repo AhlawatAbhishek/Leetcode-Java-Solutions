@@ -1,0 +1,15 @@
+class Solution {
+    public int subarraysDivByK(int[] nums, int k) {
+        HashMap<Integer, Integer> preSumMap = new HashMap<>();
+        int divSubCount = 0;
+        preSumMap.put(0, 1);
+        int preSum = 0;
+        for(int num : nums){
+           preSum = (preSum + num) % k;
+           if(preSum<0) preSum += k; //
+           divSubCount += preSumMap.getOrDefault(preSum, 0);
+           preSumMap.put(preSum, preSumMap.getOrDefault(preSum, 0)+1); 
+        }
+        return divSubCount;
+    }
+}

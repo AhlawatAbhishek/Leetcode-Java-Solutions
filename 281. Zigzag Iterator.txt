@@ -1,0 +1,81 @@
+Intuition: We can use simple 2 pointer approach and using an extra variable to keep track which
+        . vecotr's turn is this.
+
+//Time Complexity: O(1), for each operation
+//Auxiliary Space: O(1), If you donot consider the lists used to store the input vectors
+//else O(m+n), m is lenght of the first vector and n is of the second.
+public class ZigzagIterator {
+//Two keep track of the present position in each of two vectors
+    private int v1Ind, v2Ind;
+    private List<Integer> v1, v2;
+//To indicate whose turn is there for giving next element
+    private boolean v1Req;
+    public ZigzagIterator(List<Integer> v1, List<Integer> v2) {
+        this.v1 =v1;
+        this.v2 = v2;
+        v1Ind = v2Ind = 0;
+        v1Req = true;
+    }
+
+    public int next() {
+        if(v1Req){
+            v1Req = false;
+            if(v1Ind < v1.size()){
+                return v1.get(v1Ind++);
+            }else if(v2Ind < v2.size()){
+                return v2.get(v2Ind++);
+            }else{
+                return -1;
+            }
+            
+        }else{
+             if(v1Ind < v1.size()){
+                 v1Req = true;
+             }
+            if(v2Ind < v2.size()){
+                return v2.get(v2Ind++);
+            }else if(v1Ind < v1.size()){
+                return v1.get(v1Ind++);
+            }else{
+                return -1;
+            }
+        }
+    }
+
+    public boolean hasNext() {
+        return v1Ind < v1.size() || v2Ind < v2.size() ;
+    }
+}
+----------------------------
+. This is the efficient solution for the follow up in the question for k 
+  vectors
+.Intuition: There should be data structure via which we can access
+the elements of the k vectors in a cyclic manner  
+
+.We can use queue for this purpose
+// Time complexity: O(1), for each method
+// Auxiliary space: O(k), for k vectors in queue
+public class ZigzagIterator {
+    private Queue<Iterator<Integer>> que = null;
+    public ZigzagIterator(List<Integer> v1, List<Integer> v2) {
+        que = new LinkedList<>();
+        if(v1.iterator().hasNext())que.offer(v1.iterator());
+        if(v2.iterator().hasNext())que.offer(v2.iterator());
+    }
+
+    public int next() {
+      if(que.isEmpty()) return -1;  
+        Iterator<Integer> it= que.poll();
+        int next = it.next();
+//now this particular vector had it's turn. If it still has some elements
+// left then add it back to the queue         
+        if(it.hasNext()){
+            que.offer(it);
+        }
+        return next;
+    }
+
+    public boolean hasNext() {
+        return !que.isEmpty();
+    }
+}

@@ -1,0 +1,61 @@
+Intuition: .According to the game rules if you pic a number say num you get this much 
+            points added to your total, also you have to delete all the entries of num+1
+            and num-1
+    
+           .So if you pic a number you can pick all of its repetitions also since they
+            are not at the risk of getting deleted, beacuse you already deleted this
+            num's neighbours.
+               
+           .Now if you go in an increasing order in nums array then you can add each                 numbers contrinution to your total score but what if present 
+            num was a neighbour of the previously largest number so you can either take
+            the present number or leave it based on whether you have taken prevLarges or             not
+           
+           .if prevLargest was not a neighbour of current number then you are totally 
+            fine you can take current number or ignore it.
+// Time complexity: O(10001) or you can take it constant also
+// Space complexity: O(10001) or you can take it constant also
+class Solution {
+    public int deleteAndEarn(int[] nums) {
+        int numFreq[] = new int[10001];
+        for(int num : nums){
+            numFreq[num]++;
+        }
+        int usePreLarg = 0, avoidPrevLarg = 0, prevLarg = -1;
+        for(int currNum = 0; currNum<numFreq.length; currNum++){
+            if(numFreq[currNum] > 0){
+                int max = Math.max(usePreLarg, avoidPrevLarg);
+                if(prevLarg + 1 == currNum){
+//                 if use currNum and avoidPrevLarg
+                  usePreLarg =  currNum * numFreq[currNum] + avoidPrevLarg;
+//                if avoid currNum
+                  avoidPrevLarg = max;
+                }else{
+//                 if use currNum and either avoidPrevLarg or usePreLarg
+                  usePreLarg =  currNum * numFreq[currNum] + max;
+//                if avoid currNum
+                  avoidPrevLarg = max;  
+                }
+                prevLarg = currNum;
+            }
+        }
+        return Math.max(usePreLarg, avoidPrevLarg);
+    }
+}
+---------------------------------
+class Solution {
+    public int deleteAndEarn(int[] nums) {
+        int n = 10001;
+        int[] values = new int[n];
+        for (int num : nums)
+            values[num] += num;
+
+        int take = 0, skip = 0;
+        for (int i = 0; i < n; i++) {
+            int takei = skip + values[i];
+            int skipi = Math.max(skip, take);
+            take = takei;
+            skip = skipi;
+        }
+        return Math.max(take, skip);
+    }
+}

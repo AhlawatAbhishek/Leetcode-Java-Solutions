@@ -1,0 +1,34 @@
+Intuition: 1:We are intersted in knowing between different ending times
+            sorted in increasing order how many meetings are running                     simultaneously.
+    
+          2:Lets say between previous end time and current end time 2
+           meetings are running, thus we need two more rooms, thus adding 
+           2 to the total number of rooms required.
+    
+          3:The whole idea will be more clear by code below :)
+//Time complexity: O(n*logn), n is lenght of intervals array
+// Auxiliary space: O(n+n) = O(n), for start & end  arrays            
+class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        int n =intervals.length, rooms = 0;
+//seperate start & end times available        
+        int []start = new int[n], end = new int[n];
+        for(int indx = 0; indx<intervals.length; indx++){
+            start[indx] = intervals[indx][0];
+            end[indx] = intervals[indx][1];
+        }
+//  sort them       
+        Arrays.sort(start);
+        Arrays.sort(end);
+//         apply the logic written in 2nd point of intuition
+        int endIndx = 0;
+        for(int indx = 0; indx<start.length; indx++){
+            if(start[indx] < end[endIndx]){
+                rooms++;
+            }else{
+                endIndx++;
+            }
+        }
+        return rooms;
+    }
+}

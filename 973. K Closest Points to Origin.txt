@@ -1,0 +1,21 @@
+class Solution {
+    public int[][] kClosest(int[][] points, int k) {
+        Map<Integer, Double> pDistMap = new HashMap<>();
+        PriorityQueue<Map.Entry<Integer, Double>> dist = new PriorityQueue<>((a, b)->Double.compare((double)a.getValue(), (double)b.getValue()));
+        for(int indx = 0; indx<points.length; indx++){
+            int x = points[indx][0], y = points[indx][1], X = Math.abs(x), 
+            Y = Math.abs(y);
+            double dis = Math.sqrt((X*X + Y*Y));
+            pDistMap.put(indx, dis);
+        }
+        dist.addAll(pDistMap.entrySet());
+        int indx = 0, res[][] = new int[k][2];
+        while(indx <= k-1){
+            Map.Entry<Integer, Double> entry = dist.poll();
+            int ind = entry.getKey();
+            res[indx][0] = points[ind][0];
+            res[indx++][1] = points[ind][1];
+        }
+        return res;
+    }
+}

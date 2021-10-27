@@ -1,27 +1,39 @@
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
+Intuition: 
+        .From the illustrations and problem statement it is clear that we are interseted
+          in rotating the binary tree and its subtrees around their root or you can say 
+          we are interested in finding the mirror image of the tree and its subtrees.
+// Time complexity: O(n), n = number of node in binary tree
+// Auxiliary Space: O(h),h = height of binary tree, for recursion stack            
 class Solution {
     public TreeNode invertTree(TreeNode root) {
-        if(root == null){
-            return null;
+ // if its a single node remaining or input passed at first place to method is null
+        if(root == null || (root.left == null && root.right == null)){
+            return root;
         }
-        TreeNode left = invertTree(root.left);
-        TreeNode right = invertTree(root.right);
-        root.left = right;
-        root.right = left;
+//      reverse the left and right side of each node and then return the node.
+// !! note the tricker part here is note to map the left side call to root's right as soon as it returns the leftSide, wait for the right side to complete its dfs traversal   
+        TreeNode leftSide = invertTree(root.left);
+        TreeNode rightSide = invertTree(root.right);
+        root.left = rightSide;
+        root.right = leftSide;
+        return root;
+    }
+}
+--------------------------
+--this was picked from the solution, great approach---
+class Solution {
+    public TreeNode invertTree(TreeNode root) {
+        if (root == null) return null;
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            TreeNode current = queue.poll();
+            TreeNode temp = current.left;
+            current.left = current.right;
+            current.right = temp;
+            if (current.left != null) queue.add(current.left);
+            if (current.right != null) queue.add(current.right);
+        }
         return root;
     }
 }

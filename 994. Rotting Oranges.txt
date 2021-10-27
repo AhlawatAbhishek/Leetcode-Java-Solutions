@@ -1,0 +1,54 @@
+class Solution {
+    private class Point{
+        int x, y;
+        Point(int x, int y){
+            this.x = x;
+            this.y = y;
+        }
+    }
+    public int orangesRotting(int[][] grid) {
+        int rows = grid.length, cols = grid[0].length, time = 0;
+        Queue<Point> lvlQue = new LinkedList<>(); 
+        for(int r = 0; r<rows; r++){
+            for(int c = 0; c<cols; c++){
+                if(grid[r][c] == 2){
+                  lvlQue.offer(new Point(r, c));
+                    grid[r][c] = -3;
+                }
+            }
+        }
+        int dirs[][] = {{-1, 0},{0, -1},{1, 0},{0,1}};
+        while(!lvlQue.isEmpty()){
+            int size = lvlQue.size();
+            boolean atLeastOneFresh = false;
+            while(size-->0){
+               Point p = lvlQue.poll();
+                int xOld = p.x, yOld = p.y;
+                for(int dir[]: dirs){
+                    int xNew = xOld+dir[0];
+                    int yNew = yOld+dir[1];
+                   if(xNew < 0 || xNew >= rows || yNew < 0 || yNew>=cols || grid[xNew][yNew] == 0 || grid[xNew][yNew] == -3){
+                       continue;
+                   } 
+                    atLeastOneFresh = true;
+                   grid[xNew][yNew] = -3;
+                   lvlQue.offer(new Point(xNew, yNew)); 
+                }
+            }
+            if(atLeastOneFresh)time++;
+        }
+        if(checkFresh(grid)) return -1;
+        return time;
+    }
+    private boolean checkFresh(int grid[][]){
+        int rows = grid.length, cols = grid[0].length;
+         for(int r = 0; r<rows; r++){
+            for(int c = 0; c<cols; c++){
+                if(grid[r][c] == 1){
+                   return true;
+                }
+            }
+        }
+        return false;
+    }
+}

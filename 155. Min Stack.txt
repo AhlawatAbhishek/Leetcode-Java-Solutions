@@ -1,0 +1,136 @@
+class MinStack {
+    private Stack<Integer> main = null, minStack = null;
+    public MinStack() {
+        main = new Stack<>();
+        minStack = new Stack<>();
+    }
+    
+    public void push(int val) {
+        main.push(val);
+//      storing min corresponding to each entry in main stack    
+        if(minStack.isEmpty()){
+            minStack.push(val);
+        }else if(minStack.peek() > val){
+            minStack.push(val);
+        }else{
+            minStack.push(minStack.peek());
+        }
+    }
+// poping main stack and its corresponding entry    
+    public void pop() {
+        main.pop();
+        minStack.pop();
+    }
+    
+    public int top() {
+        return main.peek();
+    }
+    
+    public int getMin() {
+        return minStack.peek();
+    }
+}
+------------------------------------------------
+//store the gap between currrent min and value to be pushed in single stack
+class MinStack {
+    private Stack<Long> mainStack = null;
+    private long min;
+    public MinStack() {
+        min = Long.MAX_VALUE;
+        mainStack = new Stack<>();
+    }
+    public void push(int val) {
+       if(mainStack.isEmpty()){
+           mainStack.push(0L);
+           min = val;
+       }else{
+           mainStack.push(val-min);// it will be negative if the stack needs to be changed
+           min = Math.min(min, val);
+       }
+        
+
+    }
+// poping main stack and its corresponding entry    
+    public void pop() {
+        long item = mainStack.pop();
+        if(item < 0) min = min - item;//if poped item is negative then increase the min
+    }
+    
+    public int top() {
+        long item = mainStack.peek();
+        if(item < 0) return (int)min;
+        return (int)(item+min);
+    }
+    
+    public int getMin() {
+        return (int)min;
+    }
+}
+--------------------------------
+class MinStack {
+    private Stack<Integer> mainStack = null;
+    private int min;
+    public MinStack() {
+        min = Integer.MAX_VALUE;
+        mainStack = new Stack<>();
+    }
+    public void push(int val) {
+//Push min old val in stack only when min changes or is equal to val         
+       if(min >= val){
+           mainStack.push(min);
+           min = val;
+       }
+       mainStack.push(val);
+    }  
+    public void pop() {
+       int item = mainStack.pop();
+//In case poped item is equal to min change min to its old value by poping once more 
+       if(min == item) min = mainStack.pop(); 
+    }
+    
+    public int top() {
+        return mainStack.peek();
+    }
+    
+    public int getMin() {
+        return min;
+    }
+}
+-------------------------------
+class MinStack {
+//  store min value with each node and make your own stack   
+    private class Node{
+        int val, min;
+        Node next;
+        Node(int v, int minn, Node n){
+            val = v;
+            min = minn;
+            next = n;
+        }
+    }
+    private Node topNode;
+    public MinStack() {
+      
+    }
+    public void push(int val) {
+       if(topNode == null){
+           topNode = new Node(val, val, null);
+       }else{
+// update min value if required.           
+           topNode = new Node(val, Math.min(topNode.min, val), topNode);
+       }
+
+    }  
+// just update the top to its next    
+    public void pop() {
+       topNode = topNode.next;
+    }
+    
+    public int top() {
+        return topNode.val;
+    }
+    
+    public int getMin() {
+        return topNode.min;
+    }
+}
