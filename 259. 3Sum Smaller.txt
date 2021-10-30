@@ -1,0 +1,68 @@
+Intuition: . This question is almost similar to the 3-Sum original question
+           .These are following differences
+//Time complexity: O(N^2)
+//Auxiliary Space: O(1)
+class Solution {
+    public int threeSumSmaller(int[] nums, int target) {
+        Arrays.sort(nums);
+        int countSmaller = 0;
+        int len = nums.length;
+        for(int indx = 0; indx<len; indx++){
+               countSmaller += findPairSum(nums, target-nums[indx], indx);
+        }
+        return countSmaller;
+    }
+    private int findPairSum(int nums[], int target, int indx){
+       int right = nums.length - 1, left = indx+1, smallerCount = 0;
+        while(left < right){
+            int currSum = nums[left]+nums[right];
+            if(currSum < target){
+                smallerCount += right - left;
+                left++;
+            }else if(currSum >= target){
+                right--;
+            }
+        }
+        return smallerCount;
+    }
+}
+--------------------------------------------
+class Solution {
+// Time complexity: O(n^2 * log(n))    
+    public int threeSumSmaller(int[] nums, int target) {
+        Arrays.sort(nums);
+        int countSmaller = 0;
+        int len = nums.length;
+        for(int indx = 0; indx<len; indx++){
+               countSmaller += findPairSum(nums, target-nums[indx], indx+1);
+        }
+        return countSmaller;
+    }
+//     // Time complexity: O(n*logn)
+    private int findPairSum(int nums[], int target, int startIndx){
+       int smallerCount = 0;
+//      find largest right such that nums[left] + nums[right] < target, left < right
+//      keeping left fixed, from left to right we can form right - left pairs such that
+        // nums[left] + nums[right] < target, left < right
+        for(int left = startIndx; left<nums.length; left++){
+            int right = binarySearch(nums, left, target-nums[left]);
+            smallerCount += right-left;
+        }
+        return smallerCount;
+    }
+// Time complexity: O(logn)
+    private int binarySearch(int nums[], int left, int target){
+        int right = nums.length-1;
+        while(left < right){
+//mid is not left + (right - left) /2 nor (right + left)/2 because when only 2 elements are left with
+//these loop will never terminate. as lower side will i.e. left will be taken mid always             
+            int mid = (left+right+1)/2;
+            if(nums[mid] < target){
+                left = mid;
+            }else{
+                right = mid-1;
+            }
+        }
+        return left;
+    }
+}

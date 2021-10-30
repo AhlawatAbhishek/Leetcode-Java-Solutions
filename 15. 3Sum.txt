@@ -1,0 +1,69 @@
+//Time complexity: O(N^2), N is the number of term in nums array
+// Space complexity: O(1), if you donot consider the output list
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        int n = nums.length;
+//Sort the array to apply to pointer approach and to avoid duplicates         
+        Arrays.sort(nums);
+        List<List<Integer>> res = new ArrayList<>();
+        for(int indx = 0; indx<n; indx++){
+// If the number itself is > 0 then there is no way that we can make zero-sum combinations after this number as we sorted the array            
+            if(nums[indx] > 0) break;
+            if(indx == 0 || nums[indx-1] != nums[indx]){
+                findPairSum(nums, indx+1, n-1, indx, res);
+            }
+        }
+        return res;
+    }
+    public void findPairSum(int nums[], int left, int right, int currIndx, List<List<Integer>> res){
+        while(left < right){
+           int sum = nums[currIndx] + nums[left] + nums[right]; 
+// Since the array is now sorted and if the current sum is greater than the target (0) then 
+// we move the right pointer to left to decrease the value of the current sum            
+            if(sum > 0){
+                right--;
+// Since the array is now sorted and if the current sum is lesser than the target (0) then 
+// we move the left pointer to right to increase the value of the current sum        
+            }else if(sum < 0){
+                left++;
+// If we hit the target then add this combination in the result                
+            }else{
+                res.add(Arrays.asList(nums[left++], nums[right--], nums[currIndx]));
+//Now to avoid duplicate triplet combination it is sufficient to move left pointer to right  // to make only one element in triplet different               
+                while(left < right && nums[left] == nums[left-1]){
+                    left++;
+                }
+            }
+        }
+    }
+}
+----------------------
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        int n = nums.length;
+        Arrays.sort(nums);
+        List<List<Integer>> res = new ArrayList<>();
+        for(int indx = 0; indx<n; indx++){
+            if(nums[indx] > 0) break;
+            if(indx == 0 || nums[indx-1] != nums[indx]){
+                findPairSum(nums, indx, res);
+            }
+        }
+        return res;
+    }
+    public void findPairSum(int nums[], int currIndx, List<List<Integer>> res){
+        int n = nums.length;
+        HashSet<Integer> compSet = new HashSet<>();
+        for(int indx = currIndx+1; indx<n; indx++){
+           int complement = -(nums[currIndx] + nums[indx]); 
+            if(compSet.contains(complement)){
+                res.add(Arrays.asList(nums[currIndx], nums[indx], complement));
+                while(indx < n-1 && nums[indx] == nums[indx+1]){
+                    indx++;
+                }
+            }
+            compSet.add(nums[indx]);
+        }
+    }
+}
+--------------------------
