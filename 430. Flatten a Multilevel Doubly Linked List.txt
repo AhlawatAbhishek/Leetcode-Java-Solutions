@@ -1,0 +1,80 @@
+class Solution {
+    public Node flatten(Node head) {
+        if(head == null) return null;
+        Node curr = head;
+        Node dummyHead = new Node();
+        dummyHead.val = 0;
+        dummyHead.prev = null;
+        dummyHead.next = head;
+        dummyHead.child = null;
+        dfs(dummyHead, curr);
+        dummyHead.next.prev = null;
+        return dummyHead.next;
+    }
+    private Node dfs(Node prev, Node curr){
+         if(curr == null) return prev; 
+         curr.prev = prev;
+         prev.next = curr;
+        
+        Node currNext = curr.next;
+        Node branchLast = dfs(curr, curr.child);
+        curr.child = null;
+        return dfs(branchLast, currNext);
+    }
+}
+-----------------------------------
+class Solution {
+    public Node flatten(Node head) {
+        if(head == null) return null;
+        Node curr = head;
+        dfs(curr);
+        return head;
+    }
+    private Node dfs(Node curr){
+        if(curr != null && curr.next == null){
+            return curr;
+        }
+
+        Node currNext = curr.next;
+        Node childd = curr.child;
+        if(childd  != null){
+           curr.next = curr.child;
+           curr.child.prev = curr;
+           curr.child = null;
+           Node branchLast = dfs(curr.child);
+           currNext.prev =  branchLast;
+           branchLast.next = currNext;
+           dfs(currNext);
+        }else{
+            dfs(curr.next);
+        }
+        return curr;
+    }
+}class Solution {
+    public Node flatten(Node head) {
+        if(head == null) return null;
+        Node curr = head;
+        dfs(curr);
+        return head;
+    }
+    private Node dfs(Node curr){
+        if(curr != null && curr.next == null){
+            return curr;
+        }
+
+        Node currNext = curr.next;
+        Node childd = curr.child;
+        if(childd  != null){
+           curr.next = curr.child;
+           curr.child.prev = curr;
+           curr.child = null;
+           Node branchLast = dfs(curr.child);
+           currNext.prev =  branchLast;
+           branchLast.next = currNext;
+           dfs(currNext);
+        }else{
+            dfs(curr.next);
+        }
+        return curr;
+    }
+}
