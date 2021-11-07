@@ -1,0 +1,26 @@
+Intuition: .As it is clear from the question statement and sample test cases. we are asked to sum the numbers
+           formed by appending digits from root to leafs.
+           
+           .Thus we have to traverse in a depth first manner and return the sum after recursing for the left and
+            right subtree.
+//Time complexity: O(n), n = number of nodes in binary tree
+//Auxiliary space: O(d), for the recursion call stack
+class Solution {
+    public int sumNumbers(TreeNode root) {
+        return findSum(root, 0);
+    }
+    private int findSum(TreeNode root, int currNum){
+    //If null is passed to the method
+        if(root == null) return 0;
+    //If it is the leaf node, then append it value to currNum and return    
+        if(root.left ==null && root.right == null){
+             currNum= currNum * 10 + root.val;
+            return currNum;
+        }
+        //append current node's value to currNum and return
+        currSum = currNum * 10 + root.val;
+        //recurse for the left and right subtree and return the sum
+        return findSum(root.left, currNum)+
+        findSum(root.right, currNum);
+    }
+}

@@ -31,3 +31,61 @@ class Solution {
         return totalPaths;
     }
 }
+------------------------------------------------
+Intuition: .Somehow we need to traverse all the possible paths that cover all the non
+            obstcale cells and then back track in case we donot find the correct answer.
+           
+           .So tarversing in a depth first manner and backtracking would be the ideal
+            approach.
+    
+// Time complexity: O(4^N), N is total cells in grid,
+//for each cell we have 4 directions to go. If you want a tighter upper bound then you can
+//ingnore the direction from which you are comming, thus having 3 direction choices for
+//each cell. It will be O(3^N)    
+// Space complexity: O(N), for recursion stack of DFS
+class Solution {
+    private int pathCount = 0, dirs[][] = {{1, 0},{0, 1},{-1, 0},{0, -1}};
+    public int uniquePathsIII(int[][] grid) {
+        int nonObsCount = 0, rows = grid.length, cols = grid[0].length, sR = -1, sC = -1;
+        for(int r = 0; r<rows; r++){
+            for(int c = 0; c<cols; c++){
+                if(grid[r][c] >= 0){
+                    nonObsCount++;
+                }
+                if(grid[r][c] == 1){
+                    sR = r;
+                    sC = c;
+                }
+            }
+        }
+        dfs(grid, sR, sC, nonObsCount);
+        return pathCount;
+    }
+    private void dfs(int grid[][], int r, int c, int nonObsCount){
+//Check for boundary conditions and valid cell values.  
+        if(r<0 || c < 0 || r >= grid.length || c >= grid[0].length || grid[r][c] < 0 ||
+          nonObsCount < 1){
+            return;
+        }
+//Return and increment path count if we traversed all the non obstacles except destination
+//and have reached there.         
+        if(grid[r][c] == 2 && nonObsCount == 1){
+            pathCount++;
+            return;
+        }
+        nonObsCount--;
+//storing value of current cell to backtrack later         
+        int tempCellVal = grid[r][c];
+//not using extra visited array to keep track of the visited cells        
+        grid[r][c] = -2;
+        for(int dir[] : dirs){
+            int rNew = r+dir[0], cNew = c+dir[1];
+//Check for boundary conditions and valid cell values.             
+            if(rNew<0 || cNew < 0 || rNew >= grid.length || cNew >= grid[0].length || grid[rNew][cNew] < 0 ||nonObsCount < 1){
+                continue;
+            }
+            dfs(grid, rNew, cNew, nonObsCount);
+        }
+        grid[r][c] = tempCellVal;
+    }
+}
