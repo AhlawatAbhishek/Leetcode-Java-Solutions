@@ -1,0 +1,17 @@
+Intuition: .Basically we need to check for the minimum value of the preFix
+            sum in the whole range of prefix sums.
+           
+           .If its never less than zero than we return 1 or else we return             (minValue * (-1)) + 1 as answer.
+// Time complexity: O(N), N is nums.length
+// Auxiliary Space: O(1)
+class Solution {
+    public int minStartValue(int[] nums) {
+//taking value of min as 0 as in case if the running sum is never less than one then minimum value required will be 0 + 1 i.e.
+        int minValue = 0, runSum = 0;
+        for(int num : nums){
+            runSum += num;
+            minValue = Math.min(minValue, runSum);
+        }
+        return Math.abs(minValue)+1;
+    }
+}

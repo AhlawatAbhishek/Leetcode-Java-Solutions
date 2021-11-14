@@ -1,3 +1,9 @@
+Intuition: .The logic here is quite simple, whenever the current price is
+            lower than the next day's price you buy and add the profit of 
+            selling on next day to total profit, it will be same as holding
+            the stock if the price is going up continuously.
+//Time complexity: O(N), N is prices length
+//Auxiliary Space: O(1)                
 class Solution {
     public int maxProfit(int[] prices) {
         int totalProfit = 0;

@@ -1,0 +1,55 @@
+Intuition: .Since we are asked to get the next combination possible of the given string
+            in lexicographical order and also of lenght combinationLength, and the
+            number of call that would be made to next() and hasNext() methods are                   less i.e. 10^4.
+    
+            Thus precomputing all the combinations of the given string of length
+            combination length would be sufficient to slove this question
+            
+            for get next combination each time at the call of next() method we can keep
+            and indxItr variable and with it hashNext can also be implemented
+            
+            Things will be more clear in the code below :), and any corrections and 
+            optimization suggestions are welcomed :)
+
+//Time complexity : O(nCk), ways choosing k thing among n, n is the characters string
+//length and k is the combinationLength
+//Space complexity: O(nCk), to store the precomputed combination of k len in the arraylist
+class CombinationIterator {
+    private ArrayList<String> combs = new ArrayList<>();
+    private int indxItr = 0, combLen = -1;
+    private String chars = null;
+    public CombinationIterator(String characters, int combinationLength) {
+        chars = characters;
+        combLen = combinationLength;
+        getAllCombs(0, new StringBuilder());
+    }
+    //pre computing all the combinations the characters in the string of length combLen by depth first search and backtracking
+    private void getAllCombs(int startIndx, StringBuilder currStr){
+        //not going beyond the requred len of combinations while going in a dfs manner
+        if(currStr.length() == combLen){
+            combs.add(currStr.toString());
+            return;
+        }
+        for(int indx = startIndx; indx<chars.length(); indx++){
+            currStr.append(chars.charAt(indx));
+            //going in a depth first fashion
+            getAllCombs(indx+1, currStr);
+            //backtracking by remove the last added character
+            currStr.deleteCharAt(currStr.length()-1);
+        }
+    }
+    public String next() {
+      return combs.get(indxItr++);
+    }
+    
+    public boolean hasNext() {
+        return indxItr < combs.size();
+    }
+}
+
+/**
+ * Your CombinationIterator object will be instantiated and called as such:
+ * CombinationIterator obj = new CombinationIterator(characters, combinationLength);
+ * String param_1 = obj.next();
+ * boolean param_2 = obj.hasNext();
+ */

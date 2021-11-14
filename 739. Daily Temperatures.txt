@@ -1,16 +1,29 @@
+Intuition: .Since we are required to find the immediate next day
+            for present day that would be having more temp.
+           .We can use a data structure which is can store all the prev
+            days that have not found their next warmer till now in a
+            last in first out fashion and if present day have more temp
+            then those prev days we can keep populating prev days results
+            in res array based on the differece in the index of present
+            day and prev days.
+           .Stack is ideal data structure for this process.    
+// Time complexity: O(len), len is lenght of the temperatures array
+// Space complexity: O(len), 
 class Solution {
-    public int[] dailyTemperatures(int[] T) {
-        Stack<Integer> stack = new Stack<>();
-        int []arr = new int[T.length];
-        for(int i = T.length-1;i>=0; i--){
-           while(!stack.isEmpty() && T[stack.peek()] <= T[i]){
-               stack.pop();
+    public int[] dailyTemperatures(int[] temperatures) {
+        Stack<Integer> days = new Stack<>();
+        int len = temperatures.length, res[] = new int[len];
+        for(int d = 0; d<len;d++){
+            int currTemp = temperatures[d];
+//till the present day's temp is warmer then those present in stack keep
+//storing values for those present in stack by poping them one by one
+           while(!days.isEmpty() && currTemp > temperatures[days.peek()]){
+               int prevD = days.pop();
+               //gap between previous days and their next warmer
+               res[prevD] = d - prevD;
            }
-           if(!stack.isEmpty()){
-               arr[i] = stack.peek() - i;
-           } 
-            stack.push(i);
+            days.push(d);
         }
-        return arr;
+        return res;
     }
 }
