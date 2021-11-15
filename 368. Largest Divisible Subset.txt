@@ -1,0 +1,61 @@
+Intuition: .Bigger number cannot divide smaller while leaving remainder as a integer
+           i.e. 2%1 can be 0 but 1%2 != 0
+    
+          .Taking advantage of this fact and sorting the given array.
+    
+          .If you carefully observe now we can find the length of largestDivisibleSubset
+           by using the same logic as that of classic problem longest increasing
+           subsequence.
+    
+          .Also we can store the values of lengths of largestDivisibleSubsets till a
+          particular value of the number in nums array with some addtional space.
+    
+          .Now with these values we can build our final result, this would be more clear
+          from the last method of the code.
+    
+          .Any corrections, suggestions and optimizations to code are welcomed :)
+          
+//Time complexity: O(N^2), N is lenght of nums array
+//Auxiliary Space: O(N)
+class Solution {
+    public List<Integer> largestDivisibleSubset(int[] nums) {
+        if(nums.length == 1){
+            LinkedList<Integer> res = new LinkedList<>();
+            res.add(nums[0]);
+            return res;
+        }
+        Arrays.sort(nums);
+        int divSub[] = new int[nums.length];
+        LinkedList<Integer> res = new LinkedList<>();
+        int lgstDivSubLen = populateAndFind(nums, divSub); 
+        makeLds(lgstDivSubLen, divSub, res, nums);
+        return res;
+    }
+    private int populateAndFind(int nums[], int divSub[]){
+        Arrays.fill(divSub, 1);
+        int lgstDivSubLen = 0;
+        for(int indx1 = 1; indx1<divSub.length; indx1++){
+            for(int indx2 = 0; indx2 < indx1; indx2++){
+             //if present num is divisible by prev num
+               if(nums[indx1] % nums[indx2] == 0) 
+               divSub[indx1] = Math.max(divSub[indx1], divSub[indx2]+1);
+               lgstDivSubLen = Math.max(lgstDivSubLen, divSub[indx1]); 
+            }
+        }
+        return lgstDivSubLen;
+    }
+    private void makeLds(int lgstDivSubLen, int divSub[], LinkedList<Integer> res, int nums[]){
+        int prevNum = Integer.MAX_VALUE;
+        //since value of the largest divisble subset's length would be stored at the end
+        //of divSub array because we sorted the nums array, therefore going right to left 
+        for(int indx = divSub.length-1; indx>=0; indx--){
+            if(divSub[indx] == lgstDivSubLen && (prevNum == Integer.MAX_VALUE || prevNum % nums[indx] == 0)){
+                res.addFirst(nums[indx]);
+                //decrementing the value of largest divisble subset's length each time
+                //we make addition to result
+                lgstDivSubLen--;
+                prevNum = nums[indx];
+            }
+        }
+    }
+}
