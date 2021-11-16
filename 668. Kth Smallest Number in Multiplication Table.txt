@@ -1,0 +1,78 @@
+Intuition: .We can implement simple brute force solution. Just storing all the
+            m*n terms in matrix and storing them, then returning kth element.
+    
+           .Though it will take lots of space and time and memory limit will 
+            exceed.
+//Time complexity: O((m*n) * log(m*n)), sorting
+//Auxiliary Space: O(m*n), for matrix   
+class Solution {
+    public int findKthNumber(int m, int n, int k) {
+        int matrix[] = new int[m*n];
+        int row[] = new int[n];
+        for(int indx = 0; indx<n; indx++){
+            row[indx] = indx+1;
+        }
+        int multiplier = 1, rIndx = 0;
+        for(int indx = 0; indx<matrix.length; indx++){
+            matrix[indx] = row[rIndx] * multiplier;
+            if(rIndx == n-1){
+                rIndx = 0;
+                multiplier++;
+            }else{
+               rIndx++; 
+            }
+        }
+        int ans = -1;
+        Arrays.sort(matrix);
+        for(int indx = 0; indx<k; indx++){
+            ans = matrix[indx];
+        }
+        return ans;
+    }
+}
+
+Intuition :
+.Since the above solution didn't worked as is is taking a lot of space and time also.
+    
+ .So we want to consider more efficient solution in terms of time and space.
+    
+ .It can be observed that minimum and maximum value in mutiplication table or
+  matrix are 1 and m*n respectively.
+    
+ .The kth value must be in this search space of min and max possible values in
+  multiplication table.
+    
+ .Since the search space is sorted binary search can be applied on it.
+    
+ .Also the decision to move left or right after dividing the search space in two
+  halves in each iteration of binary search will depend on whether we have taken
+  mid large enough to be the kth value in the multiplication table or matrix.
+    
+ .rth row in the matrix would look like : r*1, r*2, r*3,....,r*n, we are checking
+  the above point is true of false i.e. k*r <= mid => k <= mid/r, also if
+  m*n is too high then k can be  > n, therefore k = Math.min(mid/r, n)
+      
+//Time complexity: O(m*log(m*n))
+//Auxiliary Space: O(1)      
+class Solution {
+    public int findKthNumber(int m, int n, int k) {
+        int lo = 1, hi = m*n;
+        while(lo < hi){
+            int mid = lo + (hi-lo)/2;
+            if(isSuffic(mid, m, n, k)){
+                hi = mid;
+            }else{
+                lo = mid+1;
+            }
+        }
+        return lo;
+    }
+    //check whether mid is large enough to be kth value in multi. matrix
+    private boolean isSuffic(int mid, int m, int n, int k){
+        int count = 0;
+        for(int r = 1; r<= m; r++){
+            count += Math.min(mid/r, n);
+        }
+        return count >= k;
+    }
+}
