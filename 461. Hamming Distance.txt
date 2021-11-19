@@ -1,0 +1,24 @@
+Intuition: .x^y will only set the different bits in x & y.
+           .Then we just have to count those different bits that are set in x^y
+            operation
+// Time complexity: O(log(xXORy))
+// Auxiliary Space: O(1)
+class Solution {
+    public int hammingDistance(int x, int y) {
+        int xXORy = x^y;
+        int setBits = 0;
+//This can be further optimized by using brain kernighan's Algo
+        // while(xXORy > 0){
+        //     setBits += (xXORy & 1);
+        //     xXORy >>= 1;
+        // }
+//brain kernighan's Algo:-loop runs only the number of set bits in the num.
+//num-1 flips all the bits after the rightmost set bit, including the right most set bit
+//therefore (num-1)&num, turns off the last set bit in num.   
+           while(xXORy > 0){
+              setBits++;
+              xXORy = xXORy &(xXORy-1);
+           }
+        return setBits;
+    }
+}

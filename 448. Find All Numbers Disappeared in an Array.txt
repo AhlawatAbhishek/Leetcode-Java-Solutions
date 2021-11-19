@@ -19,3 +19,51 @@ class Solution {
         return al;
     }
 }
+----------------------------------
+class Solution {
+    public List<Integer> findDisappearedNumbers(int[] nums) {
+        HashSet<Integer> set = new HashSet<>();
+        for(int ele : nums){
+            set.add(ele);
+        }
+        List<Integer> res = new ArrayList<>();
+        for(int num = 1; num <= nums.length; num++){
+            if(!set.contains(num)){
+                res.add(num);
+            }
+        }
+        return res;
+    }
+}
+---------------------------------------
+
+
+Intuition: .For the follow up question of doing it in linear time and no extra
+            space, trick of negative indexing can, be used if we are having
+            only positive nums in the array of size n, where max num possible is
+            also n.
+                
+            .This is my personal opinion that this type of follow up question                  cannot be tackled easily in the interview if you are not familir with
+             these kind of tricks prior.
+//Time complexity: O(N), N is the size of nums array
+// Auxiliary space: O(1)
+class Solution {
+    public List<Integer> findDisappearedNumbers(int[] nums) {
+        int len = nums.length;
+        List<Integer> res = new ArrayList<>();
+        
+        for(int indx = 0; indx<len; indx++){
+            int abs = Math.abs(nums[indx]);
+//this problem can be further extended by asking what nums are repeated also, that can be done by check nums[abs-1] < 0 already, if it is it means abs is visited already, we can therefore add it in the list of repeatitions.
+           if(nums[abs-1] > 0) 
+            nums[abs-1] = nums[abs-1] * (-1);
+        }
+//missing numbers will be those indicies + 1, whose value is still positive.
+        for(int indx = 0; indx<len; indx++){
+            if(nums[indx] > 0){
+                res.add(indx+1);
+            }
+        }
+        return res;
+    }
+}

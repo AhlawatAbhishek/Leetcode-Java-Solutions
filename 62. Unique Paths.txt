@@ -1,41 +1,77 @@
+Intuition: .Moving in a dfs fashion can solve this problem since we are required
+            to count all the paths that lead us to destination, but visiting each
+            possible path till its end.
+    
+            .while doing so we would be having many overlapping sub-paths or you
+            can say subproblems. This provides us the opportunity to use dynamic
+            programing, thus using top down approach or say memoization.
+                
+//Time complexity: O(m*n), since because of using memoization we would be visiting
+// each cell exactly once
+                
+// Auxiliary Space: O(m*n), for memo array                
 class Solution {
+    //bottom and right 2 directions possible only to go
+    private int dirs[][] = {{0,1},{1, 0}};
+    // private int pathCount = 0;
+    private int memo[][] = null;
     public int uniquePaths(int m, int n) {
-        boolean visited[][] = new boolean[m+1][n+1];
-        return countPath(0, 0, m, n, visited);
+        memo = new int[m][n];
+        //Intializing the memo array with -1 to avoid visiting same cell again
+        for(int mem[] : memo)
+            Arrays.fill(mem, -1);
+        return countPaths(0, 0, m, n);
+        // return pathCount;
     }
-    public int countPath(int row, int col, int totalRows, int totalCol, boolean [][] visited){
-       if(row == totalRows -  1 && col == totalCol -1){
-           return 1;
-       }
-       if(row >= totalRows && col >= totalCol){
-           return 0;
-       } 
-        int horizontal = 0, down = 0;
-       if(!visited[row][col]){
-           visited[row][col] = true;
-          horizontal += countPath(row, col+1, totalRows, totalCol, visited);
-          down += countPath(row + 1, col, totalRows, totalCol, visited);
-           visited[row][col] = false;
-       } 
-        return horizontal + down;
+    //dfs
+    private int countPaths(int r, int c, int R, int C){
+        //if the current cell is out of bounds of the gird
+        if(r >= R || c >= C){
+            return 0;
+        }
+        //if this cell is visited before then return pre computed result
+        if(memo[r][c] != -1){
+            return memo[r][c];
+        }
+        if(r == R-1 && c == C-1){
+            return memo[r][c] = 1;
+        }
+        int paths = 0;
+        for(int dir[] : dirs){
+            int rNew = r + dir[0];
+            int cNew = c + dir[1];
+            //if the current cell is out of bounds of the gird
+            if(rNew >= R || cNew >= C){
+              continue;
+            }
+            paths += countPaths(rNew, cNew, R, C);
+        }
+        return memo[r][c] = paths;
     }
 }
----------------------
-working and dp solution;
-class Solution {
+
+.This problem can be solved iteratively also using bottom up dynamic programming
+ or say tabulation.
+ class Solution {
     public int uniquePaths(int m, int n) {
        int [][] dp = new int[m][n];
+//Since for the cells in first col, there can be only one possible way to
+// reach a cell in this col,  that is to go down... down
         for(int rows = 0; rows<dp.length; rows++){
             dp[rows][0] = 1;
         }
+//Since for the cells in first row, there can be only one possible way to
+// reach a cell in this row,  that is to go right... right
         for(int cols  = 0; cols < dp[0].length; cols++){
             dp[0][cols] = 1;
         }
         for(int rows = 1; rows < dp.length; rows++){
             for(int cols = 1; cols < dp[rows].length; cols++){
+//at present cell one can come from one cell above it or one cell left of it
                 dp[rows][cols] = dp[rows-1][cols] + dp[rows][cols-1];
             }
         }
+//return total path count stored at destination        
         return dp[m-1][n-1];
     }
-}
+}   
