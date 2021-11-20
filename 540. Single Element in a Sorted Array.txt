@@ -1,0 +1,54 @@
+Intuition .If you read the question statement it's mentioned the array is sorted
+           and O(logn) time solution with O(1) space is asked
+           
+          .This provides us enough hint that binary search can be used.
+    
+          .Now in binary search how to decided after finding mid which half part to
+           discard.
+    
+          .If you observe in sample test cases that after finding mid if we landed             on a even index, and the number at even index is same as the number next
+          to it then the single frequency element cannot be present in the left half
+          , therefore we can safely move low to mid+2, dicarding left half
+          
+          .If mid lands us on a odd index then decrement the mid to avoid
+          calculations for odd mid. And if after being on an even index now in this           case or above case & the next number is not same to current than discard 
+          the right half and move high to mid. We are not movind hi to mid -1 bcz
+          the mid can be our answer also.
+              
+// Time complexity: O(log n), n is length of nums array
+// Auxiliary Space: O(1)              
+class Solution {
+    public int singleNonDuplicate(int[] nums) {
+        int n = nums.length, lo = 0, hi = n-1;
+        while(lo < hi){
+            int mid = lo + (hi-lo)/2;
+            // System.out.println("Calc mid is: " + mid);
+            if(mid % 2 == 1){
+               mid--;
+            }
+            if(nums[mid] == nums[mid+1]){
+                lo = mid+2;
+                // System.out.println("new Low is: "+lo);
+                // System.out.println("same Hi is: "+hi);
+            }else{
+                hi = mid;
+            }
+        }
+        return nums[hi];
+    }
+}
+
+ .For those who are confused sometimes that whether to take lo < hi or lo <= hi 
+  in while condition of binary search.Two ways to understand it are:
+   
+
+Way 1: .If we are discarding the mid in either of left or right movement i.e. (lo = mid+1/hi = mid-1)
+        then take lo<=hi
+        
+        .else if you are keeping mid in either of left or right i.e. (lo = mid / hi = mid), then
+        take lo<hi
+
+
+Way 2: .If you are returning inside the while loop use lo<=hi
+
+       .else return nums[lo] / nums[hi], and take lo<hi in while loop of binary search
