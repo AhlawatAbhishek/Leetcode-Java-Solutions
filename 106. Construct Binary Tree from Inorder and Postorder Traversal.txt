@@ -1,0 +1,81 @@
+class Solution {
+    private HashMap<Integer, Integer> postIndxMap = null;
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        postIndxMap = new HashMap<>();
+        for(int indx = 0; indx<postorder.length; indx++){
+            postIndxMap.put(postorder[indx], indx);
+        }
+        return buildTree(inorder, 0, inorder.length-1);
+    }
+    private TreeNode buildTree(int inorder[], int startIndx, int endIndx){
+        if(startIndx > endIndx){
+            return null;
+        }
+        if(startIndx == endIndx){
+            return new TreeNode(inorder[startIndx]);
+        }
+        int maxIndx = postIndxMap.get(inorder[startIndx]), data = inorder[startIndx], inIndx = startIndx;
+        for(int indx = startIndx+1; indx<=endIndx; indx++){
+            if(maxIndx < postIndxMap.get(inorder[indx])){
+                maxIndx = postIndxMap.get(inorder[indx]);
+                data = inorder[indx];
+                inIndx = indx;
+            }
+        }
+        TreeNode root = new TreeNode(data);
+        root.left = buildTree(inorder, startIndx, inIndx-1);
+        root.right  = buildTree(inorder, inIndx+1, endIndx);
+        return root;
+    }
+    
+}
+-------------------------------------
+Intuition: . Inoder : Left - Root - Right, Postoder: Left - Right - Root.
+    
+           . If we oberve the postorder it can be deduced from positioning of 
+             nodes in the order that rightmost node in the postorder will be
+             root of whole tree and all the roots of the subtrees can be find out
+             by traversing postoder from right to left.
+    
+           . To find the left and right subtrees of current root found out from
+             traversing postoder righ to left, we need to locate the current
+             root in the inorder.
+              Inorder=> leftSubTree -- currRootPostOrder -- rightSubTree
+            
+            .Now to build the tree we can use BFS or DFS. Here We would be using
+             DFS
+             
+            .To have fast lookup of postorder's node's index in inorder we would              be using hashmap.
+    
+            .To keep track of the postOrder lastVisited node we will be using
+             postIndx
+// Time complexity: O(N), N is the number of nodes in tree
+// Auxiliary Space: O(N), for storing mappings of inorder index and data
+class Solution {
+    private HashMap<Integer, Integer> inIndxMap = null;
+    private int postIndx = -1;
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        inIndxMap = new HashMap<>();
+        //starting from right in postorder
+        postIndx = postorder.length-1;
+        for(int indx = 0; indx<inorder.length; indx++){
+            inIndxMap.put(inorder[indx], indx);
+        }
+        return buildTree(postorder, 0, postorder.length-1);
+    }
+    //using dfs to build the tree
+    private TreeNode buildTree(int postorder[], int startIndx, int endIndx){
+        if(startIndx > endIndx){
+            return null;
+        }
+        int inIndx = inIndxMap.get(postorder[postIndx]);
+//dcrementing postIndx to to next node in postorder in righ to left fashion
+        TreeNode root = new TreeNode(postorder[postIndx--]);
+//recursing for the right subtree first since we are going in righ to left fashion in postorder -> Root - Right - left
+        root.right  = buildTree(postorder, inIndx+1, endIndx);
+        root.left = buildTree(postorder, startIndx, inIndx-1);
+        return root;
+    }
+    
+}
+--------------------------------------------------------
