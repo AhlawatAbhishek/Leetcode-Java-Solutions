@@ -1,0 +1,68 @@
+Intuition: .Deleting a key from BST would involve two parts:
+            1: Finding the key
+            2: Deleting the key in such way that after deletion the tree still
+               remains a BST i.e. it should still staisfy properties of BST.
+               So after deletion of key the tree should be balanced i.e.
+               again made BST.
+                
+            .For both of these operations we would be using dfs instead of 
+             going in a breadth first fashion. So that we could make use of 
+             properties of BST while searching for the key to be deleted in a
+             more convinient way.
+                 
+            .Following cases arise when we are search for the key to be deleted:
+
+              The current node's value that we are visiting:
+              1: maybe less than the key.
+                  
+              2: maybe greater than the key.
+                 In above to cases recurse for the right and left subtrees 
+                 respectively and join them with the current node.
+                     
+              3:maybe equal to the key to be deleted. Here 3 more cases arise:
+
+                3.1 left child of the present node is null, then return right
+                
+                3.2 right child of the present node is null, then return left
+                
+                3.3 both right and left childs are not null. In this case we 
+                    will be finding inorder successor of the present node visited
+                    .It will be minimum value in the right subtree of the present
+                     node visited.
+                    
+                    .Now we will copy this successor val to current visited node
+                     val and recurse to delete this successor.
+ //Time complexity: O(height of BST)
+ //Auxiliary Space: O(height of BST), for recursion call stack                    //Note in worst case the height of BST may be N(N is number of nodes in BST), in
+//case it is a skewed BST.                    
+class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if(root == null){
+            return null;
+        }
+        if(root.val > key){
+            root.left = deleteNode(root.left, key);
+            return root;
+        }else if(root.val < key){
+            root.right = deleteNode(root.right, key);
+            return root;
+        }else{
+          if(root.left == null){
+              return root.right;
+          }else if(root.right == null){
+              return root.left;
+          }else{
+              int succKey = findInOrderSucc(root.right);
+              root.val = succKey;
+              root.right = deleteNode(root.right, succKey);
+              return root;
+          }
+        }     
+    }
+    private int findInOrderSucc(TreeNode root){
+        while(root.left != null){
+            root = root.left;
+        }
+        return root.val;
+    }
+}
