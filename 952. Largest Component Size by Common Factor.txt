@@ -1,0 +1,90 @@
+Intuition: .This problem can be solved if we can group nodes in different groups.
+            Each group is a connected graph, but two different groups donot have
+            anything in common i.e. are disconnected grpah components.
+    
+           .Thus we should think of a data structure which allows us to form these disjoint
+           groups. Disjoint Set is one data structure. Link to learn - 
+           https://www.geeksforgeeks.org/disjoint-set-data-structures/ 
+    
+           .We would be forming groups on the basis of common factors. For each number
+            find all its factors and apply union operation between all factors of a number
+            and number itself
+            
+           .To find size of all the groups formed, use hasmap use find operation to 
+             find the representative of a group / grpId, and keep incrementing the size 
+             as you find more nodes of this group.
+               
+           .Find maxSize from the sizes of all these groups.  
+              
+           .Any corrections, suggestions and optimizations to code are welcomed.  
+//Time complexity: O(n * sqrt(maxNum) * log(maxNum)), n is nums.length
+               
+//for disjoint set implementation using rank each operation will be O(Log N), N is the number of elements operation is applied to.
+// Since these ops will be applied nums.length * Math.sqrt(largest num in nums) times.
+//So overall time required will be O(n * sqrt(maxNum) * log(maxNum))
+               
+//Auxiliary Space: O(maxNum + n), n is nums.length for hashmap space,
+// maxNum is for rank and parent array in disjoint set             
+class Solution {
+    //Visit above link to know more about this data structure.
+    private class DisjointSet{
+       private int parent[] = null, rank[] = null;
+       public DisjointSet(int size){
+           parent = new int[size+1];
+           rank = new int[size+1];
+           for(int node = 0; node < parent.length; node++){
+               parent[node] = node;
+           }
+       }
+       public int find(int node){
+           if(this.parent[node] != node){
+               parent[node] = find(parent[node]);
+           }
+           return parent[node];
+       } 
+       public void union(int node1, int node2){
+           int oneRep = find(node1), twoRep = find(node2);
+           if(oneRep == twoRep){
+               return;
+           }
+           if(rank[oneRep] < rank[twoRep]){
+               parent[oneRep] = twoRep;
+           }else if(rank[twoRep] < rank[oneRep]){
+               parent[twoRep] = oneRep;
+           }else{
+               parent[oneRep] = twoRep;
+               rank[twoRep]++;
+           }
+       } 
+    }
+    public int largestComponentSize(int[] nums) {
+//size of the disjoint set would be max value of nums +1;
+        int maxNum = Integer.MIN_VALUE;
+        for(int num : nums){
+            maxNum = Math.max(maxNum, num);
+        }
+        DisjointSet dSet = new DisjointSet(maxNum);
+        for(int num : nums){
+//every composite number has a prime factor less than or equal to its square root.
+            for(int fac = 2; fac < (int)(Math.sqrt(num)+1); fac++){
+               if(num % fac == 0){ 
+                dSet.union(num, fac);
+ //to find other factors correponding to present factor   
+                dSet.union(num, num/fac);    
+               }     
+            }
+        }
+        int maxSize = 0;
+//Mapping of group Id and group size.        
+        HashMap<Integer, Integer> groups = new HashMap<>();
+        for(int num : nums){
+//finding group Id or group representative            
+            int groupId = dSet.find(num);
+            int size = groups.getOrDefault(groupId, 0);            
+            size++;
+            maxSize = Math.max(maxSize, size);
+            groups.put(groupId, size);
+        }
+        return maxSize;
+    }
+}
