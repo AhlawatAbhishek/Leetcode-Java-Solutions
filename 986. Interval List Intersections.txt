@@ -1,0 +1,48 @@
+Intuition: Since the intervals given in each list are sorted and non overlapping with same
+           list intervals. Then this problem can be approached like merging two sorted
+           arrays.
+          .But the difference is that how to know which interval boundary to keep when two
+           intervals in two differnt lists overlap. Consider the below example.
+          
+          .  Interval1 :   4--------8
+                           .    .
+                           .    .
+             Interval2 : 1------6 
+             Result    :   4----6
+                 
+          .It can be observed the the start of result => max(start of 1st inter. , start of 1st inter)              and end of result => min(end of 1st inter. , end of 1st inter)
+                 
+          .Discard the smaller end containing interval among intervals of two different list. to find if
+          the larger end containing interval covers more intervals of another list.
+              
+          .Any suggestions, corrections and optimizations to code are welcomed :)    
+//Time complexity:  O(len1 + len2), len1 is length of firstList and len2 is length of secondList
+// Auxiliary Space:  O(len1 + len2), len1 is length of firstList and len2 is length of secondList
+class Solution {
+    public int[][] intervalIntersection(int[][] firstList, int[][] secondList) {
+        int len1 = firstList.length, len2 = secondList.length, lastInsrt = -1;
+        if(len1 == 0 || len2 == 0){
+            return new int[0][0];
+        }
+        ArrayList<int[]> inter = new ArrayList<>();
+        int indx1 = 0, indx2 = 0;
+        while(indx1 < len1 && indx2 < len2){
+             int start = Math.max(firstList[indx1][0], secondList[indx2][0]);
+             int end = Math.min(firstList[indx1][1], secondList[indx2][1]);
+//two interval in two list will overlap only when start <= end is true for intersection
+            if(start <= end){
+//Add the overlapping interval to resultant arraylist                
+                inter.add(new int[]{start, end});
+            }
+//Discard the smaller end containing interval among intervals of two different list. to find if the larger end
+//containing interval covers more intervals of another list.            
+            if(firstList[indx1][1] < secondList[indx2][1]){
+                indx1++;
+            }else{
+                indx2++;
+            }
+          
+        }
+        return inter.toArray(new int[inter.size()][]);
+    }
+}
