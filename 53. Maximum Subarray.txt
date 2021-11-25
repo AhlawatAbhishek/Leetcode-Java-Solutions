@@ -1,0 +1,77 @@
+Intuition: .Since we are asked to find the maximum Sum Subarray. It can be done if 
+            somehow we can keep track of max sum subarray for previous index.
+                
+           .we would be having two choices either to take the present index element alone             if it's larger than prevIndxMaxSum + currElement or take prevIndxMaxSum + 
+            currElement if it's larger than currElement.
+                
+           .Also we would be keeping track of maximum sum subarray generated till now
+            while traversing the whole array.
+                
+           .Thus two pointers can be used here for tracking purpose:
+               .maxEndingHere
+               .maxSoFar
+// Time complexity: O(len), len is length of nums array
+// Space complexity: O(1)
+class Solution {
+    public int maxSubArray(int[] nums) {
+        if(nums.length == 1){
+            return nums[0];
+        }
+        int maxEndingHere = nums[0],  maxSoFar = nums[0];
+        for(int indx = 1; indx<nums.length; indx++){
+            maxEndingHere = Math.max(nums[indx], maxEndingHere+nums[indx]);
+            maxSoFar = Math.max(maxSoFar, maxEndingHere);
+        }
+        return maxSoFar;
+    }
+}
+---------------------------------------------
+Intuition: .In follow up we are asked to use the Divide & Conquer approach.
+    
+           .We can divide array in half with each step, but the question arises
+            how we will be finding the maxSubArrays in left and right subparts
+            and what if the maxSubArray for the left and right subparts combined
+            have some part of left and some part of right.
+                
+            .we can take the left & right subparts and recurse for them & with each
+            mid we can take sumation of all the connected parts to mid on its
+            left and right sides and nums[mid] itself to find if the maxSum sub
+            array can be combination of both left and righ subparts.
+                
+            .since there are len number of elements in nums, then same will be
+            the number of mids.
+                
+            .So at end we will be returning max among:
+              1. left part
+              2. right part
+              3. left part,  right part & mid combined for each step in recursion
+class Solution {
+    public int maxSubArray(int[] nums) {
+        if(nums.length == 1){
+            return nums[0];
+        }
+        return findMaxSubArr(nums, 0, nums.length-1);
+    }
+//  Time complexity: O(len * log(len)), len is length of nums array.
+// Auxiliary Space: O(log(len)), for recursion stack.    
+    private int findMaxSubArr(int nums[], int lo, int hi){
+        if(lo <= hi){
+             int mid = lo + (hi - lo)/2;
+            int maxLeft = 0, currSum = 0, maxRight = 0;
+            for(int indx = mid-1; indx>=lo; indx--){
+             currSum = currSum + nums[indx];
+             maxLeft = Math.max(currSum, maxLeft); 
+            } 
+            currSum = 0;
+            for(int indx = mid+1; indx<=hi; indx++){
+             currSum = currSum + nums[indx];
+             maxRight = Math.max(currSum, maxRight); 
+            }
+            int bothSides = maxLeft + maxRight + nums[mid];
+            int leftHalf = findMaxSubArr(nums, lo, mid-1);
+            int rightHalf = findMaxSubArr(nums, mid+1, hi);
+            return Math.max(leftHalf, Math.max(rightHalf, bothSides));
+        }
+        return Integer.MIN_VALUE;
+    }
+}
