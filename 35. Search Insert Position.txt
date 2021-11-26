@@ -1,0 +1,40 @@
+.Intuition : .Since the array is sorted and we have to search in it. This provides us 
+              a good use case of binary search.
+    
+             .But the question arises that how we would be finding the should be index
+             of the target in the nums array if it is not already present in it.
+                  
+             .Take the example: nums = [1,3], target = 2.
+                 Ist pass: mid = 0, nums[mid] < target,lo = mid+1, lo = 1, hi = 1
+                 2nd pass : mid = 1, nums[mid] > target, hi = mid -1, hi = 0, lo =1
+                     loop breaks; & lo is at sould be position.
+                         
+             .Take another example: nums = [0, 1], target = 2.
+                 Ist pass: mid = 0, nums[mid] < target,lo = mid+1, lo = 1, hi = 1
+                 2nd pass : mid = 1, nums[mid] < target, lo = mid+1, hi = 1, lo =2
+                     loop breaks; & lo is at sould be position.
+                         
+             .Therefore it can be concluded that whenever the loop breaks the lo pointer
+              will be at the should be position of the target if it is not present in the
+              nums array.
+                         
+             .Any suggestions, corrections and optimizations to code are welcomed. :)            
+
+//Time complexity: O(Log(len)), len is the length of the nums array.
+// Auxiliary Space: O(1)
+class Solution {
+    public int searchInsert(int[] nums, int target) {
+        int lo = 0, hi = nums.length-1;
+        while(lo <= hi){
+          int mid = lo + (hi - lo)/2;
+          if(nums[mid] == target){
+              return mid;
+          }else if(nums[mid] > target){
+              hi = mid-1;
+          }else{
+              lo = mid+1; 
+          }
+        }
+        return lo;
+    }
+}
