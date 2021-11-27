@@ -37,3 +37,94 @@ class Solution {
         return output_arr;
     }
 }
+-----------------------------
+27/11/2021 - 2 Solutions::
+------------------------------------
+```
+----If the post helps you in any way, please like & comment so that it can reach others
+      & help them:)----------
+  ```
+  ```
+Intuition: .Since for each the ith index number in the nums array we are asked to find
+            the product of whole nums array expect the number at that index.
+     
+           .It would be really great that if we could just know the product of all the
+            numbers on its left and right individually.
+               
+           .And VOILA, we just got the answer :)
+               
+           .Mutliply the left and right sides for each individual number in nums array. 
+               
+           .Take this example given in the sample test cases: 
+             nums:  1,  2,  3,  4
+         prefProd:  1,  2,  6, 24 --Mutliplying left to right
+          sufProd: 24, 24, 12, 4  --Mutliplying right to left
+                   .....2   *    4.... --consider the 3rd num in nums at 2nd indx : 3
+            leftside        ^    rightside
+                            |
+                            8
+                            
+          .You will get more clearity with the code.
+          .Any corrections, suggestion and optimizations to code are welcomed :)       
+```
+```
+//Time complexity: O(len), len is the length of nums array
+// Auxiliary Space: O(len), for prefProd & sufProd arrays.
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int prod = 1, len = nums.length, res[] = new int[len];
+        int  prefProd[] = new int[len], sufProd[] = new int[len];
+      //intializing the first and last numbers in prefProd & sufProd arrays.
+        prefProd[0] = nums[0];
+        sufProd[len-1] = nums[len-1];
+        for(int indx = 1; indx<len; indx++){
+           prefProd[indx] = nums[indx] * prefProd[indx-1];
+        }
+        
+        for(int indx = len-2; indx>=0; indx--){
+          sufProd[indx] = nums[indx] * sufProd[indx+1];
+        }
+        
+        for(int indx = 0; indx<len; indx++){
+            //taking care of edge cases in case we are at first or last index.
+            int leftSideProd = indx == 0 ? 1 : prefProd[indx-1];
+            int rightSideProd = indx == len-1 ? 1 : sufProd[indx+1];
+            res[indx] = leftSideProd * rightSideProd;
+        }
+        return res;
+    }
+}
+```
+```
+Intuition: .In the follow up we are asked to do the question in O(1) space, where
+            output array is not counted.
+    
+           .The output array not counted. Read it again .)
+    
+           .We can use this array to store right or left products whichever we like
+            and then use another variable to keep track of left or right products.
+    
+           .The code is pretty similar to above with slight changes, write in
+            comments if you want explanation to be added for it also. :)
+```
+```
+//Time complexity: O(len), len is the length of nums array
+// Auxiliary Space: O(1)
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int prod = 1, len = nums.length, prefProd = 1, sufProd[] = new int[len];
+        sufProd[len-1] = nums[len-1];
+        
+        for(int indx = len-2; indx>=0; indx--){
+          sufProd[indx] = nums[indx] * sufProd[indx+1];
+        }
+        
+        for(int indx = 0; indx<len; indx++){
+            int rightSideProd = indx == len-1 ? 1 : sufProd[indx+1];
+            sufProd[indx] = prefProd * rightSideProd;
+            prefProd *= nums[indx]; 
+        }
+        return sufProd;
+    }
+}
+```
