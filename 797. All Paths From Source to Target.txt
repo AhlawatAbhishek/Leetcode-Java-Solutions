@@ -1,0 +1,42 @@
+// Time complexity: O(n*2^n), n is the number of nodes in the graph. 
+// Every node will be visited only once except the destination in case there are 
+//mulitple paths possible & total number of possible paths from src to destination is 2^n    
+
+// Auxiliary Space: O(n*2^n), each path can have upto n nodes & total 2*n paths can be possible, therefore this much space for res List is used. 
+
+// for  recursion call stack-> O(n)
+class Solution {
+    private List<List<Integer>> res = new ArrayList<>();
+    public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+        int n = graph.length;
+        List<Integer> path = new ArrayList<>();
+// adding src to path.
+        path.add(0);
+        findPath(graph, 0, path, n-1);
+        return res;
+    }
+//  going in a dfs fashion   
+    private void findPath(int graph[][], int src, List<Integer> path, int dest){
+//add the path to final result if we reached destination and return from here 
+        if(src == dest){
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for(int neigh: graph[src]){
+                path.add(neigh);
+                findPath(graph, neigh, path, dest);
+//backtrack to try another path or say tunnel kind of stuff :)
+                path.remove(path.size()-1);
+        }
+    }
+}
+
+For those who want to get an idea how number of possible paths is 2^n              
+src ----intermediate paths--- dest => adding node n => 
+    
+                             -------n-------
+                             |             |
+                       src-----inter.paths------dest
+ as you can see adding each node increase the number of paths between src to
+ dest nodes to two times & there are n-3 nodes between src to dest.
+ Therefore total paths possible between src to dest ~ 2^n   

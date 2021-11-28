@@ -1,0 +1,98 @@
+----------------------This one will give TLE---------------------------------
+class Solution {
+    private int memo[][] = null, rCost[] = null, cCost[] = null, rDest = -1, cDest = -1, rows = -1, cols = -1;
+    private boolean visited[][] = null;
+    public int minCost(int[] startPos, int[] homePos, int[] rowCosts, int[] colCosts) {
+        rows = rowCosts.length;
+        cols = colCosts.length;
+        visited = new boolean[rows][cols];
+        memo = new int[rows][cols];
+        for(int mem[] : memo){
+            Arrays.fill(mem, -1);
+        }
+        rCost = rowCosts;
+        cCost = colCosts;
+        rDest = homePos[0];
+        cDest = homePos[1];
+        return cntMinPathCost(startPos[0], startPos[1], 0);
+    }
+    private boolean isSafe(int r, int c){
+        if(r <0 || r >= rows || c < 0 || c >= cols || visited[r][c]){
+            return false;
+        }
+        return true;
+    }
+    private int cntMinPathCost(int r, int c, int currCostSum){
+        if(!isSafe(r, c)){
+            return Integer.MAX_VALUE;
+        }
+        
+        if(memo[r][c] != -1 && currCostSum >= memo[r][c]){
+            return memo[r][c];
+        }
+        if(r == rDest && c == cDest){
+            return currCostSum;
+        }
+        visited[r][c] = true;
+        int up = Integer.MAX_VALUE, down = Integer.MAX_VALUE, right = Integer.MAX_VALUE, left = Integer.MAX_VALUE;
+        if(isSafe(r-1, c)){
+            up = cntMinPathCost(r-1, c, currCostSum+rCost[r-1]);
+        }
+         if(isSafe(r+1, c)){
+            down = cntMinPathCost(r+1, c, currCostSum+rCost[r+1]);
+        }
+         if(isSafe(r, c-1)){
+            left = cntMinPathCost(r, c-1, currCostSum+cCost[c-1]);
+        }
+         if(isSafe(r, c+1)){
+            right = cntMinPathCost(r, c+1, currCostSum+cCost[c+1]);
+        }
+        visited[r][c] = false;
+        int min = Math.min(Math.min(up, down), Math.min(left, right));
+        return memo[r][c] = min;
+    }
+}
+---------------------This one will be correct-----------------------------------------
+Intuition: .Since aim is to reach the home position finally.
+    
+           .Consider how far you are horizontally and vertically form the home. And move
+            the robot horizantally and vertically both seperately, as far as the row and col
+            of home co-ordinates.
+    
+           .4 cases arise for your current location
+             1: horizontally left and vertically upward from home location.
+             2: horizontally right and vertically upward from home location. 
+             3: horizontally left and vertically downward from home location. 
+             4: horizontally right and vertically downward from home location.
+                 
+           .We would be aligning the robot horizonatally and vertically with the home
+           location and it will reach the home location. In this process we will keep adding
+           the cost as we move.
+                 
+           .Any corrections, suggestions and optimizations to code are welcomed. :)      
+  
+// Time complexity: O(r+c), r = rowCost.length & c = colCosts.length
+// Auxiliary Space: O(1)
+class Solution {
+    public int minCost(int[] startPos, int[] homePos, int[] rowCosts, int[] colCosts) {
+        int minTotCost = 0;
+        for(int indx = 0; indx<2; indx++){
+// either you are right of  or you are vertically downward of home location.
+            if(startPos[indx] > homePos[indx]){
+                 for(int pos = startPos[indx]-1; pos>=homePos[indx]; pos--){
+                    //if indx == 0, we are moving horizonatlly else vertically 
+                    minTotCost += indx == 0 ? rowCosts[pos] : colCosts[pos];
+                }
+// either you are left of  or you are vertically upward of home location.                
+            }else if(startPos[indx] < homePos[indx]){
+             //we are starting from the next pos to startPos   
+                for(int pos = startPos[indx]+1; pos<=homePos[indx]; pos++){
+                    minTotCost += indx == 0 ? rowCosts[pos] : colCosts[pos];
+                }
+            }
+        }
+        return minTotCost;
+    }
+}
+
+If you found this post helpful, please like and comment so that it can reach others and help them. :)
