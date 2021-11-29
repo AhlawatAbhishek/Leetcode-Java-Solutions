@@ -1,0 +1,145 @@
+--Wrong answer --------
+---------------------------------------------------------------
+class Solution {
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        List<List<String>> res = new ArrayList<>();
+        HashMap<String, List<Integer>> mailIndxMap = new HashMap<>();
+        HashSet<String> mergSet = new HashSet<>();
+        int len = accounts.size();
+        
+        for(int indx = 0; indx<len; indx++){
+            List<String> acnt = accounts.get(indx);
+            for(int ind = 1; ind<acnt.size(); ind++){
+                String mail = acnt.get(ind);
+                if(mailIndxMap.containsKey(mail)){
+                    List<Integer> indxList = mailIndxMap.get(mail);
+                    indxList.add(indx);
+                }else{
+                    List<Integer> indxList = new ArrayList<>();
+                    indxList.add(indx);
+                    mailIndxMap.put(mail, indxList);
+                }
+            }
+        }
+        
+        for(Map.Entry<String, List<Integer>> entry : mailIndxMap.entrySet()){
+            String mail = entry.getKey();
+            List<Integer> indxList = entry.getValue();
+            if(indxList.size() == 1){
+                int accIndx = indxList.get(0);
+                boolean isUnique = true;
+                List<String> acc = accounts.get(accIndx);
+                for(int indx = 1; indx<acc.size(); indx++){
+                    if(mailIndxMap.get(acc.get(indx)).size() > 1){
+                        isUnique = false;
+                        break;
+                    }
+                }
+               if(isUnique) 
+                res.add(acc);
+            }else{
+                mergSet.clear();
+                List<String> mrgdList = new ArrayList<>();
+                for(int indx = 0; indx<indxList.size(); indx++){
+                    int accIndx = indxList.get(indx);
+                    List<String> acc = accounts.get(accIndx);
+                    for(int ind = 1; ind<acc.size(); ind++){
+                        mergSet.add(acc.get(ind));
+                    }
+                }
+                mrgdList.add(accounts.get(indxList.get(0)).get(0));
+                for(String maill : mergSet){
+                    mrgdList.add(maill);
+                }
+                Collections.sort(mrgdList.subList(1, mrgdList.size()));
+                res.add(mrgdList);
+            }
+        }
+        
+        // Collections.sort(res, (a, b)-> a.get(0).compareTo(b.get(0)));
+        return res;
+    }
+}
+------------------------------------
+Intuition: .Since we are asked to merge the common email accounts and return 
+            the resultant list with emails of each account in final list in 
+            sorted order.
+      
+           .It can be done if we somehow form connected groups of the emails in
+            a account and then find the intersections between these connected
+            components with other and merge them if intersections
+            (common emails) found.
+                
+           .We will be doing the whole making connected components &
+           intersection finding thing with a adjacency list like structure 
+           implemented with the hashmap.
+                
+           .Please note making connected components and finding intersection
+            operations are similar to union and find operations in disjoint
+            set data structure. It can also be used in place of the hasmap's
+            adjacency list. In this implementation first email in a account is treated like
+            representative of a set/group in disjoint set data structure.
+            
+           .Any corrections, suggestions and optimizations to code are welcomed. :)
+//Time complexity: O(n*maxEm * log(n*maxEm)), n is number of accounts int the accounts list before merging & maxEm is max emails
+//in a single account among all the accounts before merging.O(n*maxEm * log(n*maxEm)) is for sorting n*maxEm emails in worst case.
+//Auxiliary Space: O(n*maxEm)               
+class Solution {
+    private HashSet<String> visited = new HashSet<>();
+    private HashMap<String, List<String>> mailAdjList = new HashMap<>();
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        List<List<String>> res = new ArrayList<>();
+        int len = accounts.size();
+//Make connected components of emails of each account with first email serving like
+// a hub like center node in star topology and all other emails of account
+//connected to it.        
+        for(int indx = 0; indx<len; indx++){
+            List<String> acnt = accounts.get(indx);
+            String firstMail = acnt.get(1);
+            if(!mailAdjList.containsKey(firstMail)){
+                    List<String> neighList = new ArrayList<>();
+                    mailAdjList.put(firstMail, neighList);
+            }
+            for(int ind = 2; ind<acnt.size(); ind++){
+                String mail = acnt.get(ind);
+//Connect other mails in account with first mail(hub / center node of component)
+//by forming two-way edge between them.                
+                mailAdjList.get(firstMail).add(mail);               
+                if(!mailAdjList.containsKey(mail)){
+                    List<String> neighList = new ArrayList<>();                                     neighList.add(firstMail);
+                    mailAdjList.put(mail, neighList);
+
+                }else{
+                     mailAdjList.get(mail).add(firstMail);
+                }
+            }
+        }
+//Run the merger method in case the first email of account is not already visited.        
+        for(int indx = 0; indx<len; indx++){
+            List<String> acnt = accounts.get(indx);
+            String firstMail = acnt.get(1), actName = acnt.get(0);
+            if(!visited.contains(firstMail)){
+                List<String> mrgList = new ArrayList<>();
+                mrgList.add(actName);
+                merger(mrgList, firstMail);
+//Sort all the mails in the current mergedList
+                Collections.sort(mrgList.subList(1, mrgList.size()));
+//Add the sorted merged list to the final result.                
+                res.add(mrgList);
+            }
+        }
+        return res;
+    }
+//Visiting each connected components in dfs fashion and merging it with common email accounts.   
+    private void merger(List<String> mrgList, String srcMail){
+//If its already visited skip it to avoid looping         
+        if(visited.contains(srcMail)){
+            return;
+        }
+        visited.add(srcMail);
+        mrgList.add(srcMail);
+        for(String neigh : mailAdjList.get(srcMail)){
+            merger(mrgList, neigh);
+        }
+    }
+}

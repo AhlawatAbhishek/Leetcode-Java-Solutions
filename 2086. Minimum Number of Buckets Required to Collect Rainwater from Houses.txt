@@ -1,0 +1,6 @@
+class Solution {
+    public int minimumBuckets(String street) {
+        return (street.equals("H") || street.startsWith("HH") || street.endsWith("HH") || street.contains("HHH")) ?
+            -1 : street.replace("H.H", "  ").length() - street.replace("H", "").length();
+    }
+}
