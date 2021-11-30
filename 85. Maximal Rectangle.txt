@@ -1,0 +1,65 @@
+Intuition: .Let's break the question, consider only 1-D array is given.
+            The problem reduces to --84. Largest Rectangle in Histogram. This can be solved
+            using monotonic stack.
+         
+            .Now to extend this to 2-D array, intialize a 1-D helper array to cols length and keep
+            adding the direct below value column wise to this 1-D array.
+            
+            .Note if the value of cell directly below the cell of current row is 0, then
+             reset the value of that corresponding cell in 1-D helper array to zero. We
+             are basically doing the addition of col values to make for the breadth part
+             of the area calculation process of the rect.
+             
+            .Area = length(width of histograms) * breadth(height of histograms);     
+             
+            .Any corrections, suggestions and optimizations to code are welcomed. :)
+//Time complexity: O(R*C^2), R = matrix.length & C = matrix[0].length
+//Auxiliary Sapce: O(C), for stack in each R*C calls and for colHghts
+class Solution {
+    public int maximalRectangle(char[][] matrix) {
+        if(matrix.length == 0|| matrix[0].length == 0){
+            return 0;
+        }
+        int rows = matrix.length, cols = matrix[0].length, colHghts[] = new int[cols];
+        // Arrays.fill(colHghts, 0);
+        int maxRecArea = 0;
+        //r*c*c times
+        for(int r = 0; r <rows; r++){
+            for(int c = 0; c<cols; c++){
+                int hght = matrix[r][c]-'0';
+                if(hght == 0){
+                    colHghts[c] = 0;
+                }else{
+                    colHghts[c] += hght;
+                }
+            }
+            // for(int ele : colHghts){
+            //     System.out.print(ele + " ");
+            // }
+            // System.out.println();
+            maxRecArea = Math.max(maxRecArea, lrgstHistArea(colHghts));
+        }
+        return maxRecArea;
+    }
+//  Using monotonic stack   
+    private int lrgstHistArea(int hght[]){
+        Stack<Integer> indicies = new Stack<>();
+        indicies.add(-1);
+        int maxArea = 0;
+        for(int indx = 0; indx<hght.length; indx++){
+            while(indicies.peek() != -1 && hght[indicies.peek()] >= hght[indx]){
+                int height = hght[indicies.pop()];
+                int width = indx - indicies.peek() - 1;
+                maxArea = Math.max(maxArea, height * width);
+            }
+            indicies.push(indx);
+        }
+         while(indicies.size() > 1){
+                int height = hght[indicies.pop()];
+                int width = hght.length - indicies.peek() - 1;
+                int area = height * width;
+                maxArea = Math.max(area, maxArea);
+            }
+            return maxArea;
+    }
+}
