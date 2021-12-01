@@ -40,3 +40,43 @@ src ----intermediate paths--- dest => adding node n =>
  as you can see adding each node increase the number of paths between src to
  dest nodes to two times & there are n-3 nodes between src to dest.
  Therefore total paths possible between src to dest ~ 2^n   
+------------------------------------------------------
+// Time complexity: O(n*2^n), n is the number of nodes in the graph. 
+// Every node will be visited only once except the destination in case there are 
+//mulitple paths possible & total number of possible paths from src to destination is 2^n    
+
+// Auxiliary Space: O(n*2^n), each path can have upto n nodes & total 2*n paths can be possible, therefore this much space for res List & memo HashMap is used. 
+
+// for  recursion call stack-> O(n)
+class Solution {
+    private HashMap<Integer, List<List<Integer>>> memo = new HashMap<>();
+    public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+        int n = graph.length;
+        return findPath(graph, 0, n-1);
+    }
+//  going in a dfs fashion   
+    private List<List<Integer>> findPath(int graph[][], int src, int dest){
+        if(memo.containsKey(src)){
+            return memo.get(src);
+        }
+        List<List<Integer>> res = new ArrayList<>();
+        if(src == dest){
+            List<Integer> path = new ArrayList<>();
+            path.add(dest);
+            res.add(path);
+            memo.put(dest, res);
+            return res;
+        }
+        for(int neigh: graph[src]){
+          for(List<Integer> path : findPath(graph, neigh, dest)){
+              List<Integer> newPath = new ArrayList<>();
+              newPath.add(src);
+              newPath.addAll(path);
+              res.add(newPath);
+          }               
+        }
+        memo.put(src, res);
+              return res;
+    }
+}
+

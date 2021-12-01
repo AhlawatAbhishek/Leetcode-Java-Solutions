@@ -1,20 +1,28 @@
+Intuition: Since for each ith house we have two options:
+          .loot this house and take money from one before previous loot.(Since looting adjacent houses will raise alarm)
+          .leave this house and take money from preivous loot.   
+          
+          .Any suggestions, corrections and optimizations to code are welcomed. :)
+//Time complexity: O(len), len is length of nums array
+//Auxiliary Space: O(len), for money array              
 class Solution {
     public int rob(int[] nums) {
-        if(nums == null || nums.length == 0){
-            return 0;
-        }
-        if(nums.length == 1){
+        int len = nums.length;
+        if(len == 1){
             return nums[0];
         }
-        if(nums.length == 2){
-            return Math.max(nums[0], nums[1]);
+        int money[] = new int[len];
+//for single houes there is only one option
+        money[0] = nums[0];
+//for two houses take max of them as looting both houses will raise alarm        
+        money[1]= Math.max(nums[0], nums[1]);
+        for(int indx = 2; indx<nums.length; indx++){
+//see the intuition for this            
+            money[indx] = Math.max(nums[indx]+money[indx-2], money[indx-1]);
         }
-        int dp[] = new int[nums.length];
-        dp[0] = nums[0];
-        dp[1] = Math.max(nums[0], nums[1]);
-        for(int i =2; i<dp.length;i++){
-            dp[i] = Math.max(nums[i]+dp[i-2], dp[i-1]);
-        }
-        return dp[dp.length -1];
+//at last return the total maximum loot robber can make        
+        return money[len-1];
     }
 }
+
+If you found this post helpful please like and comment, so that it can reach others and help them. :)

@@ -1,0 +1,141 @@
+class Solution {
+    public int minimumDeletions(int[] nums) {
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE, minIndx = -1, maxIndx = -1, len = nums.length, indx = 0;
+        if(len <= 2){
+            return len;
+        }
+        ArrayDeque<Integer> aDeq = new ArrayDeque<>(); 
+        for(int num : nums){
+            if(min > num){
+                min = Math.min(min, num);
+                minIndx = indx;
+            }
+            if(max < num){
+                max = Math.max(max, num);
+                maxIndx = indx;
+            }
+            aDeq.offer(num);
+            indx++;            
+        }
+        int totalDel = 0;
+        int minDels = Math.min(minIndx, len-1-minIndx) , maxDels = Math.min(maxIndx, len-1-maxIndx);
+        if(maxDels < minDels){
+            if(maxDels == maxIndx){
+                while(aDeq.peekFirst() != max){
+                    totalDel++;
+                    aDeq.pollFirst();
+                }
+                 totalDel++;
+                 aDeq.pollFirst();
+                if(minDels == minIndx){
+                  while(aDeq.peekFirst() != min){
+                    totalDel++;
+                    aDeq.pollFirst();
+                   }
+                }else{
+                    while(aDeq.peekLast() != min){
+                    totalDel++;
+                    aDeq.pollLast();
+                   }
+                }
+                totalDel++;
+            }else{
+                while(aDeq.peekLast() != max){
+                    totalDel++;
+                    aDeq.pollLast();
+                }
+                 totalDel++;
+                 aDeq.pollLast();
+                 if(minDels == minIndx){
+                  while(aDeq.peekFirst() != min){
+                    totalDel++;
+                    aDeq.pollFirst();
+                   }
+                }else{
+                    while(aDeq.peekLast() != min){
+                    totalDel++;
+                    aDeq.pollLast();
+                   }
+                }
+                totalDel++;
+            }
+        }else if(maxDels > minDels){
+            if(minDels == minIndx){
+                while(aDeq.peekFirst() != min){
+                    totalDel++;
+                    aDeq.pollFirst();
+                }
+                totalDel++;
+                aDeq.pollFirst();
+                if(maxDels == maxIndx){
+                  while(aDeq.peekFirst() != max){
+                    totalDel++;
+                    aDeq.pollFirst();
+                   }
+                }else{
+                    while(aDeq.peekLast() != max){
+                    totalDel++;
+                    aDeq.pollLast();
+                   }
+                }
+                totalDel++;
+            }else{
+                while(aDeq.peekLast() != min){
+                    totalDel++;
+                    aDeq.pollLast();
+                }
+                totalDel++;
+                aDeq.pollLast();
+                 if(maxDels == maxIndx){
+                  while(aDeq.peekFirst() != max){
+                    totalDel++;
+                    aDeq.pollFirst();
+                   }
+                }else{
+                    while(aDeq.peekLast() != max){
+                    totalDel++;
+                    aDeq.pollLast();
+                   }
+                }
+                totalDel++;
+            }
+        }else{
+              totalDel += (Math.min(minIndx, len-1-minIndx)+ Math.min(maxIndx, len-1-maxIndx)) + 2;
+        }
+      
+        return totalDel;
+    }
+}
+--------------------------------------Correct Solution-------------------------
+Inuition: .A deletion is defined as either removing an element from the front of the array or removing an element from the back of the array.
+         
+          .Therefore to remove an element be it max element in array or min element in array. We have to remove it from that side(left or right)
+           which is closer to the ends(left or right).
+    
+         .To be more specific for nums[indx] we need to make choice for 
+          min(left side removal--- indx+1 ele. to be removed, right side removal--- len-indx ele. to be removed).
+//Time complexity: O(N), N is the length of them nums array
+// Auxiliary Space: O(1)
+class Solution {
+    public int minimumDeletions(int[] nums) {
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE, minIndx = -1, maxIndx = -1, len = nums.length, indx = 0;
+        if(len <= 2){
+            return len;
+        }
+        for(int num : nums){
+            if(min > num){
+                min = Math.min(min, num);
+                minIndx = indx;
+            }
+            if(max < num){
+                max = Math.max(max, num);
+                maxIndx = indx;
+            }
+            indx++;            
+        }
+        int totalDel = 0;
+        // Math.min(Math.max(minIndx+1,  maxIndx+1), Math.max(len-minIndx, len-maxIndx))-- for cases like[0,-4,19,1,8,-2,-3,5]
+        // Math.min(minIndx+1+len-maxIndx, maxIndx+1+len-minIndx))---for cases like [2,10,7,5,4,1,8,6]        
+       return totalDel = Math.min(Math.min(Math.max(minIndx+1,  maxIndx+1), Math.max(len-minIndx, len-maxIndx)), Math.min(minIndx+1+len-maxIndx, maxIndx+1+len-minIndx));      
+    }
+}
