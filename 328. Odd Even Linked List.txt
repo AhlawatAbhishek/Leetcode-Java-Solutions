@@ -1,0 +1,52 @@
+Intuition: .Since we are asked to group the odd and even index nodes in the original
+            LinkedList. We will be considering 0 based indexing.
+    
+           .This can be easily done by maintaining two pointers and then moving them
+            2 positions ahead in each iteration, while taking care of edges cases &
+            and the pointers pointing to null while we are traversing the linked list.
+                
+           .Consider the eg. given in sample test cases. 
+             evenHead = 1, oddHead = 2  , prevEven = 1 
+             currEven   
+                 | 
+                [1,  2,  3,  4,  5] 
+                     |
+                   currOdd 
+                   
+             after executing while loop marked one in code.
+             we will have: 
+               evenHead = 1, oddHead = 2, prevEven = 5,
+ 
+             [1-3-5-null] && [2-4-null]
+             
+             now connecting them and returning evenHead:
+              [1-3-5-2-4-null]
+              
+           .Any corrections, suggestion and optimizations to the code are welcomed.    
+//Time complexity: O(n), n is length of linked list
+//Auxiliary Space: O(1)               
+class Solution {
+    public ListNode oddEvenList(ListNode head) {
+//            []              [1]                  [1,2]
+        if(head == null || head.next == null || head.next.next == null){
+            return head;
+        }
+        ListNode oddHead = head.next, evenHead = head, currOdd = oddHead, currEven = evenHead, prevEven = currEven;
+//1---        
+        while(currEven != null){
+            prevEven = currEven;
+            if(currEven.next != null){
+                currEven.next = currEven.next.next;
+            } 
+            
+            if(currOdd != null &&currOdd.next != null){
+                currOdd.next = currOdd.next.next;
+            }
+            currEven = currEven.next;
+            if(currOdd != null)currOdd = currOdd.next;
+        }
+        prevEven.next = oddHead;
+        return evenHead;
+    }
+}
+If you found this post helpful please like and comment, so that It can reach others and help them
