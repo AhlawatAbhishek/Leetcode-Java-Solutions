@@ -1,18 +1,58 @@
+Intuition: .Encountring zero in the nums array resets our running product to 1, after
+            taking max out of running product and maxSoFar.
+            
+           .For negative numbers we can loop backwards while applying above mentioned
+            resetting running prod technique. Since in forward it may be possible that 
+            current running prod is negative but after getting one more negative it
+            becomes largest.
+            Example:    [-2,0,-1,-3,0,0,1,2,3,-7,-8] => 336
+                                        |         | 
+            
+           .Then simply return the max out of left to right and right to left traversal.
+               
+           .Any correction, suggestion and optimizations to code are welcomed.:)    
+//Time complexity: O(len), len is length of nums array
+//Auxiliary Space: O(1)               
 class Solution {
     public int maxProduct(int[] nums) {
-        if(nums == null || nums.length == 0){
-            return -1;
+        int len = nums.length, runProd = 1, maxSoFar = nums[0];
+//Left to right        
+        for(int indx = 0; indx<len; indx++){
+            runProd *= nums[indx]; 
+            maxSoFar = Math.max(maxSoFar, runProd);
+            
+            if(runProd == 0){
+               runProd = 1;
+            }    
         }
-    
-        int curr_max = nums[0], curr_min = nums[0], final_max = nums[0];
-        for(int i = 1; i < nums.length ; i++){
-            int temp = curr_max;
-            curr_max = Math.max(Math.max(curr_max*nums[i], curr_min*nums[i]), nums[i]);
-            curr_min = Math.min(Math.min(curr_min*nums[i], temp * nums[i]), nums[i]);
-            if(curr_max > final_max){
-                final_max = curr_max;
-            }
+        runProd = 1;
+        for(int indx = len-1; indx>=0; indx--){
+            runProd *= nums[indx]; 
+            maxSoFar = Math.max(maxSoFar, runProd);
+            
+            if(runProd == 0){
+               runProd = 1;
+            }    
         }
-        return final_max;
+        return maxSoFar;
     }
-}
+} 
+If you found this post helpful, please like and comment. So that it can reach others and help them. :)
+// class Solution {
+//     public int maxProduct(int[] nums) {
+//         int len = nums.length, maxEndingHere = nums[0], minProdSoFar= nums[0], maxSoFar = nums[0];
+//         for(int indx = 1; indx<len; indx++){
+//             if(nums[indx] == 0){
+//                 maxEndingHere = 0;
+//                 maxSoFar = Math.max(maxSoFar, maxEndingHere);
+//             }    
+//             int currMaxProd = maxEndingHere * nums[indx];
+//             int currMinProd = minProdSoFar * nums[indx];
+//             int currNum = nums[indx];
+//             maxEndingHere = Math.max(currMaxProd, Math.max(currMinProd, currNum));
+//             minProdSoFar =  Math.min(currMaxProd, Math.min(currMinProd, currNum));
+//             maxSoFar = Math.max(maxSoFar, maxEndingHere);
+//         }
+//         return maxSoFar;
+//     }
+// }
