@@ -1,0 +1,79 @@
+Pre-requisites: Please understand the working and implementation of Trie and
+                 Deque data structures before going through this post.:)
+Intuition: 1. Since we have to tell at any point of time for the stream of characters
+            recieved till then whether a suffix of these characters is a string of a
+            given array of strings words.
+      
+           2.We donot know before hand till how many character in the present stream
+            starting from end of string we have to check that there is a word in 
+            words array.
+    
+           3.Also we need to store words array such that this search/query operation
+            for the present stream of characters consumes less time and space. For
+            this purpose the Trie data structure is well suited which is used when
+            we are dynamically adding or querying the strings.
+                
+           4.Also we will be storing the words in reverse order to statisfy the 
+            constraint at point 2 and to check from the most recent addition in the
+            stream we will be adding each new character in stream to the front of
+            Deque data structure which we will be using to store the stream to
+            satisfy the constraint 1.
+                
+           .Any corrections, suggestions and optimizations to code are welcomed. :)     
+// Time complexity: O(len * wLen), len = words.length & wLen = longstWordLen in words; 
+// Auxiliary Space: O(len * wLen)
+class TrieNode{
+      public TrieNode children[] = null;
+      public boolean isEnd;
+      public TrieNode(){
+         children = new TrieNode[26];
+         isEnd = false;
+      }
+    
+      public void addWord(String word){
+          TrieNode curr = this;
+          for(char c : word.toCharArray()){
+              int indx = c -'a';
+              if(curr.children[indx] == null){
+                  curr.children[indx] = new TrieNode();
+              }
+              curr = curr.children[indx];
+          }
+          curr.isEnd = true;
+      }
+}
+class StreamChecker {
+    private Deque<Character> stream = new ArrayDeque<>();
+    private TrieNode root = new TrieNode();
+    public StreamChecker(String[] words) {
+        //adding words in reverse order in trie
+        for(String word : words){
+            StringBuilder sb = new StringBuilder(word);
+            sb.reverse();
+           root.addWord(sb.toString());
+        }
+    }
+    
+    public boolean query(char letter) {
+      //appending each new coming letter to stream at its front.  
+        stream.addFirst(letter);
+        TrieNode curr = root;
+        for(char c : stream){
+//checking if there is any word present in words array with the suffix character of stream visited till now.    
+            if(curr.isEnd){
+                return true;
+            }
+            if(curr.children[c-'a'] == null){
+                return false;
+            }
+            curr = curr.children[c-'a'];
+        }
+        return curr.isEnd;
+    }
+}
+
+/**
+ * Your StreamChecker object will be instantiated and called as such:
+ * StreamChecker obj = new StreamChecker(words);
+ * boolean param_1 = obj.query(letter);
+ */
