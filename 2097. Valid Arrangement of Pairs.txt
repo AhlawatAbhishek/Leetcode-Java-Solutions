@@ -1,0 +1,65 @@
+Pre-requisite:. Eulerian path and circuit -- https://www.geeksforgeeks.org/eulerian-path-and-circuit/
+              . Hierholzer’s Algorithm for directed graph--https://www.geeksforgeeks.org/hierholzers-algorithm-directed-graph/
+              
+Intuition : .Consider the constraint for validity endi-1 == starti. If we build the graph in which for each pair [start, end],
+            there is a directed edge in graph as start-->end. Then this graph is a Eulerian path or circuit.
+                
+            .We have to find this the Eulerian trail(path) or circuit(closed path). Which can be done using Hierholzer’s Algorithm.
+                
+            .Please refer above to links before goin through the code.    
+//Time complexity: O(len)~O(E), len is pairs.length & E is number of edges in the graph, in cases like[[1,3],[3,2],[2,1]] its a closed loop.
+//Auxiliary Space: O(E), for res to store the path as the path is equal to number of edges in graph                
+//Auxiliary Space                
+class Solution {
+     private HashMap<Integer, List<Integer>> adjMap = new HashMap<>(); // To store the graph
+     private HashMap<Integer, Integer> degree = new HashMap<>(); // to store the degree of verticies = sum of indegree(+ve) & outdegree(-ve)
+     private List<int[]> res = new ArrayList<>();// to store final validated pairs or say Eulerian path.
+    public int[][] validArrangement(int[][] pairs) {
+//Building the graph in which for each pair [start, end], there is a directed edge in graph as start-->end      
+       buildGraph(pairs);
+       int srcVrtx = Integer.MIN_VALUE;
+       for(Map.Entry<Integer, Integer> entry : degree.entrySet()){
+           if(entry.getValue() > 0){
+               srcVrtx = entry.getKey();
+               break;
+           }
+       }
+//[[1,3],[3,2],[2,1]]--for cases like these where we won't be able to find a vertex with degree > 0 as these cases are already having valid
+//arrangement of pairs       
+       if(srcVrtx == Integer.MIN_VALUE) return pairs;
+       else findPath(srcVrtx); 
+//Modifying the pairs input according the valid arrangement in res        
+       for(int indx = 0; indx<pairs.length; indx++){
+           int pr[] = res.get(res.size()-1-indx);
+           pairs[indx][0] = pr[0];
+           pairs[indx][1] = pr[1];
+       }
+        return pairs;
+    }
+    private void buildGraph(int pairs[][]){
+        for(int pair[] : pairs){
+            int src = pair[0], dest = pair[1];
+            
+            adjMap.putIfAbsent(src, new ArrayList<>());
+            adjMap.get(src).add(dest);
+            //Taking care of indegree of src and outdegree of dest
+            degree.put(src, degree.getOrDefault(src, 0)+1);
+            degree.put(dest, degree.getOrDefault(dest, 0)-1);
+            
+        }
+    }
+ //DFS --Hierholzer’s Algorithm.--Time complexity: O(E), E is number of edges in the graph   
+    private void findPath(int src){
+        if(!adjMap.containsKey(src)) return;
+        List<Integer> neighs = adjMap.get(src);
+        while(neighs.size() > 0){
+            int neigh = neighs.get(neighs.size()-1);
+            neighs.remove(neighs.size()-1);
+            findPath(neigh);
+
+            res.add(new int[]{src, neigh});
+        }
+    }
+}
+
+If you found this post helpful please like and comment, so that it can reach others and help them. :)

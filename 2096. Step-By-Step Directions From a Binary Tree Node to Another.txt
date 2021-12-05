@@ -1,0 +1,129 @@
+Intuition: .Since we are asked to find the shortest path between src and dest.
+            We can do so by building path for both src and dest from root 
+            separately and the eliminating the commnon path.
+                
+        .Then replacing the entries in src path with "U" and at last appending
+         the srcPath with the reversed destPath and returing it.
+                
+        .We are reversing the endPath bcz we forming paths in reverse
+         direction in the dfs fashioned recursive "findPath" method to save 
+         memory.
+                
+        .Eg. [5,1,2,3,null,6,4], src = 6 and dest = 4;
+         rerverse paths:- srcPth: LR, destPth = RR;
+
+         removing commnon paths from end: srcPth: L, destPth: R
+         
+         replacing srcPth with U's and appending reversed destPth: srcPth: UR--answer
+        
+       .Any corrections, suggestions and optimizations to code are welcomed. :)      
+//Time complexity: O(h), h is height of binary tree which can be n(number of nodes in tree), in case of skewed tree.
+//Auxiliary Space: O(h), for recursion call stack & stringbuilder used to store the path.   
+class Solution {
+    private StringBuilder destP = null;
+    public String getDirections(TreeNode root, int startValue, int destValue) {
+        StringBuilder strtPth  = new StringBuilder();
+        findPath(root, startValue, strtPth);
+        
+        StringBuilder endPth   = new StringBuilder();
+        findPath(root, destValue, endPth);     
+        
+        int sLen = strtPth.length(), eLen = endPth.length();
+        int sIndx = sLen-1, eIndx = eLen-1, commonPthCnt = 0;
+        
+        while(sIndx >= 0 && eIndx >= 0 && strtPth.charAt(sIndx) == endPth.charAt(eIndx)){
+           eIndx--;
+           sIndx--;
+           commonPthCnt++; 
+        }
+        //removing common paths.
+        strtPth.setLength(strtPth.length()-commonPthCnt);
+        endPth.setLength(endPth.length()-commonPthCnt);
+        //replacing src path with U's
+        sLen = strtPth.length();
+        strtPth.setLength(0);
+        while(sLen-->0){
+            strtPth.append("U");
+        }
+        //appending reversed endPth to new srcPth & returing it.
+        endPth.reverse();
+        strtPth.append(endPth.toString());
+        return strtPth.toString();
+    }
+    //DFS for the key value in tree
+    private boolean findPath(TreeNode root, int key, StringBuilder path){
+        if(root == null) return false;
+        if(root.val == key){
+            return true;
+        }
+        //only adding correct path, to save memory
+        if(root.left != null && findPath(root.left, key, path))
+            path.append("L");
+        else if(root.right != null && findPath(root.right, key, path))
+            path.append("R");
+        return path.length() != 0;
+    }
+}
+
+If you found the post helpful, please like and comment so that it can reach others and help them.:)
+
+
+----------------------------------------------------
+Another solution going through LCA------------------
+------------------------------------
+Pre-requisite: Lowest common ancestor(LCA) of two nodes in binary tree.
+Another approach: . Instead of going through the root and then deleting the common paths.
+ .We can go through the LCA of two nodes and then simply proceed like above solution.
+-------------------------------------
+
+
+class Solution {
+    private StringBuilder destP = null;
+    public String getDirections(TreeNode root, int startValue, int destValue) {
+        TreeNode lca =  lcaEfficient(root, startValue, destValue);
+        StringBuilder strtPth  = new StringBuilder();
+        findPath(lca, startValue, strtPth);
+        
+        StringBuilder endPth   = new StringBuilder();
+        findPath(lca, destValue, endPth);     
+        
+        int sLen = strtPth.length();
+        strtPth.setLength(0);
+        while(sLen-->0){
+            strtPth.append("U");
+        }
+        
+        endPth.reverse();
+        strtPth.append(endPth.toString());
+        return strtPth.toString();
+    }
+    private boolean findPath(TreeNode root, int key, StringBuilder path){
+        if(root == null) return false;
+        if(root.val == key){
+            return true;
+        }
+        //only adding correct path, to save memory
+        if(root.left != null && findPath(root.left, key, path))
+            path.append("L");
+        else if(root.right != null && findPath(root.right, key, path))
+            path.append("R");
+        return path.length() != 0;
+    }
+    private TreeNode lcaEfficient(TreeNode root, int n1, int n2) {
+		if (root == null) {
+			return null;
+		}
+		if (root.val == n1 || root.val == n2) {
+			return root;
+		}
+		TreeNode lca1 = lcaEfficient(root.left, n1, n2);
+		TreeNode lca2 = lcaEfficient(root.right, n1, n2);
+		if (lca1 != null && lca2 != null) {
+			return root;
+		} else if (lca1 != null) {
+			return lca1;
+		} else {
+			return lca2;
+		}
+	}
+}

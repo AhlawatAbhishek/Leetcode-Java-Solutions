@@ -1,0 +1,45 @@
+Inuition: .Since we are asked to form 3 digit even & unique numbers from the given digits.
+           Thus the  last digit of these combination should be even.
+           
+          .3 <= digits.length <= 100, therefore we can used 3 loops each of each digit in
+           3 digit combinations.
+    
+          .To further optimize the loop we can store frequency of given digits in a map-kind
+           of array bcz 0 <= digits[i] <= 9 & also it will help to make sure the 
+           combinations we are making are unique.
+    
+          .When we are visiteing a cell say digCnt[2], and if we want to use these twos for
+           forming a 3 digit num, then we have to make sure we are having enough number
+           of twos, whether we take 1 two, 2 twos or 3 twos. It will be more clear via code.
+    
+          .Any corrections, suggestions and optimizations to code are welcomed. :)
+// Time complexity: O(n), n is digits length
+// for loops: O(N^3), N is 10~O(1), worst case when we are having freq of nums from 0 to 9, >=3
+// Auxiliary Space:O((nC3*3P3)/(mult. dupl. factorials)), n is digits length 
+class Solution {
+    public int[] findEvenNumbers(int[] digits) {
+        int  len = digits.length, digCnt[] = new int[10];
+        for(int dig : digits){
+            digCnt[dig]++;
+        }
+        ArrayList<Integer> res = new ArrayList<>();
+        for(int i = 1; i<10; i++){
+            for(int j = 0; j<10&& digCnt[i] > 0; j++){
+                for(int k = 0; k<10&& digCnt[j] > ((i == j) ? 1:0); k+=2){//traversing only even values for k
+                    int kJEq = (k == j) ? 1:0, kIEq = (k == i) ? 1:0;
+                  if(digCnt[k] > (kJEq+kIEq)){
+                    int num = i * 100 + j* 10 + k;
+                    res.add(num);
+                   }     
+                }
+            }
+        }
+        int resArr[] = new int[res.size()], indx = 0;
+        for(int ele : res){
+            resArr[indx++] = ele;
+        }
+        return resArr;
+    }
+}
+
+If you found this post helpful then please like and comment, so that it can reach others and help them. :)
