@@ -1,16 +1,34 @@
+```
+Intuition: .All consecutive even and odd numbers are two positions ahead / before of each
+           other.For example let current odd number is 1 then next would be 1+2=3, same goes
+           for even numbers.
+               
+          ."Costs 0 when moving to position[i] + 2 or position[i] - 2". Then combining this
+          and above mentioned fact we can move all even & odd chips to two consecutive
+          even and odd positions say 2 & 1 respectively.
+               
+          .Now with all odd chips at 1 & all even chips at 2 we have to incurr min(number
+          of odd chips, number of even chips) cost bcz "position[i] + 1 or position[i] - 1
+          with cost = 1".   
+		  
+		 .Any corrections, suggestions and optimizations to code are welcomed. :) 
+```
+```
+//Time complexity: O(len), len = position.length
+//Auxiliary Space: O(1)               
 class Solution {
     public int minCostToMoveChips(int[] position) {
-      int evenParity  = 0, oddParity =0;
-      for(int x : position){
-         if(x % 2== 0){
-             evenParity++;
-         }else{
-             oddParity++;
-         }
-      }
-        if(oddParity == position.length || evenParity == position.length){
-            return 0;
+       int evenPosChips=0, oddPosChips = 0, len = position.length;
+        for(int pos : position){
+            if(pos % 2 == 0){
+                evenPosChips++;
+            }else{
+                oddPosChips++;
+            }
         }
-        return Math.min(oddParity, evenParity);
+        if(evenPosChips == len || oddPosChips == len) return 0;
+        return Math.min(evenPosChips, oddPosChips);
     }
 }
+```
+If you found this post helpful then please like and comment. So that it can reach others and help them. :)
