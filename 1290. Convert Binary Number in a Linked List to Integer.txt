@@ -1,29 +1,33 @@
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode() {}
- *     ListNode(int val) { this.val = val; }
- *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
- * }
- */
+Pre requisite- Binary to decimal conversion.
+Intuition: .Since we have to convert the binary number represented by linkedlist to decimal
+            , therefore we have to know that how long the linked list is bcz we will be
+            traversing it from left to right.
+    
+           .And we would be starting from len-1 power of two from head and keep on
+           decrementing the power of two as we proceed towards the end of the linkedlist.
+    
+           .And keep adding these calculations to final decimal number.
+    
+           .Any corrections, suggestions and optimizations to code are welcomed. :)
+               
+//Time complexity: O(N), N is length of the linkedlist
+//Auxiliary Space: O(1)               
 class Solution {
     public int getDecimalValue(ListNode head) {
-        ListNode temp = head;
-        int size = 0;
-        while(temp != null ){
-            temp = temp.next;
-            size++;
+        int len = 0;
+        ListNode curr = head;
+        while(curr != null){
+            len++;
+            curr = curr.next;
         }
-        ListNode temp2 = head;
-        int p = size-1;
-        int res = 0;
-        while(temp2 != null){
-            int x = (int)Math.pow(2, p--);
-            res += temp2.val * x;
-            temp2 = temp2.next;
+        int exp = len-1;
+        int deci = 0;
+        curr=head;
+        while(curr != null){
+            deci += (int)(curr.val * Math.pow(2, exp--));
+            curr = curr.next;
         }
-        return res;
+        return deci;
     }
 }
+If you found this post helpful then please like and comment. So that it can reach others and help them. :)

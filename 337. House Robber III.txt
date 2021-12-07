@@ -1,4 +1,4 @@
-/**
+/** [2,1,3,null,4] **/
 Intuition: . "It will automatically contact the police if two directly-linked houses
               were broken into on the same night." This constraint is the crux of the
               question.
