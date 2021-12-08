@@ -1,31 +1,40 @@
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
+Intuition: .Since the value of tilt of each node = Math.abs(leftSum - rightSum).
+            
+           .Therefore it will be wise to start calculating the tilt of bottom most nodes and also returing the node values plus their left &
+            right subtree sums to their parents.
+    
+           .In this way we keep calculating the titl of each node in tree in bottom up fashion 
+		   and also adding these tilt valued to cummilative tiltSum & at last returning the titlSum.
+    
+           .So for this approach DFS fashion traversal is well suited.
+               
+           .Any corrections, suggestions & optimizations to code are welcomed. :)
+
+//Time complexity: O(N), N is number of nodes in tree bcz each node will be visited once.
+//Auxiliary Space: O(h), h is height of tree, in worst case it could be N, in a
+//skewed tree, this space is used for the recursion call stack of "findTiltHelper"            
 class Solution {
-    int result =0;
+    private int tiltSum = 0;
     public int findTilt(TreeNode root) {
-        tilt(root);
-        return result;
+        if(root == null || (root.left == null && root.right == null)){
+            return 0;
+        }
+        tiltSum = 0;
+        findTiltHelper(root);
+        return tiltSum;
     }
-    public int tilt(TreeNode root){
+//     DFS fashion traversal
+    private int findTiltHelper(TreeNode root){
         if(root == null){
             return 0;
         }
-        int left = tilt(root.left);
-        int right = tilt(root.right);
-        result += Math.abs(right -left);
-        return left +right+root.val;
+        int leftSum = findTiltHelper(root.left);
+        int rightSum = findTiltHelper(root.right);
+  
+        int subTreeSum = root.val + leftSum + rightSum;
+        tiltSum += Math.abs(leftSum - rightSum);
+        return subTreeSum;
     }
 }
+
+If you found this post helpful then please like & comment. So that it can reach others and help them. :)
