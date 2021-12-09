@@ -1,3 +1,39 @@
+Intuition: .We can think each index say i as a node in a directed graph. And it's neighbours being (i + arr[i]) &
+            (i - arr[i]).
+    
+           .So now the problem reduces to checking if we can reach destination(0 containing index) from source(start index);
+            
+           .Doing as simple DFS seems to a ligit option for it while keeping track of visited nodes(indicies) to avoid continous
+            looping.
+               
+           .Any corrections, suggestions and optimizations to code are welcomed.:)
+// Time complexity: O(len), len = arr.length, since we are visiting each index exactly once.
+//Space complexity: O(len), for recursion call stack of 'isReachable'                
+class Solution {
+
+    public boolean canReach(int[] arr, int start) {
+        int len = arr.length;
+        return isReachable(arr, start, len);
+    }
+    private boolean isReachable(int arr[], int src, int len){
+        if(src <0 || src >= len || arr[src] == Integer.MIN_VALUE){
+            return false;
+        }
+        //return true if a zero containing index--destination is reached
+        if(arr[src] == 0) return true;
+        //taking copy of value at src indx since we are using the arr to mark nodes(indicies visited)
+        int srcVal = arr[src];
+        //Marking this src index visited by storing -Infi. here 
+        arr[src] = Integer.MIN_VALUE;
+        //Visit the neighbour nodes(indicies) or src node(index)-
+        return isReachable(arr, src+srcVal, len) ||
+        isReachable(arr, src-srcVal, len);
+       
+    }
+}
+If you found this post helpful then please like and comment. So that it can reach others and help them. :)
+------------------BFS approach---------------------------
+-------------------------------------------------------------
 class Solution {
     	public boolean canReach(int[] arr, int start) {
 		Queue<Integer> q = new LinkedList<>();
