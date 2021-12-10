@@ -1,0 +1,49 @@
+Intuition: .Filling board left to right, since the number of rows is always fixed to 2.
+. Also for fully and partially filled borads we can used the previous results calculated with less number of columns, so
+overlapping sub problems exits, therefore dynamic programming can be applied.   
+        
+.Applying bottom up DP or tabulation here to save the recursion call stack that would be used in top-down DP
+
+.fullyFilled  calculations.      
+Suppose n = 3, now if we are at the third column the how can we fill all the three columns or more specifically which previous
+calculations of previous columns we can use to make for the third one. 
+1. -- col1-V & col2-V & col 3 -V(Vertical) --fully filled prev 
+2. -- col1-V & then H, H(horizontal)--fully filled one before prev 
+3. -- col1-V & 2  tromino  arrangements--partially filled prev*2, also shown in example 1 in question 
+Therefore    fullyFilled[col] = (fullyFilled[col-1] + fullyFilled[col-2] + 2*partFilled[col-1])    
+        
+.partFilled - calculations
+Suppose n = 6 and we are at 6th column, how can we calculate the number of ways to 6th column be partially filled and rest all fully filled by using previous column's calculations.
+1. -- rest n-2(4) cols filled + one inverted L(tromino) in n-1th(5th) column
+2. -- rest n-1(5) cols filled + one domino tile from second last(5th) column extending to last(6th) column.
+Therefore   partFilled[col] = (fullyFilled[col-2] + partFilled[col-1])   
+
+.Any suggestions, corrections and optimizations to code are welcomed.:)
+//Time complexity: O(n)
+//Auxiliary Space: O(n), for fullyFilled & partFilled arrays  
+class Solution {
+    private final int mod = 1000000007;
+    public int numTilings(int n) {
+//1 column - 1 tile, 2 columns- 2 tiles-> H(horizontal), H or V, V(Vertical)        
+        if(n <= 2) return n;
+
+        long fullyFilled[] = new long[n+1];
+        long partFilled[] = new long[n+1];
+
+         fullyFilled[0] = 1l;  
+         fullyFilled[1] = 1l;
+         fullyFilled[2] = 2l;
+         partFilled[0] = 0l;
+         partFilled[1] = 0l;
+         partFilled[2] = 1l;
+        
+        for(int col = 3; col<=n; col++){
+           
+            fullyFilled[col] = (fullyFilled[col-1] + fullyFilled[col-2] + 2*partFilled[col-1])%mod;
+             partFilled[col] = (fullyFilled[col-2] + partFilled[col-1])%mod;
+            
+        }
+        return (int)(fullyFilled[n]%mod);
+    }
+}
+If you found this post helpful then please like and comment to increase it's reach.:)
