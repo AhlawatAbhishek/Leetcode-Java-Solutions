@@ -1,0 +1,67 @@
+Intuition: 1.Since all the n numbers divisible either by a or b are in sorted order. Binary searching for the nth number seems
+           to be a legit option.
+     
+           2.But on what basis we would be reducing the search space. If we observe:
+              n = number of numbers divisible by a + number of numbers divisible by b - number of numbers divisible by a & b
+            This can be used to check for if the number we are at is the nth magical number or not.
+                
+           3.Search space will be from 1 to n * min(a*b) (since the nth number cannot be bigger than this).
+             Any corrections, modifications and optimizations to code are welcomed. :)
+// Time complexity: O(Log(n * min(a, b)))
+//Auxiliary Space: O(1)
+class Solution {
+    public int nthMagicalNumber(int n, int a, int b) {
+        final int mod = 1000_000_007;
+        //making sure that a is always greater in gcd calculation. GCD * LCM = Prod. of nums
+        if(a < b){ 
+        int temp = a;
+        a = b;
+        b = temp;}
+        int lcm = a*b/gcd(a, b);
+        //see point 3
+        long lo = 1, hi = (long)n * Math.min(a, b);
+        while(lo < hi){
+            long mid = (lo + (hi - lo) /2);
+            //see point 2
+            long magNumsTillMid = mid/a + mid/b - mid/lcm;
+            if(magNumsTillMid < n){
+                lo = mid+1;
+            }else{
+                hi = mid;
+            }
+        }
+        return (int)(hi% mod);
+    }
+    private int gcd(int a, int b){
+       if(b == 0) return a;
+        return gcd(b, a%b);
+    }
+}
+If you found this post helpful please like and commnet to increase it's reach. :)
+-----------------
+class Solution {
+    public int nthMagicalNumber(int n, int a, int b) {
+        final int mod = 1000_000_007;
+        if(a < b){ 
+        int temp = a;
+        a = b;
+        b = temp;}
+        int lcm = a*b/gcd(a, b);
+        int magNumTillLCM = lcm/a + lcm/b - 1;
+        int quo = n/magNumTillLCM, rem = n % magNumTillLCM;
+        long ans = ((long)lcm * quo) % mod;
+        if(rem == 0) return (int)ans;
+       int aInc = a, bInc = b;
+        while(rem-->1){
+          if(aInc <= bInc) 
+            aInc += a;
+          else  
+            bInc += b;
+        }
+        return (int)((ans + Math.min(aInc, bInc))% mod); 
+    }
+    private int gcd(int a, int b){
+       if(b == 0) return a;
+        return gcd(b, a%b);
+    }
+}
