@@ -1,0 +1,82 @@
+//Not correct.
+class Solution {
+    public int maxTotalFruits(int[][] fruits, int startPos, int k) {
+         int fArrLen = fruits.length, fGrid[] = new int[fruits[fArrLen-1][0]+1];
+         for(int indx = 0; indx<fruits.length; indx++){
+             fGrid[fruits[indx][0]] = fruits[indx][1];
+         }
+         return maxCollect(fGrid, startPos, 1, k, 0, 0);
+    }
+    private int maxCollect(int[] fGrid, int src, int k, int K, int totalCurrFrts, int currSteps){
+        if(src < 0 || src > fGrid.length || fGrid[src] == -2 || (fGrid[src] == 0 && K == k) || k == K){
+            return totalCurrFrts;
+        }
+        int currPos = src, rightSideFrts = 0, leftSideFrts = 0;
+        int fVall = fGrid[currPos];
+        totalCurrFrts += fGrid[currPos];
+        fGrid[currPos] = -2;
+        for(int steps = k; steps<=K && currPos < fGrid.length-1; steps++){
+            currPos++;
+            int fVal = fGrid[currPos];
+            fGrid[currPos] = -2;
+            rightSideFrts += maxCollect(fGrid, currPos, steps+1, K, totalCurrFrts + fVal, steps);
+             fGrid[currPos] = fVal;
+        }
+        currPos = src;
+         // fGrid[currPos] = fVall;
+        for(int steps = 1; steps<=k && currPos >= 1; steps++){
+            currPos--;
+            int fVal = fGrid[currPos];
+            fGrid[currPos] = -2;
+            leftSideFrts += maxCollect(fGrid, currPos, steps+1, K, totalCurrFrts + fVal, steps);
+            fGrid[currPos] = fVal;
+        }
+        return Math.max(leftSideFrts, rightSideFrts);
+    }
+}
+--------------
+----post link: https://leetcode.com/problems/maximum-fruits-harvested-after-at-most-k-steps/discuss/1624680/java-greedy-sliding-window-easy-to-understand-and-detailed-explanation
+correct---------------
+![image](https://assets.leetcode.com/users/images/144447ee-9e2a-491e-87b0-f06c3d8a9f82_1639293646.2565556.png)
+
+```
+Intuition: .Think greedly either go to as far as left you can then turn and come to right while picking all the fruits along the way and
+            vice-versa. 
+           .Maximize the above two options and keep the record of every such window formed by taking two pointers left and right &
+            applying siliding window.
+           .Any suggestions, corrections and optimizations to code are welcomed. :)
+```
+```
+//Time complexity: O(len^2) upper bound bcz of the while loop inside for loop.
+//Auxiliary Space: O(1)
+class Solution {
+    public int maxTotalFruits(int[][] fruits, int startPos, int k) {
+        int left = 0, len = fruits.length;
+        //finding the leftmost reachable point from startPos
+        while(left < len && fruits[left][0] < startPos-k){
+            left++;
+        }
+        int maxSum = 0, currSum = 0;
+//applying the silidin window-- Consider example two of problem statement to get clarity of the below two cases
+//two options of movement: 1. go (r-start) steps back and froth i.e. (right-startPos) * 2 and then go to left finally i.e. (startPos -left)
+//2. go (startPos-left) steps back and froth i.e. (startPos-left)*2  & go to right finally i.e. (right-startPos)
+//The minimum of these two options should not be greater than k, if it is so then increment left to decrease the window size;        
+        for(int right = left; right<len && fruits[right][0] <= startPos + k; right++){
+            currSum +=fruits[right][1];
+            int rightThenLeft = (fruits[right][0]-startPos) * 2 + (startPos -fruits[left][0]);
+            int leftThenRight = (startPos-fruits[left][0])*2    + (fruits[right][0]-startPos);
+            int minOfMovOptns = Math.min(rightThenLeft, leftThenRight);
+           //Keep decrementing window size till & decrementing current sum this condition satisfies     
+            while(minOfMovOptns > k){
+                currSum -= fruits[left++][1];
+                 rightThenLeft = (fruits[right][0]-startPos) * 2 + (startPos -fruits[left][0]);
+                 leftThenRight = (startPos-fruits[left][0])*2    + (fruits[right][0]-startPos);
+                 minOfMovOptns = Math.min(rightThenLeft, leftThenRight);
+            }
+            maxSum = Math.max(maxSum, currSum);
+        }
+         return maxSum;
+    }
+}
+```
+If you found this post helpful then please like and comment to increase it's reach. :)

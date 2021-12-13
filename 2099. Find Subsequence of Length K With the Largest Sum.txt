@@ -1,0 +1,41 @@
+Intuition: .Use the greatest elements only to from the greatest sum subseq. of size k.
+          
+           .Thus elements can be sorted and the maxSum can be found out but wait we need to return the subseq and in subseq ordering matters,
+            which we would loose if we sort the original array.
+             
+           .Use a auxiliary array to store both number and index and sort this auxiliary array- 'indxNumMap' according to the numbers stored.
+                
+           .No use another array - 'isUsedForMax' to mark the indices' whose numbers we have used to get the maxSum.
+                
+           .Finally store the marked indicies' numbers in the result array.
+            Any corrections, suggestions and optimizations to code are welcomed.:)     
+
+//Time complexity: O(len*Log(len)), bcz of sorting used
+//Auxiliary Space: O(len), for auxiliary arrays used                
+class Solution {
+    public int[] maxSubsequence(int[] nums, int k) {
+        int len = nums.length;
+        int indxNumMap[][] = new int[len][2];
+        for(int indx = 0; indx<len; indx++){
+            indxNumMap[indx][1] = nums[indx];
+            indxNumMap[indx][0] = indx;
+        }
+        Arrays.sort(indxNumMap, (a, b)-> a[1]-b[1]);
+       
+        boolean isUsedForMax[] = new boolean[len];
+        for(int indx = 0; indx<k; indx++){
+           isUsedForMax[indxNumMap[len-1-indx][0]] = true;    
+        }
+        
+        int insrtIndx = 0 , res[] = new int[k];
+        for(int indx = 0; indx<len; indx++){
+            if(isUsedForMax[indx]){
+                res[insrtIndx++] = nums[indx];
+            }
+        }
+       
+        return res;
+    }
+}
+
+If you found this post helpful then please like and commnet to increase it's reach.:)

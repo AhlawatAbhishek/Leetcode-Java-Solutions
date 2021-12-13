@@ -1,0 +1,54 @@
+---post link--https://leetcode.com/problems/detonate-the-maximum-bombs/discuss/1625146/Java-or-DFS-orO(bLen)-time-orEasy-to-understand-and-detailed-explanation.-%3A)
+Pre-requisite: Distance between two points in mathematics and DFS in computer science(DSA).
+Inuition: . From each node we can form a directed graph to the nodes that are in it's range.
+          
+          .From being in the range means the distance between the co-ordinates of detonating bomb and target is less than or equal to the
+           radius of the detonating bomb.
+    
+          .Then once the complete graph is fromed for each node then we perform a DFS via method "countReach" for each node as we are allowed
+           to explode only one bomb, and finally return the maximum reach that can be achieved.
+               
+          .Any corrections, suggestions or optimizations to code are welcomed. :)     
+//Time complexity: O(bLen), bLen is the length of the longest chain of explosions possible.
+//Auxiliary Space: O(bombs.length) for the adjList
+class Solution {
+    private HashMap<Integer, ArrayList<Integer>> adjList = new HashMap<>();
+    private HashSet<Integer> exploded = new HashSet<>();
+    public int maximumDetonation(int[][] bombs) {
+        int len = bombs.length;
+        for(int indx1 = 0; indx1<len; indx1++){
+            int detX = bombs[indx1][0], detY = bombs[indx1][1], detRad = bombs[indx1][2];
+            for(int indx2 = 0; indx2<len; indx2++){
+                // if(indx1 == indx2) continue;
+                int targetX = bombs[indx2][0], targetY = bombs[indx2][1];
+                //Distance between two points
+                long detTargetDistSqr = (long)(detX-targetX) *  (detX-targetX) + (long)(detY-targetY) * (detY-targetY);
+                long detRadSqr = (long)detRad * detRad;
+                if(detTargetDistSqr <= (long)detRad * detRad){
+                    if(!adjList.containsKey(indx1)) adjList.put(indx1, new ArrayList<>());
+                    adjList.get(indx1).add(indx2);
+                }
+            }
+        }
+        int maxExploded = 0;
+        for(Map.Entry<Integer, ArrayList<Integer>> entry : adjList.entrySet()){
+            //including self
+            int src = entry.getKey();
+            countReach(src);
+            int range = exploded.size();
+            maxExploded = Math.max(maxExploded, range);
+            // System.out.println("src is: " + entry.getKey()+" and range is: "+ range);
+            // System.out.println("NeighBours are: "+ entry.getValue().size());
+            exploded.clear();
+        }
+        return maxExploded;
+    }
+    private void countReach(int src){
+        if(exploded.contains(src)) return;
+        exploded.add(src);
+        for(int neigh : adjList.get(src)){  
+            countReach(neigh);
+        }
+    }
+}
+If you found this post helpful then please like and comment so that it can reach others and help them. :)

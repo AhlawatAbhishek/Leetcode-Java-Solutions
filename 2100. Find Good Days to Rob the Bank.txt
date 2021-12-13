@@ -1,0 +1,36 @@
+Intuition: .We need to find points to rob where two conditions satisfy:
+            1.There are atleast time+1 numbers of days before current day in which security is in non-increasing order inculding current day.
+            2.There are atleast time+1 numbers of days after current day in which security is in non-decreasing order inculding current day.
+                
+          .We can keep two arrays to check for the continous decreasing/constant days from left to right --for constraint 1 above. && 
+         continous decreasing/constant  days for right to left-- for constraint 2 above.
+              
+         .Any corrections, suggestions or optimizations to code are welcomed. :)
+// Time compelxity: O(len)
+// Auxiliary space: O(len), for extra arrays rightDec & leftDec           
+class Solution {
+    public List<Integer> goodDaysToRobBank(int[] arr, int time) {
+        int len = arr.length, leftDec[] = new int[len], rightDec[] = new int[len];
+        for(int indx = 0; indx<len; indx++){
+            if(indx-1 >= 0 && arr[indx-1] >= arr[indx]){
+                leftDec[indx] = leftDec[indx-1]+1;
+            }else{
+                leftDec[indx] = 1;
+            }
+        }
+        List<Integer> res = new ArrayList<>();
+        for(int indx = len-1; indx>=0; indx--){
+            if(indx+1 < len && arr[indx+1] >=arr[indx]){
+                rightDec[indx] = rightDec[indx+1]+1;
+            }else{
+                rightDec[indx] = 1;
+            }
+        }
+        for(int indx = 0; indx<len; indx++){
+           if(leftDec[indx] >= time+1 && rightDec[indx] >= time+1) res.add(indx);
+        }
+        return res;
+    }
+}
+
+If you found this post helpful, then please like and comment to increase it's reach. :)
