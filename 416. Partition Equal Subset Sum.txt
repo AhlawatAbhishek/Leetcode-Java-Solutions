@@ -47,3 +47,66 @@ class Solution {
         return dp[sum];
     }
 }
+-----------------------------
+416. Partition Equal Subset Sum-----------https://leetcode.com/problems/partition-equal-subset-sum/discuss/1626216/Java-or-O(n*hLen)-time-and-spaceor-DFSor-Easy-to-understand-and-detailed-explanation.%3A)
+-----------------
+Intuition: .To divide the array in to two subsets of equal sum, the overall sum of the array must be divisible by two.
+           .And if it is then we have to find out that totalSum/2 can be formed by a subsequence or not. For that we will do simple DFS via method 'isSumPresent'.
+           .Also for optimization of method 'isSumPresent' memoization or top down Dynamic Programming can be applied. Since
+            it contains overlapping subproblems and optimal substructure. Also to save recursion call stack tabulation could
+            have been used but this is more efficient as we return as soon as we hit the target sum.
+               
+           .Any corrections, suggestions or optimizations to code are welcomed. :)  
+//Time complexity: O(n*hlen), n=nums.length & hLen = halfSum
+//Auxiliary space: O(n*hLen)  
+class Solution {
+    private Boolean memo[][] = null;
+    public boolean canPartition(int[] nums) {
+        int totalSum = 0;
+        for(int num : nums){
+            totalSum += num;
+        }
+        if(totalSum % 2 != 0) return false;
+        int halfSum = totalSum/2;
+        memo = new Boolean[halfSum+1][nums.length];
+        return isSumPresent(nums, 0, 0, halfSum);
+    }
+    //DFS
+    private boolean isSumPresent(int nums[], int indx, int currSum, int target){
+        if(currSum > target|| indx >= nums.length) return false;
+        if(currSum == target) return true;
+        if(memo[currSum][indx] != null){
+             return memo[currSum][indx];
+        }
+        return memo[currSum][indx] =  isSumPresent(nums, indx+1, currSum, target) ||
+               isSumPresent(nums, indx+1, currSum+ nums[indx], target);
+        
+    }
+}
+If you found this post helpful then please like and comment to increase it's reach. So that it can help others. :)
+----------------------------------------------------------------------
+//Time complexity: O(n*hlen), n=nums.length & hLen = halfSum
+//Auxiliary space: O(n*hLen)  
+class Solution {
+    public boolean canPartition(int[] nums) {
+        int totalSum = 0, len = nums.length;
+        for(int num : nums){
+            totalSum += num;
+        }
+        if(totalSum % 2 != 0) return false;
+        int halfSum = totalSum/2;
+        boolean doSumExist[][] = new boolean [len][halfSum+1];
+        doSumExist[0][0] = true;
+        for(int indx = 1; indx<len; indx++){
+            int currEle = nums[indx-1];
+            for(int sum = 0; sum <= halfSum; sum++){
+                if(currEle > sum){
+                    doSumExist[indx][sum] = doSumExist[indx-1][sum];
+                }else{
+                    doSumExist[indx][sum] = doSumExist[indx-1][sum] || doSumExist[indx-1][sum-currEle];
+                }
+            }
+        }
+        return doSumExist[len-1][halfSum];
+    }
+}

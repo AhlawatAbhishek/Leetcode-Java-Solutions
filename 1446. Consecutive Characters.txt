@@ -1,3 +1,4 @@
+--post link--https://leetcode.com/problems/consecutive-characters/discuss/1626185/java-olen-time-o1-space-easy-to-understand-and-detailed-explanation
 Intuition: .Since we are to find the 'length of a non-empty substring that contains only one unique character'.
          
             .That is nothing but the length of longest repeating substring. Which can be found by using two variables maxLen &
