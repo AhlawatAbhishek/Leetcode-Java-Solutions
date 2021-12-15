@@ -40,3 +40,51 @@ class Solution {
         return head;
     }
 }
+-----------------------------------------------
+----------post link-----https://leetcode.com/problems/insertion-sort-list/discuss/1629563/Java-or-O(len2)-or-Two-pointers-or-Easy-to-understand-and-detailed-explanation%3A)
+--------
+Intuition: .Since we are asked to perform the insertion sort on the linked list, which unlike array donot have random access.
+            Therefore we cannot simply traverse backwards as we do in insertion sort for the array, as singly linked list also
+            donot have a previous pointer pointing to previous node.
+               
+          .So we would be declaring two Node refrences dummyHead and tail and intializing dummyHead and then inserting the 
+          original nodes at there correct position in sorted order in the newly formed linked list by these two node refrences.
+                
+          .At last we will be returning the next node to dummyHead.
+           Any corrections, suggestions or optimizations to code are welcomed. :)
+//Time complexity: O(len^2), len is length of the Linked List
+// Auxiliary Space: O(1), ignoring the space used to create dummyHead.
+class Solution {
+    public ListNode insertionSortList(ListNode head) {
+        if(head.next == null) return head;
+        ListNode dummyHead = new ListNode(Integer.MIN_VALUE), tail = null, curr = head;
+        //iterating the whole original liked list and inserting nodes of it in the new linked list at correct position.
+        while(curr != null){
+            ListNode next = curr.next;
+            if(tail == null){//new Linked List is empty
+                dummyHead.next = curr;
+                tail = curr;
+                curr.next = null;
+            }else if(tail != null && dummyHead.next.val > curr.val){//curr node less than the first node in the new Linked List
+                curr.next = dummyHead.next;
+                dummyHead.next = curr;
+            }else if(tail != null && curr.val > tail.val){//curr node greater than the last node in the new Linked List 
+                tail.next = curr;
+                tail = curr;
+                curr.next = null;
+            }else{//curr node's value lie between first and last node's values of the new Linked List
+                ListNode currNode = dummyHead.next;
+                //At worst case it can run upto len-2 times 
+                while(currNode.next != null && currNode.next.val< curr.val){
+                    currNode = currNode.next;
+                }
+                curr.next = currNode.next;
+                currNode.next = curr;
+                if(tail == currNode) tail = curr;
+            }
+            curr = next;
+        }
+        return dummyHead.next;
+    }
+}
+If you found this post helpful then please like and comment to increase it's reach. So that it can help others also. :)
