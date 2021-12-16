@@ -1,43 +1,165 @@
 class Solution {
     public List<Integer> findMinHeightTrees(int n, int[][] edges) {
-        List<Integer> res = new ArrayList<>();
-        if(n<=0) return res;
-        if(n==1){
-            res.add(0);
-            return res;
+        List<Integer> roots = new ArrayList<>();
+        if(n == 1){
+            roots.add(0);
+            return roots;
         }
         int degree[] = new int[n];
-        List<List<Integer>> adj = new ArrayList<>();
-        for(int i  = 0 ; i<n ; i++){
-            adj.add(new ArrayList<>());
-        }
-        for(int[] e : edges){
-            degree[e[0]]++;
-            degree[e[1]]++;
-            adj.get(e[0]).add(e[1]);
-            adj.get(e[1]).add(e[0]);
-        }
-        Queue<Integer> q = new LinkedList<>();
-        for(int i = 0; i<n; i++){
-            if(degree[i] == 1){
-                q.add(i);
+        HashMap<Integer,ArrayList<Integer>> graph = new HashMap<>(); 
+        Queue<Integer> vertices = new LinkedList<>();
+        calcDeg_MkMap(edges, degree, graph);
+        findRoots(vertices, roots, degree, graph);
+        return roots;
+    }
+    private void findRoots(Queue<Integer> verticies, List<Integer> roots, int degree[], HashMap<Integer,ArrayList<Integer>> graph){
+        int totalVert = degree.length;
+        for(int vrtx1 = 0; vrtx1<totalVert; vrtx1++){
+            if(degree[vrtx1] == 1){
+                verticies.offer(vrtx1);
             }
         }
-        while(n>2){
-            int size = q.size();
-            n -= size;
-            while(size-->0){
-                int v = q.poll();
-                for(int i : adj.get(v)){
-                    degree[i]--;
-                    if(degree[i] == 1){
-                        q.add(i);
-                    }
+        while( totalVert > 2){
+            int size = verticies.size();
+            totalVert -=  size;
+           while(size-->0){     
+            int vrtx = verticies.poll();
+            for(int neigh : graph.get(vrtx)){
+                degree[neigh]--;
+                if(degree[neigh] == 1){
+                    verticies.offer(neigh);
                 }
             }
-            
+           }    
         }
-        res.addAll(q);
+       while(!verticies.isEmpty()) 
+        roots.add(verticies.poll()); 
+    }
+    private void calcDeg_MkMap(int [][]edges, int degree[], HashMap<Integer,ArrayList<Integer>> graph){
+        for(int edgIndx = 0; edgIndx < edges.length; edgIndx++){
+            int vrtx1 = edges[edgIndx][0], vrtx2 = edges[edgIndx][1];
+            degree[vrtx1]++;
+            degree[vrtx2]++;
+            graph.putIfAbsent(vrtx1, new ArrayList<>());
+            graph.putIfAbsent(vrtx2, new ArrayList<>());
+            graph.get(vrtx1).add(vrtx2);
+            graph.get(vrtx2).add(vrtx1);
+        }
+    }
+}
+----------------------------------------
+--Correct logic buts gives TLE---
+
+class Solution {
+    private HashMap<Integer, ArrayList<Integer>> adjList = null;
+    private HashMap<Integer, Integer> srcHeightMap = null;
+    private HashSet<Integer> visited = null;
+    private int minHeight = Integer.MAX_VALUE;
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+         List<Integer> res = new ArrayList<>();
+         if( n == 1){
+             res.add(0);
+             return res;
+         }
+        adjList = new HashMap<>();
+        visited = new HashSet<>();
+        srcHeightMap = new HashMap<>();
+        for(int eIndx = 0; eIndx<n-1; eIndx++){
+            int vrtx1 = edges[eIndx][0], vrtx2 = edges[eIndx][1];
+            if(!adjList.containsKey(vrtx1)) adjList.put(vrtx1, new ArrayList<>());
+            if(!adjList.containsKey(vrtx2)) adjList.put(vrtx2, new ArrayList<>());
+            adjList.get(vrtx1).add(vrtx2);
+            adjList.get(vrtx2).add(vrtx1);
+        }
+        for(int vrtx = 0; vrtx < n; vrtx++){
+            int currSrcHeight = calcTreeHeight(vrtx);
+            srcHeightMap.put(vrtx, currSrcHeight);
+            minHeight = Math.min(minHeight, currSrcHeight);
+            visited.clear();
+        }
+        // System.out.println("Size of srcHeightMap is: "+ srcHeightMap.size());
+        for(Map.Entry<Integer, Integer> entry : srcHeightMap.entrySet()){
+            if(entry.getValue() == minHeight){
+                res.add(entry.getKey());
+            }
+        }
         return res;
+    }
+    private int calcTreeHeight(int src){
+        if(visited.contains(src)) return 0;
+        int subTreeHeight = 0;
+        visited.add(src);
+        for(int child : adjList.get(src)){
+           int currHeight = calcTreeHeight(child);
+           subTreeHeight = Math.max(subTreeHeight, currHeight+1); 
+        }
+        return subTreeHeight;
+    }
+}
+------------------------------------------------------------ Correct solution.
+class Solution {
+    private int maxHeight = Integer.MIN_VALUE, leafNode = -1;
+//------------------------     
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+          List<Integer> roots = new ArrayList<>();
+        if(n == 1){
+            roots.add(0);
+            return roots;
+        }
+        int heights[] = new int[n];
+        HashMap<Integer,ArrayList<Integer>> graph = new HashMap<>();
+        mkMap(edges, graph);
+        int src = 0, height = 0 ,parent = src; 
+        findLngstPath(src, src, height, graph, heights);
+        src = leafNode; parent =src;
+        findLngstPath(src, src, height, graph, heights);
+        findRoots(heights, roots, graph);
+        return roots;
+    }
+//------------------------ 
+    private void findRoots(int heights[], List<Integer> roots, HashMap<Integer,ArrayList<Integer>> graph){
+        int midHght = maxHeight/2;
+        int vrtx;
+        for(vrtx = 0; vrtx<heights.length; vrtx++){
+            if(heights[vrtx] == midHght){
+                roots.add(vrtx);
+                break;
+            }
+        }
+        if(maxHeight%2 != 0){
+            for(int neigh : graph.get(vrtx)){
+                if(heights[neigh] == midHght+1){
+                    roots.add(neigh);
+                    return;
+                }
+            }
+        }
+    }
+//------------------------ 
+    private void findLngstPath(int src, int parent, int height, HashMap<Integer,ArrayList<Integer>> graph, int heights[]){
+  
+        boolean isLeaf = true;
+ 
+        heights[src] = height;
+        for(int neigh : graph.get(src)){  
+           if(neigh != parent){ 
+            isLeaf = false;
+            findLngstPath(neigh, src, height+1, graph, heights);
+           }    
+        }
+        if(maxHeight < height && isLeaf){
+            maxHeight = height;
+            leafNode = src;
+        }
+    }
+//------------------------     
+    private void mkMap(int [][]edges, HashMap<Integer,ArrayList<Integer>> graph){
+        for(int edgIndx = 0; edgIndx < edges.length; edgIndx++){
+            int vrtx1 = edges[edgIndx][0], vrtx2 = edges[edgIndx][1];
+            graph.putIfAbsent(vrtx1, new ArrayList<>());
+            graph.putIfAbsent(vrtx2, new ArrayList<>());
+            graph.get(vrtx1).add(vrtx2);
+            graph.get(vrtx2).add(vrtx1);
+        }
     }
 }

@@ -1,0 +1,128 @@
+class Loc{
+    String name;
+    int rating;
+    Loc(String n, int r){
+        name = n;
+        rating = r;
+    }
+}
+class SORTracker {
+    private PriorityQueue<Loc> locs= null;
+    private int queries;
+    public SORTracker() {
+        queries = 0;
+        locs = new PriorityQueue<>((a, b)->{
+            if(a.rating != b.rating){
+                return b.rating - a.rating;
+            }else{
+                return a.name.compareTo(b.name);
+            }
+        });
+    }
+    
+    public void add(String name, int score) {
+        locs.add(new Loc(name, score));
+    }
+    
+    public String get() {
+        queries++;
+        ArrayList<Loc> tempLocs = new ArrayList<>();
+        int pos = 0;
+        while(pos < queries-1){
+            tempLocs.add(locs.poll());
+            pos++;
+        }
+        String resLoc = locs.peek().name;
+        for(Loc l : tempLocs){
+            locs.offer(l);
+        }
+        return resLoc;
+    }
+}
+
+/**
+ * Your SORTracker object will be instantiated and called as such:
+ * SORTracker obj = new SORTracker();
+ * obj.add(name,score);
+ * String param_2 = obj.get();
+ */
+---------------------------------------------
+class SORTracker {    
+    private PriorityQueue<Loc> leftMinHeap= null, rightMaxHeap = null;
+    private int queries;
+    public SORTracker() {
+        queries = 1;
+        rightMaxHeap = new PriorityQueue<>((a, b)->{
+            if(a.rating != b.rating){
+                return b.rating - a.rating;
+            }else{
+                return a.name.compareTo(b.name);
+            }
+        });
+        leftMinHeap = new PriorityQueue<>((a, b)->{
+            if(a.rating != b.rating){
+                return -b.rating + a.rating;
+            }else{
+                return b.name.compareTo(a.name);
+            }
+        });
+    }
+
+    public void add(String name, int score) {
+        Loc p = new Loc(name, score);
+        if (rightMaxHeap.size() == 0 && leftMinHeap.size() == 0) {
+            rightMaxHeap.add(p);
+        } else if (rightMaxHeap.size() > 0 && leftMinHeap.size() == 0) {
+            rightMaxHeap.add(p);
+        } else if (rightMaxHeap.size() == 0 && leftMinHeap.size() >= 0) {
+            leftMinHeap.add(p);
+        } else {
+           //  if(isBetter(leftMinHeap.peek(), p)){
+           //     rightMaxHeap.offer(p);
+           // }else{
+           //     leftMinHeap.offer(p);
+           // }
+            Loc p2 = leftMinHeap.peek();
+            if (check(p2, p)) { // p > p2
+                leftMinHeap.add(p);
+            } else {
+                rightMaxHeap.add(p);
+            }
+        }
+    }
+    private boolean isBetter(Loc one, Loc two){
+        return one.rating > two.rating || one.name.compareTo(two.name) > 0; 
+    }
+    public boolean check(Loc p1, Loc p2) { //p2 > p1
+        if (p2.rating > p1.rating) return true;
+        if (p2.rating < p1.rating) return false;
+        if (p2.name.compareTo(p1.name) > 0) return false;
+        return true;
+    }
+    private void heapify(){
+        while(leftMinHeap.size() > queries && leftMinHeap.size() != 0){
+            rightMaxHeap.offer(leftMinHeap.poll());
+        }
+        
+        while(leftMinHeap.size() < queries && !rightMaxHeap.isEmpty()) {
+            leftMinHeap.offer(rightMaxHeap.poll());
+       }
+    }
+    public String get() {
+        heapify();
+        Loc top = leftMinHeap.peek();
+        queries++;
+        return top.name;
+    }
+
+
+}
+
+class Loc{
+    String name;
+    int rating;
+    Loc(String n, int r){
+        name = n;
+        rating = r;
+    }
+}
