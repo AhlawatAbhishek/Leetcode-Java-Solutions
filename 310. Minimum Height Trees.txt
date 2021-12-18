@@ -1,3 +1,5 @@
+//Time complexity: O(n)
+//Auxiliary Space: O(n), even for the graph, n vertices + n-1 edges 
 class Solution {
     public List<Integer> findMinHeightTrees(int n, int[][] edges) {
         List<Integer> roots = new ArrayList<>();
@@ -97,6 +99,22 @@ class Solution {
     }
 }
 ------------------------------------------------------------ Correct solution.
+Intuition: .The longest path in the minimum height binary tree from one leaf to another will be the diameter of the tree.
+           
+           .This diameter will be the same regardless of which node we choose as root for the MHT.
+               
+           .Also it can be observed that the root will lie on the this diameter if the tree is a MHT, and at max there can be
+            two roots that can be possible for a MHT
+            
+           .In case the length of the diameter is even then two roots are possible else only one root is possible which will be
+            the midde node of the diameter.
+               
+           .To find diameter of a tree: 1 Take any one node say 0 of tree and find the node farthest from it.
+                                        2 Now take this farthest node found say far1 and found the farthest node from it. 
+                                          the path traced will be the diameter of the tree.
+           .We can thus simply find diameter performing two DFS, via method 'findLngstPath'    
+//Time complexity: O(length of diameter of tree)
+//Space complexity: O(n), for heights array               
 class Solution {
     private int maxHeight = Integer.MIN_VALUE, leafNode = -1;
 //------------------------     

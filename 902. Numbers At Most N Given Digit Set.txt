@@ -1,22 +1,51 @@
+-----------Post link -https://leetcode.com/problems/numbers-at-most-n-given-digit-set/discuss/1633666/Java-or-Combinatorics-Solutions-or-No-DP-or-Easy-to-understand-and-Detailed-Explanation-%3A)
+Intuition: . In the above example you can see we are calculating the number of numbers whose number of digits are less than that 
+             of n i.e. 'numDigLessNsDigs'
+           . At place of each digits other than leftmost digit in n, we can have 'avlDigits' options of digits. So in this way
+             we will be adding these permutations for all ones, tens, hundredths...<leftMostTh digit of n into 
+            'numDigLessNsDigs'.
+                 
+           .Then we will be fixing one less than each digit of the n and calculating the permuatations for the rest numbers
+           
+           .Finally we will be returning finalAns + 1. The whole algo will be more clear from the code below.
+            Any corrections, suggestions or optimizations to code are welcomed. :)    
+//Time complexity: O(nLen * avlDigits), avlDigits = digits.length & nLen = numDigs.length
+//Auxiliary space: O(nLen), to store the digits of n 
 class Solution {
-  public int atMostNGivenDigitSet(String[] D, int N) {
-    char[] s = String.valueOf(N).toCharArray();
-    int n = s.length;
-    int ans = 0;
-    for (int i = 1; i < n; ++i)
-      ans += (int)Math.pow(D.length, i);
-    for (int i = 0; i < n; ++i) {
-      boolean prefix = false;
-      for (String d : D) {
-        if (d.charAt(0) < s[i]) {
-          ans += Math.pow(D.length, n - i - 1);
-        } else if (d.charAt(0) == s[i]) {
-          prefix = true;
-          break;
+    public int atMostNGivenDigitSet(String[] digits, int n) {
+        char numDigs[] = String.valueOf(n).toCharArray();
+        int nLen = numDigs.length;
+        int numDigLessNsDigs = 0, avlDigits = digits.length;
+//calculating the number of numbers whose number of digits are less than that of n
+        for(int pow = 1; pow<nLen; pow++){
+            numDigLessNsDigs += (int)(Math.pow(avlDigits, pow));
         }
-      }
-      if (!prefix) return ans;
+        int permuLessThnN = 0, finalAns = numDigLessNsDigs;
+//calculating number of numbers that can be formed after fixing each digit in final num
+//here we are checking for less than the digits in 'n';
+       for(int indx=0; indx<nLen; indx++){
+       	char currNsDig = numDigs[indx];
+       	boolean isPrefix = false;
+       	 for(String dig : digits){
+//since we are checking digits less than currNsDig, therefore each remaining place can have avlDigits number of options.
+//For example: n = 643, digits: [3, 4, 5, 6]--> fix first digit-1 of n--> 5 _ _, both blanks have avlDigits number of options
+//Therefore totalPermutations in this case are  avlDigits ^ (number of blanks)            
+       	 	if(dig.charAt(0) < currNsDig){
+//number of blanks after fixing indx+1 digits in n will be =  nLen-1-indx, since we are following a zero based indexing     
+               permuLessThnN += Math.pow(avlDigits, nLen-1-indx);
+       	 	}else if(dig.charAt(0) == currNsDig){
+       	 		isPrefix = true;
+       	 		break;
+       	 	}
+       	 }
+//if currNsDig is not in the digits array till end it means we have completed calculating the number of number less than or equal to n
+       	 if(!isPrefix){
+           return finalAns + permuLessThnN;
+       	 }
+       }
+       finalAns += permuLessThnN;
+//Adding one to finalAns to account for the n      
+       return finalAns+1;
     }
-    return ans + 1;
-  }
 }
+If you found this post helpful then please like and comment to increase it's reach. :)

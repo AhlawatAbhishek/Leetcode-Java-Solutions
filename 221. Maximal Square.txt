@@ -1,40 +1,74 @@
+---------------Post's link----https://leetcode.com/problems/maximal-square/discuss/1632901/Java-or-2-Solutions-or-Easy-to-understand-and-detailed-explanation.-%3A)
+Intuition: .Take the example: one 1
+                              1   1
+           Here the length of the square formed after including 'one' depends on the minimum length of the ones:
+                1. Below 'one'
+                2. right of 'one'
+                3. lower right diagonal starting from 'one'
+//Time complexity: O((rows * cols)^2), in worst case inside while loop will run rows * cols time.
+//Auxiliary Space: O(1)
 class Solution {
     public int maximalSquare(char[][] matrix) {
+//Starting from top left corner
          int maxLen = 0, rows = matrix.length, cols = matrix[0].length;
          for(int r = 0; r<rows; r++){
              for(int c = 0; c<cols; c++){
+//zero will not contribute to the sqaure therefore checking only for the ones
                  if(matrix[r][c] == '1'){
+//even if it is a single one then also it will form a square of side length 1
                      int currLen = 1;
                      boolean isOne = true;
+//checking for the current side's length diagonally(right downwards)
                      while(currLen + r < rows && currLen + c < cols && isOne){
                          //check for one in rows
                          for(int rw = r; rw<=r+currLen; rw++){
+//checking for the zeroes in the rows below the current cell
                              if(matrix[rw][c+currLen] == '0'){
                                  isOne = false;
                                  break;
                              }
                          }
-                         //check for one in cols
+//checking for zero in cols in the current cell's row
                          for(int cl = c; cl<=c+currLen; cl++){
                              if(matrix[r+currLen][cl] == '0'){
                                  isOne = false;
                                  break;
                              }
-                         }     
+                         }
+//If not zero found till now then increase the current side's length by one
                          if(isOne)currLen++;
                      }
                      maxLen = Math.max(currLen, maxLen);
                  } 
              }
          }
+//Finally return the area of the max length sqaure found   
         return maxLen * maxLen;
     }
 }
 --------------------------------------------------------------------
+Intuition: .Take the example: 1 1
+                              1 one
+           Here the length of the square formed after including 'one' depends on the minimum length of the ones:
+                1. Above 'one'
+                2. Left of 'one'
+                3. upper left diagonal starting from 'one'
+           .Even though minimum of above three cases turns out to be 0, then also we will add one to the length of the square 
+            fromed after including 'one', as a single cell is a square of side length 1;
+
+           .If the present cell's value is 0 then it will not form any square with other cells therefore ignore it.
+               
+           .In this was the whole matrix can be traversed and the previous calculation for length of square side can be used to 
+            form the length of current cell's square side. So a bottom up DP solution is possible as the overlapping sub
+            problems and optimal sub structures exists.
+//Time complexity: O(rows * cols), rows = matrix.length, cols = matrix[0].length
+//Auxiliary Space: O(rows * cols), for the dp array.               
 class Solution {
     public int maximalSquare(char[][] matrix) {
          int maxLen = 0, rows = matrix.length, cols = matrix[0].length;
          int dp[][] = new int[rows][cols];
+//First row and first column wont have any cells precedding them from left, diagonally(upward left) or top, hence storing their
+//values as it is
          for(int r = 0; r<rows; r++){
             dp[r][0] = matrix[r][0]-'0';
              maxLen = Math.max(maxLen, dp[r][0]);
@@ -43,8 +77,10 @@ class Solution {
              dp[0][c] = matrix[0][c]-'0';
              maxLen = Math.max(maxLen, dp[0][c]);
          }
+//Now traversing the remaining matrix        
          for(int r = 1; r<rows; r++){
              for(int c = 1; c<cols; c++){
+                 //If it is a zero store 0 for its contribution and move ahead.
                  if(matrix[r][c] == '0'){
                      dp[r][c] = 0;
                      continue;
@@ -53,6 +89,10 @@ class Solution {
                  maxLen = Math.max(maxLen, dp[r][c]);
              }
          }
+//Finally return the area of the max length sqaure found        
         return maxLen * maxLen;
     }
 }
+---------------------------------
+Any corrections, suggestions or optimizations to code are welcomed.:)
+Also if you found this post helpful then please like and comment to increase it's reach. So that it can help others also. :)
