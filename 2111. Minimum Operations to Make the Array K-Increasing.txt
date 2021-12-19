@@ -1,0 +1,55 @@
+----------Post Link--https://leetcode.com/problems/minimum-operations-to-make-the-array-k-increasing/discuss/1635792/Java-or-LIS-modified-and-Binary-Search-or-Easy-to-understand-and-detailed-explanation.-%3A)
+Intuition: .Consider the above example: here k distance apart numbers form two subsequences, which upon stored in a arraylist form a                     contiguos set. --- [4,5,2] & [1,2,2]
+    
+           .Now to find how many correction operations are required on each such contiguous subset we can apply longest increasing
+           subsequence problems' approach, with just a minor upgrade that the duplicates will be allowed i.e. sequences need not to be 
+           strictly increasing. And this much elements donot need correction.
+    
+           .Finally we substract the number of elements which donot need correction from arr.length to get the minimum operation required.
+            Any corrections, suggestions or optimizations to code are welcomed.:)
+//Time complexity: O(k*(len*Log(len)), len is subseq.size();
+//Auxiliary Space: O(len)
+class Solution {
+    public int kIncreasing(int[] arr, int k) {
+        int followRules = 0;
+         int len = arr.length;
+        for(int subAr = 0; subAr < k; subAr++){
+             ArrayList<Integer> subseq = new ArrayList<>();
+             for(int indx = subAr; indx<len; indx+=k){
+                 subseq.add(arr[indx]);
+             }
+             followRules += lngstIncSubSeq(subseq); 
+        }
+        int minOperations = len - followRules;
+        return minOperations;
+    }
+    //It is not strictly increasing subsequence, duplicates are allowed
+    private int lngstIncSubSeq(ArrayList<Integer>subseq){
+       int len = subseq.size(), lisLen = 0;
+        int dp[] = new int[len];
+        for(int num : subseq){
+            int insrtIndx = higher(dp, lisLen, num);
+            if(lisLen == insrtIndx){
+                lisLen++;
+            }
+            dp[insrtIndx] = num;
+        }
+        return lisLen;
+    }
+    //upper bound excluding num to allow duplicates
+    private int higher(int arr[], int len, int num){
+    	int left = 0, right = len-1, res = len;
+    	while(left <= right){
+    		int mid = (left + right) >> 1;
+           //Also ignoring duplicates while finding upper bound. 
+    		if(arr[mid] <= num){
+    			left = mid+1;
+    		}else{
+    			res = mid;
+    			right = mid-1;
+    		}
+    	}
+    	return res;
+    }
+}
+If you found this post helpful then please like and comment to increase it's reach. :)

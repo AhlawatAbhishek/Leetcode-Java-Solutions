@@ -34,3 +34,60 @@ class Solution {
         return res;
     }
 }
+--------------------------------------------------------post link-------https://leetcode.com/problems/decode-string/discuss/1636230/Java-or-Reverse-Iteration-or-Stack-or-Easy-to-understand-and-detailed-explanation.%3A)
+---------------------------------------
+Intuition: .Traverse the string backwards, if current char is not a digit then push it into the stack.
+    
+           .If it is a digit, then form the 'times' by reading digits backward. And form the word by poping everything from
+           stack till ']', while ignoring '['.
+               
+           .Replicate this 'frmdStr' string 'time'-1 number of times.
+               
+           .Insert this currently formed string 'currStr' to stack. Continue this way till you are done traversing whole s.
+               
+           .Now append whatever is in the stack to final result 'orgStr' and return it.
+            Any suggestions, corrections or optimizations to code are welcomed. :)   
+           
+//Time complexity: O(maxK * len), len is length of string s
+//Auxiliary Space: O(len)
+class Solution {
+    public String decodeString(String s) {
+        Stack<String> wrdSt = new Stack<>();
+        StringBuilder orgStr = new StringBuilder();
+        for(int indx = s.length()-1; indx>=0;indx--){
+            char ch = s.charAt(indx);
+            if(!Character.isDigit(ch)){
+                wrdSt.push(ch+"");
+            }else{
+                StringBuilder times = new StringBuilder();
+                while(indx >= 0 && Character.isDigit(s.charAt(indx))){
+                    times.append(s.charAt(indx--));
+                }
+                indx++;
+                times.reverse();
+                int t = Integer.parseInt(times.toString());
+                StringBuilder currStr = new StringBuilder();
+                while(!wrdSt.isEmpty() && !wrdSt.peek().equals("]")){
+                    String pop = wrdSt.pop();
+                    if(pop.equals("[")){
+                        continue;
+                    }
+                    currStr.append(pop);
+                }
+                String frmdStr = currStr.toString();
+                t--;
+                while(t-->0){
+                    currStr.append(frmdStr);
+                }
+                if(!wrdSt.isEmpty()&&wrdSt.peek().equals("]"))wrdSt.pop();
+                wrdSt.push(currStr.toString());
+                
+            }
+        }
+        while(!wrdSt.isEmpty()){
+            orgStr.append(wrdSt.pop());
+        }
+        return orgStr.toString();
+    }
+}
+If you found this post helpful then please upvote and comment to increase it's reach. So that it can help others also.:)

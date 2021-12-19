@@ -49,3 +49,42 @@ class Solution {
     }
 }
 If you found this post helpful then please like and comment to increase it's reach. :)
+----------------------------------------Wrong but logic was correct----------
+class Solution {
+    public int atMostNGivenDigitSet(String[] digits, int n) {
+        TreeSet<Integer> digSet = new TreeSet<>();
+        formSet(digits, digSet);
+        long fullNumCombs = 1l;
+        boolean allFlrExst = true;
+        int tempNum = n, totalDigsAvl = digits.length, digCntN =0;
+        long lessThnNSum = 0l;
+        while(tempNum > 0){
+            int currDig = tempNum % 10;
+            Integer flr = digSet.floor(currDig);
+            if(flr == null){
+                allFlrExst = false;
+            }
+            int flrCnt = digSet.headSet(currDig, true).size();
+            fullNumCombs *= flrCnt;
+            tempNum /= 10;
+            digCntN++;
+        }
+        digCntN--;
+        while(digCntN>0){
+            lessThnNSum += (long)Math.pow(totalDigsAvl, digCntN);
+            digCntN--;
+        }
+        if(!allFlrExst){
+            fullNumCombs = 0;
+        }
+        return (int) (fullNumCombs + lessThnNSum);
+        
+    }
+    private void formSet(String digits[], TreeSet<Integer> digSet){
+        for(String d : digits){
+            for(char dig : d.toCharArray()){
+                digSet.add(dig-'0');
+            }
+        }
+    }
+}

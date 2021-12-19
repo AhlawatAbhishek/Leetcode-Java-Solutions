@@ -37,3 +37,30 @@ class Solution {
         return bst.size();
     }
 }
+-------------------------
+//Patience Sort Algorithm
+   int lengthOfLIS(int nums[]) {
+        int len= 0, dp[]= new int[nums.length];
+        for(int num:nums) {
+            int i= upperBound(dp, len, num);
+            if(i==len) ++len;
+            dp[i]= num;
+        }
+        return len;
+    }
+    
+    int upperBound(int[] dp, int len, int num){
+        int l= 0, r= len-1;
+        int ans= len;
+///Add equal to in 'dp[mid]<num' if you want  increasing subsequence's length with dupplicates
+        while(l<=r){
+            int mid= (l+r)/2;
+            if(dp[mid]<num){
+                l= mid+1;
+            }else{
+                ans= mid;
+                r= mid-1;
+            }
+        }
+        return ans;        
+    }
