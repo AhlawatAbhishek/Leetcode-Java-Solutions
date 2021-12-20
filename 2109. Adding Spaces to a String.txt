@@ -1,0 +1,15 @@
+class Solution {
+    public String addSpaces(String s, int[] spaces) {
+        int len = s.length(), spIndx = 0;
+        StringBuilder res = new StringBuilder();
+        for(int indx = 0; indx<len; indx++){
+            char ch = s.charAt(indx);
+            if(spIndx < spaces.length && indx == spaces[spIndx]){
+                res.append(" ");
+                spIndx++;
+            }
+            res.append(ch);
+        }
+        return res.toString();
+    }
+}

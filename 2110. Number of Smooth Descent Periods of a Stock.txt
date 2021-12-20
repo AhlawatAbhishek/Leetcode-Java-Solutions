@@ -1,0 +1,17 @@
+class Solution {
+    public long getDescentPeriods(int[] prices) {
+        int len = prices.length;
+        long smthD[] = new long[len], smthDSum = 0l;
+        for(int indx = 0; indx<len; indx++){
+            if(indx == 0){
+                smthD[indx] = 1l;
+            }else if(prices[indx-1] - prices[indx] == 1){
+                smthD[indx] = smthD[indx-1]+1l;
+            }else{
+                smthD[indx] = 1l;
+            }
+            smthDSum += smthD[indx]; 
+        }
+        return smthDSum;
+    }
+}

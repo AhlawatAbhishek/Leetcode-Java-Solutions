@@ -1,0 +1,109 @@
+----------------Post Link---https://leetcode.com/problems/minimum-absolute-difference/discuss/1637082/Java-or-3-Solutions-or-Easy-to-understand-and-detailed-explanation.-%3A)
+```
+Intuition: .To find min diff possible sort the array, so that minDiffPairs are adjacent to each other. Then add those pairs 
+            whose difference is this minDiff.
+```
+```
+//Time complexity: O(len * log(len)), for sorting
+//Auxiliary Space: O(len)
+class Solution {
+     public List<List<Integer>> minimumAbsDifference(int[] arr) {
+         List<List<Integer>> res = new ArrayList<>();
+         Arrays.sort(arr);
+         int minDiff = Integer.MAX_VALUE;
+         for(int indx = 1; indx<arr.length; indx++){
+             int curr = arr[indx], prev = arr[indx-1], currDiff = Math.abs(curr-prev);
+             if(minDiff > currDiff){
+                 minDiff = currDiff;
+             } 
+         }
+         for(int indx = 1; indx<arr.length; indx++){
+             int curr = arr[indx], prev = arr[indx-1], currDiff = Math.abs(curr-prev);
+             if(minDiff == currDiff){
+                 res.add(new ArrayList<>(Arrays.asList(prev, curr)));
+             } 
+         }
+         return res;
+         
+    }
+   
+}
+```
+```
+Intuition: .Sort the array. Find current minDiff. Then add those pairs whose difference is this minDiff, but if currDiff is
+            < minDiff, then update minDiff, remove all previously added pairs and add the new pair
+ ```
+ ```
+//Time complexity: O(len * log(len)), for sorting
+//Auxiliary Space: O(len)    
+class Solution {
+     public List<List<Integer>> minimumAbsDifference(int[] arr) {
+         List<List<Integer>> res = new ArrayList<>();
+         Arrays.sort(arr);
+         int minDiff = Integer.MAX_VALUE;
+         for(int indx = 1; indx<arr.length; indx++){
+             int curr = arr[indx], prev = arr[indx-1], currDiff = Math.abs(curr-prev);
+              if(minDiff == currDiff){
+                 res.add(new ArrayList<>(Arrays.asList(prev, curr)));
+             }else if(minDiff > currDiff){
+                 res.clear();
+                 minDiff = currDiff;
+                 res.add(new ArrayList<>(Arrays.asList(prev, curr)));
+             } 
+         }
+         return res;
+         
+    }
+   
+}
+```
+```
+Pre-requisite: Counting Sort-Link-https://www.geeksforgeeks.org/counting-sort/
+Intuition: .Since sorting is the one that is contributing to time complexity of above two sols.
+               We have to make optimizations here to reduce the overall time complexity.This can be done by counting sort as the range 
+			   '-10^6 <= arr[i] <= 10^6'-> 10^6 + 10^6 = 2 * 10^6 is suitable for the counting sort to work.
+    
+         .Also for the negative elements, there would be a problem, since negative indexing in not allowed in arrays. Therefore
+          we would be masking or say shifting them to adjust them in 0-based indexing.
+             
+         .Rest implementation will be pretty much same as above solution. Any corrections, suggestions or optimizations to code are
+         welcomed.:)
+  ```
+  ```
+//Time complexity: O(max(aLen, cLen)), cLen = maxEle - minEle + 1 & aLen = arr.length
+//Auxiliary Space: O(max(aLen, cLen))    
+class Solution {
+     public List<List<Integer>> minimumAbsDifference(int[] arr) {
+         List<List<Integer>> res = new ArrayList<>();
+         findMinDiffPairs(arr, res);
+         return res;
+    }
+    private void findMinDiffPairs(int arr[], List<List<Integer>> res){
+        int maxEle = Integer.MIN_VALUE, minEle = Integer.MAX_VALUE;
+        for(int ele : arr){
+            maxEle = Math.max(maxEle, ele);
+            minEle = Math.min(minEle, ele);
+        }
+        int minDiff = maxEle - minEle, mask = -minEle, cLen = maxEle - minEle + 1;
+        int count[] = new int[cLen], aLen = arr.length;
+        for(int ele : arr){
+            count[ele+mask]++;
+        }
+        int prevEle = 0;
+        for(int currEle = 1; currEle<cLen; currEle++){
+            if(count[currEle] == 0) continue;
+             int curr = currEle - mask, prev = prevEle - mask, currDiff = Math.abs(curr-prev);
+              if(minDiff == currDiff){
+                 res.add(new ArrayList<>(Arrays.asList(prev, curr)));
+             }else if(minDiff > currDiff){
+                 res.clear();
+                 minDiff = currDiff;
+                 res.add(new ArrayList<>(Arrays.asList(prev, curr)));
+             }
+            prevEle = currEle;
+         }
+        
+    }
+}
+```
+If you found this post helpful, then please upvote and comment to increase it's reach. So that it can help others also.:)
