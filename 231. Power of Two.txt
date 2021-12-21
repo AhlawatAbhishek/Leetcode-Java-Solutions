@@ -1,0 +1,19 @@
+----------Post Link: https://leetcode.com/problems/power-of-two/discuss/1638815/Java-2-Solutions-or-O(1)-Time-and-Spaceor-Easy-to-understand-(Handwritten)-illustration.-%3A)
+------------------------
+//Time complexity: O(1)
+//Auxiliary Sapce: O(1)
+class Solution {
+    public boolean isPowerOfTwo(int n) {
+        long N = n;
+        return N!=0 && (N&(N-1)) == 0;
+    }
+}
+//Time complexity: O(1)
+//Auxiliary Sapce: O(1)
+class Solution {
+    public boolean isPowerOfTwo(int n) {
+        //-2147483648 converting the number to long for this case
+        long N = n;
+       return N != 0 && (N & -N) == N; 
+    }
+}
