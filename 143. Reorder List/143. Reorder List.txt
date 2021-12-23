@@ -1,13 +1,6 @@
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode() {}
- *     ListNode(int val) { this.val = val; }
- *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
- * }
- */
+----Post Link----https://leetcode.com/problems/reorder-list/discuss/1640639/Handwritten-Illustrations-or-Java-or-2-Sols-or-Deque-and-Reversal-Approaches-or-Easy-to-Understand-%3A)
+//Time complexity: O(len), len is length of the linked list
+//Auxiliary Space: O(len), for deque used 
 class Solution {
     public void reorderList(ListNode head) {
         if(head.next == null) return;
@@ -28,5 +21,47 @@ class Solution {
             prev.next = nodeDq.poll();
             prev.next.next = null;
         }
+    }
+}
+//Time complexity: O(len), len is length of the linked list
+//Auxiliary Space: O(1) 
+class Solution {
+    public void reorderList(ListNode head) {
+        if(head.next == null) return;
+        ListNode fast = head, slow = head, prev = slow;
+        while(fast != null && fast.next != null){
+            prev = slow;
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        prev.next = null;
+        ListNode rHead = reverse(slow);
+        slow.next = null;
+        alterMrg(head, rHead);
+    }
+    private void alterMrg(ListNode head1, ListNode head2){
+        ListNode curr1 = head1, curr2 = head2, prev = curr2;
+        while(curr1 != null && curr2 != null){
+            ListNode next1 = curr1.next, next2 = curr2.next;
+            curr1.next =curr2;
+            curr2.next = next1;
+            prev = curr2;
+            curr2 = next2;
+            curr1 = next1;
+        }
+        if(curr2 != null){
+          prev.next = curr2;
+          curr2.next = null;
+        } 
+    }
+    private ListNode reverse(ListNode head){
+        ListNode curr = head, prev = null;
+        while(curr != null){
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
     }
 }

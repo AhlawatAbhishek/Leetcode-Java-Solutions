@@ -1,0 +1,54 @@
+------------------------------Post link----https://leetcode.com/problems/course-schedule-ii/discuss/1643104/Java-or-Topological-Sort-or-Handwritten-illustrations-easy-to-understand-%3A)
+//Time complexity: O(V+E), iterating over V verticies and their neighbours in total number of neighbours traversed will be equal to E edges in the graph
+//Space Complexity:O(V+E), V verticies stored in graph as keys and in total E edges.
+class Solution {
+    
+    public int[] findOrder(int numCrs, int[][] preq) {
+        HashMap<Integer, HashSet<Integer>> graph = new HashMap<>();
+        int degree[] = new int[numCrs]; 
+        makeGraphCalDegree(preq, graph, degree);
+        int resOrdr[] = new int[numCrs];
+      
+        findOrder(resOrdr, graph, degree);
+//Checking if we found solution i.e. is it possible to finsh all courses.
+        boolean solNotPos = false;
+        for(int deg : degree){
+            if(deg != 0){
+                solNotPos = true;
+                break;
+            }
+        }
+
+        return solNotPos ? new int[0] : resOrdr;
+    }
+    private void findOrder(int resOrdr[], HashMap<Integer, HashSet<Integer>> graph, int degree[]){
+        Queue<Integer> que = new LinkedList<>();
+        int numCrs = degree.length;
+        for(int crs = 0; crs<numCrs; crs++){
+            if(degree[crs] == 0){
+                que.offer(crs);
+            }
+        }
+        int rIndx = 0;
+        while(!que.isEmpty()){
+            int src = que.poll();
+            resOrdr[rIndx++] = src;
+            if(!graph.containsKey(src)) continue;
+            for(int neigh : graph.get(src)){
+                degree[neigh]--;
+                if(degree[neigh] == 0){
+                    que.offer(neigh);
+                }
+            }
+        }
+    }
+    private void makeGraphCalDegree(int [][]preq, HashMap<Integer, HashSet<Integer>> graph, int degree[]){
+        for(int pr[] : preq){
+            int dest = pr[0], src = pr[1];
+            degree[dest]++;
+            graph.putIfAbsent(src, new HashSet<>());
+            graph.get(src).add(dest);
+        }
+    }
+}
+If you found this post helpful then please like and comment to increase it's reach. :)
