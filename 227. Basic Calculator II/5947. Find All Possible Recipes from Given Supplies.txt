@@ -1,0 +1,31 @@
+class Solution {
+    public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
+        List<String> posRecp = new ArrayList<>();
+        HashSet<String> sups = new HashSet<>();
+        HashSet<String> isPos = new HashSet<>();
+        for(String sup : supplies){
+            sups.add(sup);
+        }
+        int rLen = recipes.length;
+        while(true){
+            boolean areWeDone = true;
+            loop:
+            for(int indx = 0; indx<rLen; indx++){
+                if(isPos.contains(recipes[indx])) continue;
+                for(String ing : ingredients.get(indx)){
+                    if(!sups.contains(ing)){
+                        continue loop;
+                    }
+                }
+                sups.add(recipes[indx]);
+                isPos.add(recipes[indx]);
+                areWeDone = false;    
+            }
+            if(areWeDone) break;
+        }
+        for(String recp : isPos){
+            posRecp.add(recp);
+        }
+        return posRecp;
+    }
+}

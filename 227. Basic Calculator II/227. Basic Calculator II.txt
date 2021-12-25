@@ -1,0 +1,143 @@
+------------------Two Stack----------------
+class Solution {
+    private static HashMap<Character, Integer> prefs = new HashMap<>(); 
+    public int calculate(String s) {
+        String trimmed = s.trim();
+        setPref();
+        int res = evaluate(trimmed);
+        return res;
+    }
+    private int evaluate(String exp){
+    	Deque<Integer> operand = new ArrayDeque<>();
+    	Deque<Character> operator = new ArrayDeque<>();
+    	for(int indx = 0; indx<exp.length(); indx++){
+    		char c = exp.charAt(indx);
+    		if(Character.isDigit(c)){
+    		  int  num = 0;
+    		  while(indx<exp.length() && Character.isDigit(exp.charAt(indx))){
+    		  	num = num *10 + exp.charAt(indx++) -'0';
+    		  }	
+    		  indx--;
+              operand.offerLast(num);
+    		}else if(isOperator(c)){
+    		  if(operator.isEmpty() || prefs.get(operator.peekLast())< prefs.get(c)){	
+
+    			operator.offerLast(c);
+    		  }else{
+    	      	// System.out.println("Entered in wrong prec zone");
+    	      	 while(!operator.isEmpty() && prefs.get(operator.peekLast())>=prefs.get(c)){
+                    performProcess(operator, operand);
+    	      	 }
+    	      	 // System.out.println("Top of operand is:" + operand.peekLast());
+    	      	 operator.offerLast(c);
+    	      }	
+    		}
+    	}
+    	while(operand.size() >= 2){
+    		performProcess(operator, operand);
+    	}
+    	return operand.pollLast();
+    }
+    private void performProcess(Deque<Character> operator, Deque<Integer> operand){
+        if(!operator.isEmpty() && operand.size() >= 2){
+        	int oprnd2 = operand.pollLast(), oprnd1 = operand.pollLast();
+        	char oprtr = operator.pollLast();
+        	int res = 0;
+        	switch(oprtr){
+        	  case '+':
+                res = oprnd1 + oprnd2;
+                break;
+              case '-':
+                res = oprnd1 - oprnd2;
+                break;
+              case '/':
+                res = oprnd1 / oprnd2;
+                break;
+              case '*':
+                res = oprnd1 * oprnd2;
+                break;    
+        	}
+        	operand.offerLast(res);
+        }
+    }
+    private boolean isOperator(char c){
+    	return c == '+' || c == '-' || c == '/' || c == '*';
+    }
+    private static void setPref(){
+        prefs.put('+', 1);
+        prefs.put('-', 1);
+        prefs.put('*', 2);
+        prefs.put('/', 2);
+    }
+}
+----------------------------------------------------------One Stack
+class Solution {
+    public int calculate(String s) {
+        int len = s.length(), currNum = 0, res = 0;
+        char currOp = '+';
+        Deque<Integer> numSt = new ArrayDeque();
+        for(int indx = 0; indx<len; indx++){
+            char ch = s.charAt(indx);
+            if(Character.isDigit(ch)){
+                currNum = currNum * 10 + ch-'0';
+            }
+            if((!Character.isDigit(ch) && ch != ' ' )|| indx == len-1){
+                switch(currOp){
+                    case '+': 
+                        numSt.offerLast(currNum);
+                        break;
+                    case '-':
+                        numSt.offerLast(-1 * currNum);
+                        break;
+                    case '*':
+                        numSt.offerLast(numSt.pollLast() * currNum);
+                        break;
+                    case '/':
+                        numSt.offerLast(numSt.pollLast() / currNum);
+                        break;    
+                }
+                currOp = ch;
+                currNum = 0;
+            }
+        }
+        while(!numSt.isEmpty()){
+             res += numSt.pollLast();
+        }
+        return res;
+    }
+}
+-----------------------------------------------------No Stack
+class Solution {
+    public int calculate(String s) {
+        int len = s.length(), currNum = 0, res = 0, lastNum = 0;
+        char currOp = '+';
+         
+        for(int indx = 0; indx<len; indx++){
+            char ch = s.charAt(indx);
+            if(Character.isDigit(ch)){
+                currNum = currNum * 10 + ch-'0';
+            }
+            if((!Character.isDigit(ch) && ch != ' ' )|| indx == len-1){
+                switch(currOp){
+                    case '+': 
+                    	 res += lastNum;
+                       lastNum = currNum;
+                        break;
+                    case '-':
+                    	  res += lastNum;
+                        lastNum = -currNum;
+                        break;
+                    case '*':
+                        lastNum = lastNum * currNum;
+                        break;
+                    case '/':
+                        lastNum = lastNum / currNum;
+                        break;    
+                }
+                currOp = ch;
+                currNum = 0;
+            }
+        }
+        return res+lastNum;
+    }
+}
