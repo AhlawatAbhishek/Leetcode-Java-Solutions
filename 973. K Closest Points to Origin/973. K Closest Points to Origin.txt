@@ -1,0 +1,28 @@
+-------------Post link-----https://leetcode.com/problems/k-closest-points-to-origin/discuss/1647934/Java-or-Very-East-To-Understandor-Handwritten-Illustrations-%3A)
+class Pt{
+    long dist;
+    int[]pts;
+    Pt(long d, int[] pts){
+        dist = d;
+        this.pts = pts;
+    }
+}
+class Solution {
+    public int[][] kClosest(int[][] points, int k) {
+        int res[][] = new int[k][2];
+        PriorityQueue<Pt> queue = new PriorityQueue<>((a, b)->(int)(a.dist-b.dist));
+        for(int indx = 0; indx<points.length; indx++){
+            int x = points[indx][0], y = points[indx][1];
+            long dist = (long)x * x + (long)y * y;
+            Pt p = new Pt(dist, points[indx]);
+            // System.out.print(dist+" ");
+            // if(queue.size() == k) queue.poll();
+            queue.offer(p);
+        }
+        for(int indx = 0; indx<k; indx++){
+            res[indx] = queue.poll().pts;
+        }
+        return res;
+    }
+}
+-----------------------------------------------------

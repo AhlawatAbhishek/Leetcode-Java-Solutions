@@ -1,3 +1,4 @@
+----Post Link----https://leetcode.com/problems/find-all-possible-recipes-from-given-supplies/discuss/1646855/java-handwritten-explanation-very-easy-to-understand/1191477
 class Solution {
     public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
         List<String> posRecp = new ArrayList<>();
