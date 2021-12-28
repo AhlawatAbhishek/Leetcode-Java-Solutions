@@ -1,0 +1,71 @@
+class Solution {
+    public boolean canBeValid(String s, String locked) {
+         if(s.length() % 2 == 1) {
+            return false;
+         } 
+         int leftBalance = 0, rightBalance = 0, flipp = 0;
+        for(int indx = 0; indx<=s.length()-1; indx++){
+         char c = s.charAt(indx), l = locked.charAt(indx);
+            if(l == '0'){
+                flipp++;
+            }else{
+                if(c == ')'){
+                   leftBalance--;
+                }else if(c == '('){
+                   leftBalance++;
+                }
+            }
+            if(leftBalance+flipp < 0){
+                return false;
+            }
+        }
+        if(leftBalance > flipp) return false;
+        flipp = 0;
+        for(int indx = s.length()-1; indx>=0; indx--){
+            char c = s.charAt(indx), l = locked.charAt(indx);
+            if(l == '0'){
+                flipp++;
+            }else{
+                if(c == '('){
+                   rightBalance--;
+                }else if(c == ')'){
+                   rightBalance++;
+                }
+            }
+            if(rightBalance+flipp < 0){
+                return false;
+            }
+        }
+        if(rightBalance > flipp) return false;
+         return true;
+    }
+}
+---------------------------------------------
+class Solution {
+    public boolean canBeValid(String s, String locked) {
+         if(s.length() % 2 == 1) {
+            return false;
+         } 
+         int rightP = 0, leftP = 0;
+        for(int indx = 0; indx<=s.length()-1; indx++){
+         char ch = s.charAt(indx), l = locked.charAt(indx);
+            if(ch == '(' || l == '0'){
+               leftP++;
+           }else{
+               leftP--;
+           }
+           if(leftP < 0) return false;
+        }
+      if(leftP == 0) return true;
+        for(int indx = s.length()-1; indx>=0; indx--){
+            char ch = s.charAt(indx), l = locked.charAt(indx);
+            if(ch == ')' || l == '0'){
+                rightP++;
+            }else{
+                rightP--;
+            }
+           if(rightP < 0) return false;
+        }
+         return true;
+    }
+}

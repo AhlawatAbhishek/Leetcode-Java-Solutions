@@ -1,0 +1,14 @@
+Post Link-----https://leetcode.com/problems/middle-of-the-linked-list/discuss/1651747/Javaor-Handwritten-Illustrations-or-Very-Easy-to-understand-or
+
+//Time complexity: O(N), N is length of linked list
+//Auxilliary Space: O(1)
+class Solution {
+    public ListNode middleNode(ListNode head) {
+        ListNode slow = head, fast = head;
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+}

@@ -1,0 +1,28 @@
+https://leetcode.com/problems/number-complement/discuss/1649771/Java-or-Handwritten-Illustrations-or-Very-easy-to-understand.
+class Solution {
+    public int findComplement(int num) {
+        int lmsbPos = (int)(Math.log(num) / Math.log(2));
+        while(lmsbPos>=0){
+            int mask = 1 << lmsbPos;
+            num = num ^ mask;
+            lmsbPos--;
+        }    
+        return num;
+    }
+}
+
+-------------------------
+eg: 5---101---bitmask final = 111;
+class Solution {
+  public int findComplement(int num) {
+    // bitmask has the same length as num and contains only ones 1...1
+    int bitmask = num;
+    bitmask |= (bitmask >> 1); //copy first bit
+    bitmask |= (bitmask >> 2); //copy 2 bits
+    bitmask |= (bitmask >> 4); //copy 4 bits
+    bitmask |= (bitmask >> 8); //copy 8 bits
+    bitmask |= (bitmask >> 16); //copy 16 bits
+    // flip all bits 
+    return bitmask ^ num;
+  }
+}
