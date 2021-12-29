@@ -1,0 +1,65 @@
+----------------post's link--https://leetcode.com/problems/populating-next-right-pointers-in-each-node/discuss/1654295/Java-or-2-Sols-or-Handwritten-Explanations-or-Very-easy-to-understand.-%3A)
+class Solution {
+    static class LinkNode{
+        Node n;
+        int level;
+        LinkNode(Node n, int lvl){
+            this.n = n;
+            level = lvl;
+        }
+    }
+    public Node connect(Node root) {
+        if(root == null)return root;
+       Deque<LinkNode> lvlQue = new ArrayDeque<>();
+       lvlQue.offerLast(new LinkNode(root, 0));
+       while(!lvlQue.isEmpty()){
+           int size = lvlQue.size();
+           while(size-->0){
+               LinkNode nod = lvlQue.pollFirst();
+               Node node = nod.n; 
+               int lvl = nod.level;
+               if(node.left != null){
+                   if(!lvlQue.isEmpty()){
+                       if(lvlQue.peekLast().level == lvl+1){
+                           lvlQue.peekLast().n.next = node.left; 
+                       }
+                   }
+                   lvlQue.offerLast(new LinkNode(node.left, lvl+1));
+               }
+               if(node.right != null){
+                   if(!lvlQue.isEmpty()){
+                       if(lvlQue.peekLast().level == lvl+1){
+                           lvlQue.peekLast().n.next = node.right; 
+                       }
+                   }
+                   lvlQue.offerLast(new LinkNode(node.right, lvl+1));
+               }
+               
+           }
+       }
+       return root;                             
+    }
+}
+-----------------------------------------------------------
+Approach 2---------------------------------------------------------
+class Solution {
+    public Node connect(Node root) {
+        if(root == null)return root;
+        Node leftNode = root;
+       while(leftNode != null && leftNode.left != null){
+           populateLowerLvl(leftNode);
+           leftNode = leftNode.left;
+       }
+       return root;                             
+    }
+    private void populateLowerLvl(Node n){
+        while(n != null){
+            n.left.next = n.right;
+            if(n.next != null){
+                n.right.next = n.next.left;
+            }
+            n = n.next;
+        }
+    }
+}
+-------------------------------------------------------------------------

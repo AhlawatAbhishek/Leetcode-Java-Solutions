@@ -1,0 +1,105 @@
+---------------TLE -------------------------------
+import java.math.BigInteger;
+class Solution {
+   public String abbreviateProduct(int left, int right) {
+        BigInteger prod = new BigInteger("1");
+        for(int num = left; num<=right; num++){
+            prod = prod.multiply(BigInteger.valueOf(num)); 
+        }
+       // System.out.println("Prod is: "+prod);
+        String p = prod.toString();
+        return abbrev(p);
+    }
+    private String abbrev(String p){
+        StringBuilder rev = new StringBuilder(), front = new StringBuilder();
+        int pLen = p.length();
+        int indx = pLen - 1;
+        char c = p.charAt(indx);
+            if(c == '0'){
+                while(p.charAt(indx) == '0'){
+                  indx--;
+                }
+            }
+        int zeroCount = pLen-1 - indx, dCount = 0;
+       
+        if(indx+1 <= 10){
+            front.append(p.substring(0, indx+1)+"e"+zeroCount);
+            return front.toString();
+        }
+        for(; indx>=0&& dCount < 5; indx--, dCount++){
+            c = p.charAt(indx);
+            rev.append(c);
+        }
+         for(int ind = 0; ind<5 && ind<=indx; ind++){
+            c = p.charAt(ind);
+            front.append(c);
+        }
+        front.append("..."+rev.reverse().toString()+"e"+zeroCount);
+        return front.toString();
+    }
+}
+-------------------------------------------------------
+class Solution {
+    public String abbreviateProduct(int left, int right) {
+        // long tenDig = 1000000000000, fiveDig = 1000000;  
+        double firstFive = 1d;
+        long lastFive = 1l, shortNum = 1l;
+        int zeroCnt = 0;
+        for(int num = left; num<=right; num++){
+            firstFive *= num;
+            lastFive *= num;
+            while(lastFive % 10 == 0){
+                lastFive /= 10;
+                zeroCnt++;
+            }
+           if(firstFive>10000000000L) firstFive/=1000000;
+            if(lastFive>10000000000L) lastFive%=1000000;
+            if(shortNum<10000000000L) shortNum*=num;
+            while(shortNum%10==0) shortNum/=10; 
+        }
+        if(shortNum <= 10000000000l)return shortNum+"e"+zeroCnt;
+        String fFive = Double.toString(firstFive).replace(".", "");
+        String lFive = Long.toString(lastFive);
+        while(lFive.length()<5) lFive="0"+lFive;
+        return fFive.substring(0,5) + "..."+lFive.substring(lFive.length()-5)+"e"+zeroCnt;
+    }
+}
+-----------------------------------------------------
+class Solution {
+    private static final long MAX_SUFFIX = 1000000000000L;
+    private static final int MAX_PREFIX = 100000;
+
+    public String abbreviateProduct(int left, int right) {
+        long product = 1;
+        int trailingZeros = 0;
+        double prefix = 1.0;
+
+        for (int num = left; num <= right; num++) {
+            product *= num;
+            while (product % 10 == 0) {
+                product /= 10;
+                trailingZeros++;
+            }
+
+            if (product >= MAX_SUFFIX) {
+                product %= MAX_SUFFIX;
+            }
+
+            prefix *= num;
+
+            while (prefix >= MAX_PREFIX) {
+                prefix /= 10;
+            }
+        }
+        return buildAbbreviation(prefix, product, trailingZeros);
+    }
+
+    private String buildAbbreviation(double prefix, long product, int trailingZeros) {
+        String suffix = String.valueOf(product);
+        if (suffix.length() > 10) {
+            suffix = (int)prefix + "..." + suffix.substring(suffix.length() - 5);
+        }
+
+        return String.format("%se%d", suffix, trailingZeros);
+    }
+}
