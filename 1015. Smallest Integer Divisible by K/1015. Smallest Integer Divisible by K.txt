@@ -1,0 +1,43 @@
+---TLE------
+Was continous dividing until remainder occurs two times.
+-------------------
+class Solution {
+    public int smallestRepunitDivByK(int k) {
+        int len = 1, num = 1;
+        boolean oneOccured = false;
+        HashSet<Integer> rems = new HashSet<>();
+        while(num%k != 0){
+            int rem = num %k;
+            if(rems.contains(rem))return -1;
+            else rems.add(rem);
+            num = rem * 10 + 1;
+            len++;
+        }
+        return len;
+    }
+}
+---------------------------------------------
+class Solution {
+    public int smallestRepunitDivByK(int k) {
+        int len = 1, num = 1;
+        for(int nLen = 1; nLen<=k; nLen++){
+            if(num % k == 0)return len;
+            int rem = num %k;
+            num = rem * 10 + 1;
+            len++;
+        }
+        return -1;
+    }
+}
+-----------------------------------------
+class Solution {
+    public int smallestRepunitDivByK(int k) {
+        if(k%2 == 0 || k % 5 == 0)return -1;
+        int prevRem = 0;
+        for(int nLen = 1; nLen<=k; nLen++){
+            prevRem = (prevRem*10+1)%k;
+            if(prevRem % k == 0)return nLen;
+        }
+        return -1;
+    }
+}
