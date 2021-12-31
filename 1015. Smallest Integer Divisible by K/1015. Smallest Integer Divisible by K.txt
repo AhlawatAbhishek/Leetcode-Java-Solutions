@@ -1,3 +1,4 @@
+------post's link---https://leetcode.com/problems/smallest-integer-divisible-by-k/discuss/1657000/Java-or-Handwritten-Illustrations-or-Very-Easy-to-understand
 ---TLE------
 Was continous dividing until remainder occurs two times.
 -------------------

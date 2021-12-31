@@ -1,0 +1,20 @@
+----post's link---https://leetcode.com/problems/maximum-difference-between-node-and-ancestor/discuss/1657637/Java-or-Handwritten-Illustrations-or-Very-easy-to-understand-%3A)
+//Time complexity: O(N), N is number of nodes in tree, since each node is visited once
+//Auxiliary Space: O(Height of tree), for recursion call stack of 'findMaxDiffAn', in case of skewed tree height can be upto N
+class Solution {
+    private int maxDiff = 0; 
+    public int maxAncestorDiff(TreeNode root) {
+        findMaxDiffAn(root, root.val, root.val);
+        return maxDiff;
+    }
+    private void findMaxDiffAn(TreeNode root, int min, int max){
+        if(root == null)return;
+        int val = root.val;
+        int diff = Math.max(Math.abs(val-min), Math.abs(val-max));
+        maxDiff = Math.max(maxDiff, diff);
+        min = Math.min(min, val);
+        max = Math.max(max, val);
+        findMaxDiffAn(root.left, min, max);
+        findMaxDiffAn(root.right, min, max);
+    }
+}
