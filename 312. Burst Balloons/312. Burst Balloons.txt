@@ -1,0 +1,25 @@
+class Solution {
+    private int memo[][] = null;
+    public int maxCoins(int[] nums) {
+        int len = nums.length;
+        memo = new int[len][len];
+        for(int mem[] : memo){
+            Arrays.fill(mem, -1);
+        }
+        return findMaxCoins(nums, 0, nums.length - 1);
+        // return totalMaxCoins;
+    }
+    private int findMaxCoins(int nums[], int left, int right){
+        if(left > right) return 0;
+        if(memo[left][right] != -1)return memo[left][right];
+        // if(left == right) return nums[left];
+         int totalMaxCoins = 0;
+        for(int indx = left; indx<=right; indx++){
+            int currProf = nums[indx], leftSide = left > 0 ? nums[left-1] : 1, rightSide = right<nums.length-1 ? nums[right+1] : 1;
+            currProf *= leftSide * rightSide;
+            int remain = findMaxCoins(nums, left, indx-1) + findMaxCoins(nums, indx+1, right);
+            totalMaxCoins = Math.max(totalMaxCoins, currProf+remain);
+        }
+        return memo[left][right] = totalMaxCoins;
+    }
+}

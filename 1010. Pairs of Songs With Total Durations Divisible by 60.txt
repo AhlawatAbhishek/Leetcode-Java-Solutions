@@ -19,4 +19,21 @@ class Solution {
     private int countException(int n){
         return n*(n-1)/2;
     }
+}---------------------------------------
+------------------------------
+//Time Complexity: O(len), len is times.length
+//Auxiliary Space: O(1)
+class Solution {
+    public int numPairsDivisibleBy60(int[] time) {
+        int rem[] = new int[60], totalPairs = 0;
+        for(int t : time){
+            if(t % 60 != 0){
+                totalPairs += rem[60-t%60];
+            }else{
+                totalPairs += rem[0]; 
+            }
+            rem[t%60]++;
+        }
+        return totalPairs;
+    }
 }
