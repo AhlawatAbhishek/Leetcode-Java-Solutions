@@ -1,0 +1,48 @@
+//Time complexity: O(n)
+//Auxiliary Space: O(n^2)
+class Solution {
+    public int findJudge(int n, int[][] trust) {
+        int perTrstMp[][] = new int[n+1][n+1];
+        for(int indx = 0; indx<trust.length; indx++){
+            int a = trust[indx][0], b = trust[indx][1];
+            // indicates person a trust b
+            perTrstMp[a][b]++;
+           //total persons a person trusts 
+            perTrstMp[a][0]++;
+        }
+        int perWhTrstNo = -1;
+        //finding if there is a person who donot trust anyone
+        for(int per = 1; per<n+1; per++){
+            if(perTrstMp[per][0] == 0){
+                perWhTrstNo = per;
+            }
+        }
+        if(perWhTrstNo ==-1)return -1;
+        //checking if this perWhTrstNo can be the judge, by checking if he's trusted by everyone else in town
+        for(int per = 1; per<n+1; per++){
+            if(per == perWhTrstNo) continue;
+            if(perTrstMp[per][perWhTrstNo] == 0)return -1;
+        }
+        return perWhTrstNo;
+    }
+}	
+-------------------------------------------------------
+//Time complexity: O(n)
+//Auxiliary Space: O(n)
+class Solution {
+    public int findJudge(int n, int[][] trust) {
+        int chckdFor[] = new int[n+1];
+//building totalTrust array       
+        int totalTrust[] = new int[n+1];
+        for(int indx = 0; indx<trust.length; indx++){
+            int a = trust[indx][0], b = trust[indx][1];
+            totalTrust[a]--;
+            totalTrust[b]++;
+        }
+//finding if there is a person who donot trust anyone and trusted by everyone else. He will have totalTrust equal to n-1        
+        for(int per = 1; per<=n; per++){
+            if(totalTrust[per] == n-1)return per;
+        }
+        return -1;
+    }
+}
