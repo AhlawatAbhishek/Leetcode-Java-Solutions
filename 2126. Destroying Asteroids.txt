@@ -1,0 +1,21 @@
+-------post's link------https://leetcode.com/problems/destroying-asteroids/discuss/1661057/java-very-easy-to-understand-sol/1201087
+class Solution {
+    public boolean asteroidsDestroyed(int mass, int[] asteroids) {
+        TreeMap<Double, Double> astMap = new TreeMap<>();
+        for(int ast : asteroids){
+            astMap.put((double)ast, astMap.getOrDefault((double)ast, 0D)+1D);
+        }
+        double pMass = mass;
+        while(!astMap.isEmpty()){
+            Double lessThnEq = astMap.floorKey(pMass);
+            if(lessThnEq == null){
+                return false;
+            }else{
+                double freq = astMap.get(lessThnEq);
+                pMass += ((double)lessThnEq * freq);
+                astMap.remove(lessThnEq);
+            }
+        }
+        return true;
+    }
+}

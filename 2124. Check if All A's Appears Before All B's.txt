@@ -1,0 +1,15 @@
+------post's link
+----------------https://leetcode.com/problems/check-if-all-as-appears-before-all-bs/discuss/1661088/java-very-easy-to-understand
+class Solution {
+    public boolean checkString(String s) {
+        boolean bStarted = false;
+        for(char c: s.toCharArray()){
+            if(bStarted && c == 'a'){
+                return false;
+            }else if(c == 'b'){
+                bStarted = true;
+            }
+        }
+        return true;
+    }
+}

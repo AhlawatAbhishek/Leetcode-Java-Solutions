@@ -1,0 +1,36 @@
+---------------post's link---------------------https://leetcode.com/problems/number-of-laser-beams-in-a-bank/discuss/1661111/java-or-Very-Easy-to-understand-%3A)
+class Solution {
+    private int totalLasers = 0;
+    public int numberOfBeams(String[] bank) {
+        findTotalLasers(bank);
+        return totalLasers;
+    }
+    private void findTotalLasers(String []bank){
+        int lenB = bank.length;
+        //rowNumber -- Number of security devices mapping
+        HashMap<Integer, Integer> rowLocMap = new HashMap<>();
+        
+        for(int indx = 0; indx<lenB; indx++){
+            String bk = bank[indx];
+            for(int c = 0; c<bank[indx].length(); c++){
+               char ch = bk.charAt(c);
+                if(ch == '1'){
+                   rowLocMap.putIfAbsent(indx, 0);   
+                   rowLocMap.put(indx, rowLocMap.getOrDefault(indx, 0)+1);     
+                }
+               
+            }
+        }
+        
+        int prevSec = -1;
+        
+        for(int r = 0; r<lenB; r++){
+            if(rowLocMap.containsKey(r)){
+                if(prevSec != -1){
+                    totalLasers +=  (rowLocMap.get(prevSec) * rowLocMap.get(r));
+                }
+                prevSec = r;
+            }
+        }
+    }
+}

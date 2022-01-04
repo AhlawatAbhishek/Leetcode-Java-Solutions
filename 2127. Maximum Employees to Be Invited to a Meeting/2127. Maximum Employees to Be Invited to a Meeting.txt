@@ -1,0 +1,55 @@
+class Solution {
+    public int maximumInvitations(int[] favourite) {
+        int totalPeople = favourite.length;
+        boolean visited[] = new boolean[totalPeople];
+        int indegree[] = new int[totalPeople];
+        for(int per = 0; per<totalPeople; per++){
+            int likes = favourite[per];
+            indegree[likes]++;
+        }
+        // topological sort for acyclic part
+        Queue<Integer> que = new LinkedList<>();
+        for(int dIndx = 0; dIndx< totalPeople; dIndx++){
+            if(indegree[dIndx] == 0){
+                que.offer(dIndx);
+                visited[dIndx] = true;
+            }
+        }
+        //length of the chain leading to pth person inclusively
+        int chainLen[] = new int[totalPeople];
+        Arrays.fill(chainLen, 1);
+        while(!que.isEmpty()){
+            int size = que.size();
+            while(size-->0){
+                int per = que.poll();
+                int likes = favourite[per];
+                chainLen[likes] = Math.max(chainLen[likes], chainLen[per] + 1);
+                indegree[likes]--;
+                if(indegree[likes] == 0){ 
+                    visited[likes] = true;
+                    que.offer(likes);
+                }
+            }
+        }
+        int numCanBeInvited = 0, ringSize = 0;
+        //now we are left with only cycles either of length 2 or more than 2
+        for(int per = 0; per<totalPeople; per++){
+            //if we have not checked the chainLen for this person
+            if(!visited[per]){
+                int chainLength = 0;
+                for(int p = per; !visited[p]; p = favourite[p]){
+                    visited[p] = true;
+                    chainLength++;
+                }
+                //if it is a 2 length chain
+                if(chainLength == 2){
+                    numCanBeInvited += chainLen[per] + chainLen[favourite[per]];
+                }else if(chainLength > 2){
+                    ringSize = Math.max(chainLength, ringSize);
+                }
+            }
+            
+        }
+        return Math.max(numCanBeInvited, ringSize);
+    }
+}
