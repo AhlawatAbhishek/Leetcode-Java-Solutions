@@ -1,0 +1,131 @@
+class Solution {
+    private List<List<String>> res = new ArrayList<>(); 
+    public List<List<String>> partition(String s) {
+        partition(s, 0, new ArrayList<>());
+        return res;
+    }
+    private void partition(String s, int strtIndx, List<String> curr){
+        if(strtIndx >= s.length() && curr.size() > 0){
+            res.add(new ArrayList<>(curr));
+            return;
+        }
+        for(int indx = strtIndx; indx<s.length(); indx++){
+            String currStr = s.substring(strtIndx, indx+1);
+            if(isPalin(currStr)){
+                if(indx == strtIndx){
+                    curr.add(s.charAt(indx) + "");
+                }else{
+                    curr.add(currStr);         
+                }
+                partition(s, indx+1, curr);
+                curr.remove(curr.size()-1);             
+            }
+        }
+    }
+    private boolean isPalin(String s){
+        int left = 0, right = s.length()-1;
+        while(left < right){
+            if(s.charAt(left) != s.charAt(right)){
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+}----------------
+----------------------------------------------------------
+class Solution {
+    private List<List<String>> res = new ArrayList<>(); 
+    private int isPal[][] = null;
+    public List<List<String>> partition(String s) {
+        int sLen = s.length();
+        isPal = new int[sLen][sLen];
+        for(int pal[] : isPal){
+            Arrays.fill(pal, -1);
+        }
+        partition(s, 0, new ArrayList<>());
+        return res;
+    }
+    private void partition(String s, int strtIndx, List<String> curr){
+        if(strtIndx >= s.length() && curr.size() > 0){
+            res.add(new ArrayList<>(curr));
+            return;
+        }
+        for(int indx = strtIndx; indx<s.length(); indx++){
+            // boolean isPlnd = checkPalin(s, strtIndx, indx);//for reader understanding only
+            boolean isPlnd = false;
+            String currStr = s.substring(strtIndx, indx+1);
+            if(strtIndx == indx){
+                isPlnd = true;
+            }else if(strtIndx < s.length()-1 && indx -1 >= 0 && isPal[strtIndx+1][indx-1] != -1){
+                if(isPal[strtIndx+1][indx-1] == 1 && s.charAt(strtIndx) == s.charAt(indx)){
+                    isPlnd = true;
+                }
+            }else{
+                isPlnd = isPalin(currStr);
+            }
+            if(isPlnd)
+             isPal[strtIndx][indx] = 1;
+            else
+             isPal[strtIndx][indx] = 0;   
+            if(isPlnd){
+                if(indx == strtIndx){
+                    curr.add(s.charAt(indx) + "");
+                }else{
+                    curr.add(currStr);         
+                }
+                partition(s, indx+1, curr);
+                curr.remove(curr.size()-1);             
+            }
+        }
+    }
+// ------this part is only for the reader understanding when it is added the function call overhead is increased
+    private boolean checkPalin(String s, int strtIndx, int indx){
+         boolean isPlnd = false;
+         String currStr = s.substring(strtIndx, indx+1);
+            if(strtIndx == indx){
+                isPlnd = true;
+            }else if(strtIndx < s.length()-1 && indx -1 >= 0 && isPal[strtIndx+1][indx-1] != -1){
+                if(isPal[strtIndx+1][indx-1] == 1 && s.charAt(strtIndx) == s.charAt(indx)){
+                    isPlnd = true;
+                }
+            }else{
+                isPlnd = isPalin(currStr);
+            }
+           return isPlnd;
+    }
+    private boolean isPalin(String s){
+        int left = 0, right = s.length()-1;
+        while(left < right){
+            if(s.charAt(left) != s.charAt(right)){
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+}
+-----------------------------------------------------------------
+class Solution {
+    public List<List<String>> partition(String s) {
+        int len = s.length();
+        boolean[][] dp = new boolean[len][len];
+        List<List<String>> result = new ArrayList<>();
+        dfs(result, s, 0, new ArrayList<>(), dp);
+        return result;
+    }
+
+    void dfs(List<List<String>> result, String s, int start, List<String> currentList, boolean[][] dp) {
+        if (start >= s.length()) result.add(new ArrayList<>(currentList));
+        for (int end = start; end < s.length(); end++) {
+            if (s.charAt(start) == s.charAt(end) && (end - start <= 2 || dp[start + 1][end - 1])) {
+                dp[start][end] = true;
+                currentList.add(s.substring(start, end + 1));
+                dfs(result, s, end + 1, currentList, dp);
+                currentList.remove(currentList.size() - 1);
+            }
+        }
+    }
+}					
