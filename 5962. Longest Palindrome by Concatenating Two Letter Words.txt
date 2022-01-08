@@ -1,0 +1,26 @@
+class Solution {
+    public int longestPalindrome(String[] words) {
+        int chrs[][] = new int[26][26];
+        for(String w : words){
+            chrs[w.charAt(0)-'a'][w.charAt(1)-'a']++;
+        }
+        int len = 0;
+        for(int indx1 = 0; indx1<26; indx1++){
+            for(int indx2 = indx1+1; indx2<26; indx2++){
+                len += Math.min(chrs[indx1][indx2], chrs[indx2][indx1])*4;
+            }
+        }
+        //for string with same characters whose freq is greater than equal to 2
+        for(int indx = 0; indx<26; indx++){
+            len += (chrs[indx][indx]/2)*4;
+        }
+        //including anyone string which occurs odd number of times and whose characters are also same
+        for(int indx = 0; indx<26; indx++){
+           if(chrs[indx][indx] % 2 == 1){
+               len+=2;
+               break;
+           } 
+        }
+        return len;
+    }
+}

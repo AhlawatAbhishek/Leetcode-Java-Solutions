@@ -1,0 +1,35 @@
+class Solution {
+    // row, col1, col2 
+    private Integer memo[][][] = null;
+    public int cherryPickup(int[][] grid) {
+        int rows = grid.length, cols = grid[0].length;
+        memo = new Integer[rows][cols][cols];
+        // r--row, c--robo1 col, C--robo2 col
+        return traverseGrid(grid, 0, 0, grid[0].length-1);
+    }
+    private int traverseGrid(int grid[][], int r, int c, int C){
+        //return 0 if any of the robo have gone out of the bounds of the grid
+        if(C < 0 || C>=grid[0].length || c < 0|| c>= grid[0].length){
+            return 0;
+        }
+        //return from the memo if you have already seen this state
+        if(memo[r][c][C] != null){
+            return memo[r][c][C];
+        }
+        int ans = grid[r][c];
+        //if both are not at the same column
+        if(c != C){
+            ans += grid[r][C];
+        }
+        int maxDown = 0;
+//if we are not already at the last row then there will be total of nine cobinations by combining 3 directions for robo1 with 3 directions for robo2
+        if(r != grid.length-1){
+            for(int c1 = c-1; c1<= c+1; c1++){
+                for(int c2 = C-1; c2<= C+1; c2++){
+                    maxDown = Math.max(maxDown, traverseGrid(grid, r+1, c1, c2));
+                }
+            }
+        }
+        return memo[r][c][C] = ans + maxDown;
+    }
+}
