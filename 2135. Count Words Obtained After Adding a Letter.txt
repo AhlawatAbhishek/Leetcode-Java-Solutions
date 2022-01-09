@@ -1,0 +1,33 @@
+---------post's link--------https://leetcode.com/problems/count-words-obtained-after-adding-a-letter/discuss/1677112/java-bit-magic-encoding-with-explanation-easy-to-understand
+class Solution {
+    public int wordCount(String[] startWords, String[] targetWords) {
+        HashSet<Integer> sW = new HashSet<>();
+        for(String s : startWords){
+            sW.add(encode(s));            
+        }
+        int canFr = 0;
+        for(String t : targetWords){
+            int cod = encode(t);
+            for(int indx = 0; indx<26; indx++){
+                int chrCode = (1<<indx);
+                //checking if character (char)(indx + 'a') is there in the targetWord
+                if((chrCode & cod) != 0){
+//                 checking if after excluding the character  (char)(indx + 'a') from the target word, is there any matching word present in the startWords' code that we stored in sW                    
+                    if(sW.contains(cod - chrCode)){
+                        canFr++;
+                        break;
+                    }
+                }
+            }
+        }
+        return canFr;
+    }
+// this coding scheme works because it is given in constraints of the question that the characters in both startWords and targetWords are unique. So after shifting 1 left by c-'a' times for each character c in a string, we get unique value each time and sum of these values is also unique.    
+    private int encode(String s){
+        int code = 0;
+        for(char c : s.toCharArray()){
+            code += (1<<(c - 'a'));
+        }
+        return code;
+    }
+}

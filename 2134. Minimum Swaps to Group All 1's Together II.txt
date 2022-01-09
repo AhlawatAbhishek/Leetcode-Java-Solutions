@@ -1,0 +1,22 @@
+----post's link-----https://leetcode.com/problems/minimum-swaps-to-group-all-1s-together-ii/discuss/1677266/Java-or-Sliding-Window-and-appending-array-Illusion-or-Explained-and-Easy-to-understand-%3A)
+//Minimum swaps neede will be minimum number of holes i.e. zeroes in the sliding window (of size totalOnes in nums), which will slide on the array formed after appending the nums array to itself.
+class Solution {    
+    public int minSwaps(int[] nums) {
+       int totalOnes = 0;
+        for(int num : nums){
+            if(num == 1) totalOnes++;
+        }
+        int len = nums.length;
+        int maxOnes = 0, currOnes = 0;
+//taking the loop to 2*len to form an illusion of appending the copy of the original array to the original array itself.       
+        for(int indx = 0; indx<2*len; indx++){
+            //excluding ones outside the window of size totalOnes, which keeps on sliding by one position in each iteration of this for loop
+            if(indx >= totalOnes && nums[(indx - totalOnes)%len] == 1)currOnes--;
+            //doing indx %len to get the indicies of the correct elements to be appended after the size grows beyond or equal to len
+            if(nums[indx%len] == 1)currOnes++;
+            maxOnes = Math.max(maxOnes, currOnes);
+        }
+//      this are the minimum number of holes i.e. zeroes that need to be swapped with ones   
+        return totalOnes - maxOnes;
+    }
+}

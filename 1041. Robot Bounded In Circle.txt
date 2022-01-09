@@ -1,0 +1,31 @@
+class Solution {
+     static HashMap<Integer, int[]> dirMap = new HashMap<>();
+      static{ 
+        dirMap.put(0, new int[]{-1, 0});
+        dirMap.put(1, new int[]{0, 1});
+        dirMap.put(2, new int[]{1, 0});
+        dirMap.put(3, new int[]{0, -1});
+        dirMap.put(-1, new int[]{0, -1});
+        dirMap.put(-2, new int[]{1, 0});
+        dirMap.put(-3, new int[]{0, 1});
+      }  
+     public boolean isRobotBounded(String instructions) {
+        int dir = 0, r = 0, c=0;
+        for(char i : instructions.toCharArray()){
+            if(i == 'L'){
+                dir--;
+                if(dir == -4)dir = 0;
+            }else if(i == 'R'){
+                dir++;
+                if(dir == 4)dir = 0;
+            }else{
+                int dirs[] = dirMap.get(dir);
+                r += dirs[0];
+                c += dirs[1];
+            }
+        }
+        if((r == 0 && c == 0)||dir != 0)return true;
+        return false;
+        
+    }
+}
