@@ -1,0 +1,81 @@
+// time complexity: O(max(lenA, lenB))
+//auxiliary space: O(max(lenA, lenB)), for string builder used
+class Solution {
+    public String addBinary(String a, String b) {
+        int lenA = a.length(), lenB = b.length(), indx1 = lenA - 1, indx2 = lenB - 1;
+        StringBuilder ans = new StringBuilder();
+        char carry = '0';
+        while(indx1>=0 || indx2>=0){
+            char chA = indx1 >= 0 ? a.charAt(indx1): '0', chB = indx2>=0? b.charAt(indx2): '0';
+            int sum = chA-'0' + chB - '0' + carry - '0';
+            //adding 1, 1, 1 in binary equals 1 and 1 carry
+            if(sum == 3){
+                ans.insert(0, "1");
+                carry = '1';
+            }else if(sum == 2){//adding 1, 1, 0 in binary equals 0 and 1 carry
+                ans.insert(0, "0");
+                carry = '1';
+            }else if(sum == 1){//adding 1, 0, 0 in binary equals 1 and 0 carry
+                ans.insert(0, "1");
+                carry = '0';
+            }else{//adding 0, 0, 0 in binary equals 0 and 0 carry
+                ans.insert(0,"0");
+                carry = '0';
+            }
+            indx1--;
+            indx2--;
+        }
+        if(carry != '0')ans.insert(0, carry);
+        return ans.toString();
+    }
+}
+Any corrections, suggestions or optimizations code are welcomed. :)
+If you found this post helpful then please like and comment to increase it's reach. :)    
+--------------------------------------------
+class Solution {
+  public String addBinary(String a, String b) {
+    return Integer.toBinaryString(Integer.parseInt(a, 2) + Integer.parseInt(b, 2));
+  }
+}
+-------------------------------
+/*
+Intuition
+
+Here the input is more adapted to push towards Approach 1, but there is popular Facebook variation of this problem when interviewer provides you two numbers and asks to sum them up without using addition operation.
+
+No addition? OK, bit manipulation then.
+
+How to start? There is an interview tip for bit manipulation problems: if you don't know how to start, start from computing XOR for your input data. Strangely, that helps to go out for quite a lot of problems, Single Number II, Single Number III, Maximum XOR of Two Numbers in an Array, Repeated DNA Sequences, Maximum Product of Word Lengths, etc.
+
+Here XOR is a key as well, because it's a sum of two binaries without taking carry into account.
+----a^b = bitwise sum of a and b without carry. 
+----To find current carry is quite easy as well, it's AND of two input numbers, shifted one bit to the left.
+i.e. (a&b)<<1, now or it with a^b ------
+*/
+import java.math.BigInteger;
+class Solution {
+  public String addBinary(String a, String b) {
+    BigInteger x = new BigInteger(a, 2);
+    BigInteger y = new BigInteger(b, 2);
+    BigInteger zero = new BigInteger("0", 2);
+    BigInteger carry, answer;
+    while (y.compareTo(zero) != 0) {
+      answer = x.xor(y);
+      carry = x.and(y).shiftLeft(1);
+      x = answer;
+      y = carry;
+    }
+    return x.toString(2);
+  }
+}
+-----------------------------
+Performance Discussion
+
+Here we deal with input numbers which are greater than 2^{100}2 
+100
+ . That forces to use slow BigInteger in Java, and hence the performance gain will be present for the Python solution only. Provided here Java solution could make its best with Integers or Longs, but not with BigIntegers.
+
+Complexity Analysis
+
+Time complexity : \mathcal{O}(N + M)O(N+M), where NN and MM are lengths of the input strings a and b.
+
