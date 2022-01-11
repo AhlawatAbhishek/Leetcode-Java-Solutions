@@ -1,34 +1,51 @@
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
+//post's link---https://leetcode.com/problems/sum-of-root-to-leaf-binary-numbers/discuss/1681873/Java-or-DFS-and-bit-manipulation-or-Easy-to-understand-or-Explained-%3A)
+Intuition: To get the binary number from root to leaf, dfs seems to be a legit option as it will tarverse one branch till the
+           very end.
+// Time complexity: O(h), h is height of binary tree, in worst case it could be upto n(number of nodes in the tree), when the
+//binary tree is skewed
+// Auxiliary Space: O(h), for the recursion call stack of the findSum method
 class Solution {
+    private int total = 0;
     public int sumRootToLeaf(TreeNode root) {
-      
-       return findSum(root);
+        //dfs
+        findSum(root, 0);
+        return total;
     }
-    public int findSum(TreeNode root){
-       return findPathSum(root , 0);
-    }
-    public int findPathSum(TreeNode root , int sum){
-        if(root == null){
-            return 0;
+    private void findSum(TreeNode root, int num){
+//if we add the num value to total when root is null then every num formed at the leafs will be added twice.
+//Once when leaf's left child is null and once when leaf's right child is null
+        if(root == null)return;
+//this the crux of the problem we are form num by appending bits to the previously formed num        
+        num = (num<<1)+root.val;
+        if(root != null && root.left  == null && root.right == null){
+            total += num;
+            return;
         }
-        sum = (sum << 1) + root.val;
-        if(root.left == null && root.right == null){
-            return sum;
-        }
-        return findPathSum(root.left, sum) + findPathSum(root.right , sum);
+        findSum(root.left, num);  
+        findSum(root.right, num);
     }
 }
+------------------------------------------------------
+class Solution {
+    private int total = 0;
+    public int sumRootToLeaf(TreeNode root) {
+       findSum(root, "");
+        return total;
+    }
+    private void findSum(TreeNode root, String num){
+        if(root == null)return;
+        if(root != null && root.left  == null && root.right == null){
+            num += ""+root.val;
+            if(num.length() != 0){
+                total += Integer.parseInt(num, 2);
+            }
+            return;
+        }
+        int val = root.val;
+        findSum(root.left, num+""+val);  
+        findSum(root.right, num+""+val);
+    }
+}
+-----------
+Any corrections, suggestions or optimizations code are welcomed. :)
+If you found this post helpful then please like and comment to increase it's reach. :)

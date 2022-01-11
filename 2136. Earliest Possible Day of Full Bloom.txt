@@ -1,0 +1,29 @@
+//post's link---https://leetcode.com/problems/earliest-possible-day-of-full-bloom/discuss/1680216/Java-or-Easy-to-understand-or-With-explanations-%3A)
+//Time complexity: O(n*log n), n is the total seeds given. (sorting used will be the major contributor of the time complexity)
+//Auxiliary Space: O(n), to store the seeds in plnts array
+class Solution {
+    private static class Plt{
+        int gTime, pTime;
+        Plt(int g, int p){
+            gTime = g;
+            pTime = p;
+        }
+    }
+    //We are prefering the seed which have more grow time, because larger the grow time for a plant, larger will the time window available for planting other seeds while the seed/plant is growing as no work is done during the growing phase of a seed.
+    public int earliestFullBloom(int[] plantTime, int[] growTime) {
+        int len = plantTime.length;
+        Plt plnts[] = new Plt[len];
+        for(int indx = 0; indx<len; indx++){
+            plnts[indx] = new Plt(growTime[indx], plantTime[indx]);
+        }
+        Arrays.sort(plnts, (a,b)->b.gTime-a.gTime);
+        int dToBloom = 0, currPlntTimeTotal =0;
+        for(int indx = 0; indx<len; indx++){
+ //checking other than the previous total plant time used by the plants that we have done planting how much this new plant / seed will require in total to bloosm along with the previously used total plant time and taking max of that and totalBloosm time till now           
+            dToBloom = Math.max(dToBloom, currPlntTimeTotal + plnts[indx].gTime + plnts[indx].pTime);
+            // we are adding plantTime of each plant after we have done calculations for the current seed underconsideration to currPlntTimeTotal as the plant time is bound to be used. As while we are planting a plant/seed then no other activity can takes place other than growing.
+            currPlntTimeTotal += plnts[indx].pTime;
+        }
+        return dToBloom;
+    }
+}
