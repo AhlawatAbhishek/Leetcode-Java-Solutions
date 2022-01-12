@@ -1,0 +1,98 @@
+//for each unstamped zero we are checking that it is possible to put a stamp with that zero being the part of the left boundary of the stamp.
+
+//if stamp can be placed on this zero than we mark all the zeroes that would be comming under the stamp boundaries as stampped
+
+//if there exists a unstampped zero for which stamp cannot be placed with it being the part of the left boundary of the stamp then we return false else we return true at the end once we are done checking for all the unstampped zeroes
+class Solution {
+    public boolean possibleToStamp(int[][] grid, int stampHeight, int stampWidth) {
+        int rows = grid.length, cols = grid[0].length, up[][] = new int[rows][cols], down[][] = new int[rows][cols];
+        //up[r][c] is how far up you can be getting zeroes if you get a zero at grid[r][c] ,including the one at grid[r][c]
+        //down[r][c] is how far down you can be getting zeroes if you get a zero at grid[r][c] ,including the one at grid[r][c]
+        //populating the up and down arrays
+        for(int c = 0; c<cols; c++){
+            //populating the up array
+            up[0][c] = 1 - grid[0][c];
+            for(int r = 1; r<rows; r++){
+               if(grid[r][c] == 0) 
+                up[r][c] = up[r-1][c] + 1; 
+            }
+            //populating the down array
+            down[rows-1][c] = 1 - grid[r][c];
+            for(int r = rows-2; r>=0; r--){
+               if(grid[r][c] == 0) 
+                down[r][c] = down[r+1][c] + 1;
+            }
+        }
+        //checking if the unstampped zeroes can be stampped and if yes then marking them stampped. And if no then returning false
+        boolean[][]stampped = new boolean[rows][cols];
+        for(int r = 0; r< rows; r++){
+            for(int c = 0; c<cols; c++){
+                if(stampped[r][c] || grid[r][c] == 1)continue;
+                
+            }
+        }
+    }
+}
+[[1,0,0,1,1],[1,0,0,0,1],[1,1,1,0,1]]
+2
+1
+// Intuition: 
+// .for each unstamped zero we are checking that it is possible to put a stamp with that zero being the part of the left boundary of the stamp.
+
+// .if stamp can be placed on this zero than we mark all the zeroes that would be comming under the stamp boundaries as stampped
+
+// .if there exists a unstampped zero for which stamp cannot be placed with it being the part of the left boundary of the stamp then we return
+//  false else we return true at the end once we are done checking for all the unstampped zeroes
+//Time Complexity: O(rows*cols)
+//Space Complexity: O(rows*cols)
+class Solution {
+    public boolean possibleToStamp(int[][] grid, int stampHeight, int stampWidth) {
+        int rows = grid.length, cols = grid[0].length, up[][] = new int[rows][cols], down[][] = new int[rows][cols];
+//up[r][c] is how far up you can be getting zeroes if you get a zero at grid[r][c] ,including the one at grid[r][c]
+//down[r][c] is how far down you can be getting zeroes if you get a zero at grid[r][c] ,including the one at grid[r][c]
+//populating the up and down arrays
+        for(int c = 0; c<cols; c++){
+            //populating the up array
+            up[0][c] = 1 - grid[0][c];
+            for(int r = 1; r<rows; r++){
+               if(grid[r][c] == 0) 
+                up[r][c] = up[r-1][c] + 1; 
+            }
+//populating the down array
+            down[rows-1][c] = 1 - grid[rows-1][c];
+            for(int r = rows-2; r>=0; r--){
+               if(grid[r][c] == 0) 
+                down[r][c] = down[r+1][c] + 1;
+            }
+        }
+        //checking if the unstampped zeroes can be stampped and if yes then marking them stampped. And if no then returning false
+        boolean[][]stampped = new boolean[rows][cols];
+        for(int r = 0; r< rows; r++){
+            for(int c = 0; c<cols; c++){
+                if(stampped[r][c] || grid[r][c] == 1)continue;
+                int lastCol = c, upZeroes =  Integer.MAX_VALUE, downZeroes = Integer.MAX_VALUE;
+//basically we are trying to form a rectangle of zeroes and check if the height and width of that rectangle is equal to or greater than the
+//given height and width respectively
+                boolean canBePlaced = false;
+                while(lastCol<cols&&grid[r][lastCol] == 0){
+                    upZeroes = Math.min(up[r][lastCol], upZeroes);
+                    downZeroes = Math.min(down[r][lastCol], downZeroes);
+                    stampped[r][lastCol] = true;
+                    lastCol++;
+                    int recWidth = lastCol-c;
+                    int recHeight = upZeroes + downZeroes - 1;
+                    if(recWidth == stampWidth && recHeight==stampHeight){
+                    //System.out.println("returning false for row "+r +" col "+c);
+                      canBePlaced = true;
+                      break;
+                    }
+                }
+                if(canBePlaced = false){
+                    System.out.println("returning false for row "+r +" col "+c);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}

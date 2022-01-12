@@ -1,9 +1,8 @@
 //post's link---https://leetcode.com/problems/sum-of-root-to-leaf-binary-numbers/discuss/1681873/Java-or-DFS-and-bit-manipulation-or-Easy-to-understand-or-Explained-%3A)
-Intuition: To get the binary number from root to leaf, dfs seems to be a legit option as it will tarverse one branch till the
-           very end.
-// Time complexity: O(h), h is height of binary tree, in worst case it could be upto n(number of nodes in the tree), when the
-//binary tree is skewed
-// Auxiliary Space: O(h), for the recursion call stack of the findSum method
+Intuition: To get the binary number from root to leaf, dfs seems to be a legit option as it will tarverse one branch till the very end.
+// Time complexity: O(n), (n is number of nodes in the tree) since we are visiting each node once.
+// Auxiliary Space: O(h), for the recursion call stack of the findSum method,  h is height of binary tree, in worst case it could be upto
+//n(number of nodes in the tree), when the binary tree is skewed
 class Solution {
     private int total = 0;
     public int sumRootToLeaf(TreeNode root) {
@@ -15,7 +14,7 @@ class Solution {
 //if we add the num value to total when root is null then every num formed at the leafs will be added twice.
 //Once when leaf's left child is null and once when leaf's right child is null
         if(root == null)return;
-//this the crux of the problem we are form num by appending bits to the previously formed num        
+//this the crux of the solution we are forming num by appending bits to the previously formed num        
         num = (num<<1)+root.val;
         if(root != null && root.left  == null && root.right == null){
             total += num;
@@ -25,6 +24,9 @@ class Solution {
         findSum(root.right, num);
     }
 }
+```
+Any corrections, suggestions or optimizations code are welcomed. :)
+If you found this post helpful then please like and comment to increase it's reach. :)
 ------------------------------------------------------
 class Solution {
     private int total = 0;
