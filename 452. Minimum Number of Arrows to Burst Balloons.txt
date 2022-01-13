@@ -1,17 +1,14 @@
 class Solution {
     public int findMinArrowShots(int[][] points) {
-        if(points.length == 0){
-            return 0;
-        }
-        Arrays.sort(points, (a,b) -> Integer.compare(a[1], b[1])); // a[1] - b[1] // sort based on ending index of diameter of ballon in increasing order.
-        int arrow = 1;
+        int totalArr = 1, pLen = points.length;
+        Arrays.sort(points, (a, b)->Integer.compare(a[1],b[1]));
         int end = points[0][1];
-        for(int i = 1; i<points.length; i++){
-            if(points[i][0] > end){
-                arrow++;
-                end = points[i][1];
+        for(int indx = 1; indx<pLen; indx++){
+            if(end < points[indx][0]){
+                 end = points[indx][1];
+                totalArr++;
             }
         }
-        return arrow;
+        return totalArr;
     }
 }
