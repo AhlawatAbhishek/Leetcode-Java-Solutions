@@ -1,0 +1,66 @@
+class Solution {
+    public int myAtoi(String s){
+        String numb = s.trim();
+        long num = 0, sign = 1;
+        if(numb.length() == 0)return 0;
+        if(numb.charAt(0) == '-'|| numb.charAt(0) == '+'){
+            if(numb.charAt(0) == '-')sign = -1;
+            numb = numb.substring(1);
+        }
+        int indx = 0, len = numb.length();
+        for(;indx<len&&Character.isDigit(numb.charAt(indx)); indx++){
+            char dig = numb.charAt(indx);
+            num = num*10 + (dig-'0'); 
+            if(num*sign <=  Integer.MIN_VALUE){
+                return Integer.MIN_VALUE;
+            }
+            if(num * sign >=  Integer.MAX_VALUE){
+                return Integer.MAX_VALUE;
+            }
+        }
+        return (int)num * (int)sign;
+    }   
+}
+----------------------
+class Solution {
+    public int myAtoi(String input) {
+        int sign = 1; 
+        int result = 0; 
+        int index = 0;
+        int n = input.length();
+        
+        // Discard all spaces from the beginning of the input string.
+        while (index < n && input.charAt(index) == ' ') { 
+            index++; 
+        }
+        
+        // sign = +1, if it's positive number, otherwise sign = -1. 
+        if (index < n && input.charAt(index) == '+') {
+            sign = 1;
+            index++;
+        } else if (index < n && input.charAt(index) == '-') {
+            sign = -1;
+            index++;
+        }
+        
+        // Traverse next digits of input and stop if it is not a digit
+        while (index < n && Character.isDigit(input.charAt(index))) {
+            int digit = input.charAt(index) - '0';
+
+            // Check overflow and underflow conditions. 
+            if ((result > Integer.MAX_VALUE / 10) || 
+                (result == Integer.MAX_VALUE / 10 && digit > Integer.MAX_VALUE % 10)) {     
+                // If integer overflowed return 2^31-1, otherwise if underflowed return -2^31.    
+                return sign == 1 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+            }
+            
+            // Append current digit to the result.
+            result = 10 * result + digit;
+            index++;
+        }
+        
+        // We have formed a valid number without any overflow/underflow.
+        // Return it after multiplying it with its sign.
+        return sign * result;
+    }
+}
