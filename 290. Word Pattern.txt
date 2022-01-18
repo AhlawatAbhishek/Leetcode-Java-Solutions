@@ -1,49 +1,56 @@
+//Time complexity: O(pattern.length())
+//Space complexity: O(distinct strings s), since pToC map can only have 26 key-value pairs
 class Solution {
-    public boolean wordPattern(String pattern, String str) {
-        Map<Character, String> char_map = new HashMap();
-        Map<String, Character> word_map = new HashMap();
-        
-        int n = pattern.length(), i = 0;
-        String[] words = str.split(" ");
-        if(n != words.length) return false;
-        
-        while(i < n){
-            char c = pattern.charAt(i);
-            String word = words[i];
-            if(char_map.containsKey(c) != word_map.containsKey(word)) return false;
-            if(char_map.containsKey(c)){
-                if( (word_map.get(word) != c) || !(char_map.get(c).equals(word)) ) return false;
-            } else {
-                char_map.put(c, word);
-                word_map.put(word, c);
+    public boolean wordPattern(String pattern, String s) {
+        HashMap<Character, String> patToS = new HashMap<>();
+        HashMap<String, Character> sToPat = new HashMap<>();
+        String strs[] = s.split(" ");
+        int len = pattern.length();
+        if(len != strs.length)return false;
+        for(int indx = 0; indx<len; indx++){
+            char cPat = pattern.charAt(indx);
+            String str = strs[indx];
+            if(patToS.containsKey(cPat)){
+                if(!patToS.get(cPat).equals(str)){
+                    // System.out.println("returning false for"+cPat+ " " + str + " " + indx);
+                    return false;
+                }    
+            }else{
+                patToS.put(cPat, str);
             }
-            i++;
+            if(sToPat.containsKey(str)){
+                if(sToPat.get(str) != cPat){
+                    // System.out.println("returning false for"+cPat+ " " + str + " " + indx);
+                    return false;
+                }
+            }else{
+                
+                sToPat.put(str, cPat);
+            }
         }
-        return i == n;
+        return true;
     }
-}---------------------------
---------------
- 	class Solution {
-    public boolean wordPattern(String pattern, String str) {
-        Map<Character, String> char_map = new HashMap();
-        Map<String, Character> word_map = new HashMap();
-        
-        int n = pattern.length(), i = 0;
-        String[] words = str.split(" ");
-        if(n != words.length) return false;
-        
-        while(i < n){
-            char c = pattern.charAt(i);
-            String word = words[i];
-            if(char_map.containsKey(c) != word_map.containsKey(word)) return false;
-            if(char_map.containsKey(c)){
-                if( (word_map.get(word) != c) || !(char_map.get(c).equals(word)) ) return false;
-            } else {
-                char_map.put(c, word);
-                word_map.put(word, c);
-            }
-            i++;
+}
+--------------------------------------------------------------------------
+// You can, but then you need to modify line 19 to !map_index.get(c).equals(map_index.get(w)).
+// This is because if you use primitive int as a key/value for generic map, java will convert it into Integer then save the converted Integer into map, and "==" or "!=" only works for Integer whos value is below 127.
+//Time complexity: O(pattern.length())
+//Space complexity: O(distinct strings s), since pToC map can only have 26 key-value pairs
+class Solution {
+    public boolean wordPattern(String pattern, String s) {
+        HashMap indxMp = new HashMap();
+        String strs[] = s.split(" ");
+        int len = pattern.length();
+        if(len != strs.length)return false;
+        for(Integer indx = 0; indx<len; indx++){
+            char cPat = pattern.charAt(indx);
+            String str = strs[indx];
+            if(!indxMp.containsKey(cPat))indxMp.put(cPat, indx);
+            if(!indxMp.containsKey(str))indxMp.put(str, indx);
+            if(indxMp.get(cPat) != indxMp.get(str)){
+                    return false;
+            }       
         }
-        return i == n;
+        return true;
     }
 }

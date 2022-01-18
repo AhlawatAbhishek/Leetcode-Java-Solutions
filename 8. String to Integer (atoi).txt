@@ -1,16 +1,23 @@
+post's link ---- https://leetcode.com/problems/string-to-integer-atoi/discuss/1689168/Java-or-Easy-to-understand-%3A)
+//Time complexity: O(n), n is the length of the s string after trimming it.
+//Auxiliary Space: O(1)
 class Solution {
     public int myAtoi(String s){
+        //removing the leading and trailling spaces
         String numb = s.trim();
         long num = 0, sign = 1;
         if(numb.length() == 0)return 0;
+//getting the sign of the final answer if a sign character exists and by default positive
         if(numb.charAt(0) == '-'|| numb.charAt(0) == '+'){
             if(numb.charAt(0) == '-')sign = -1;
             numb = numb.substring(1);
         }
         int indx = 0, len = numb.length();
+//forming digit till a non digit character is encountered
         for(;indx<len&&Character.isDigit(numb.charAt(indx)); indx++){
             char dig = numb.charAt(indx);
-            num = num*10 + (dig-'0'); 
+            num = num*10 + (dig-'0');
+//taking care of clamping the final number in case is surpases the limits of int in java
             if(num*sign <=  Integer.MIN_VALUE){
                 return Integer.MIN_VALUE;
             }

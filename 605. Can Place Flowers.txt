@@ -34,3 +34,29 @@ class Solution {
         return count >= n;
     }
 }
+------------------------------------------------------
+https://leetcode.com/problems/can-place-flowers/discuss/1698798/Java-or-Easy-to-understand-or-Explained
+------------------------------
+Intuition: .Fill the vacant places that staisfy non adjacent condition left to right and check if you have filled n or more flowers in those places.
+//Time complexity: O(fBd.length), in worst case we have to check for all the vacant places if they satisfy the non adjacent condition of the question.
+//Auxiliary Space: O(1)
+class Solution {
+    public boolean canPlaceFlowers(int[] fBd, int n) {
+        int flwrs = 0;
+        for(int indx = 0; indx<fBd.length; indx++){
+            if(fBd[indx] == 1)continue;
+            int prevEmpty = indx-1>=0 ? fBd[indx-1] : 0;
+            int nextEmpty = indx+1<fBd.length ? fBd[indx+1] : 0;
+            if(prevEmpty == 0 && nextEmpty == 0){
+                fBd[indx] = 1;
+                flwrs++;
+            }
+            //'>' is inputs like [0, 0, 0, 1], 0
+            if(flwrs >=  n)return true;
+        }
+        //for inputs like [1], 0
+        return flwrs == n;
+    }
+}
+Any corrections, suggestions or optimizations to code are welcomed. :)
+If you found this post helpful then please like and comment to increase it's reach. :)    

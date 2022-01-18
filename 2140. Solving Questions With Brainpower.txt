@@ -1,0 +1,30 @@
+class Solution {
+    private long memo[] = null;
+    public long mostPoints(int[][] questions) {
+        memo = new long[questions.length];
+        Arrays.fill(memo, -1);
+        return dfs(questions, 0);
+    }
+    private long dfs(int q[][], int indx){
+       if(indx >= q.length){
+           return 0l;
+       }
+       if(memo[indx] != -1)return memo[indx]; 
+       long incl = q[indx][0] + dfs(q, indx+q[indx][1]+1);
+       long excl = dfs(q, indx+1);
+       return memo[indx] =  Math.max(incl, excl); 
+    }
+}
+--------------------------------------------------------
+class Solution {
+    public long mostPoints(int[][] q) {
+        long dp[] = new long[q.length];
+        dp[dp.length-1] = q[dp.length-1][0];
+        for(int indx = dp.length-2; indx>=0; indx--){
+            int skips = q[indx][1];
+            int marks = q[indx][0];
+            dp[indx] = Math.max(dp[indx+1], marks + (skips+indx+1 < dp.length ? dp[skips+indx+1] : 0));
+        }
+        return dp[0];
+    }
+}

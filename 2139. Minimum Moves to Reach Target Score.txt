@@ -1,0 +1,16 @@
+//try to use doubling action as late as possible going from 1 to target.
+//Or reversly while going from target to 1 try to use doubling action as soon as possible.
+//if target value is even then 1 action i.e. doubling action is required.
+//if target value is odd then 2 actions i.e. reducing action followed by doubling action is required.
+//if no more doubling action is left were are just to convert current value of target to 1 which will be target - 1 moves
+class Solution {
+    public int minMoves(int target, int maxDoubles) {
+        int minMovs = 0;
+        while(target > 1 && maxDoubles>0){
+            minMovs += target%2 + 1;
+            target>>=1;
+            maxDoubles--;
+        }
+        return target-1+minMovs;
+    }
+}
