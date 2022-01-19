@@ -1,0 +1,41 @@
+class Solution {
+    public long maxRunTime(int n, int[] batr) {
+        long lo = 0, hi = 0, batSm = 0l;
+        for(int bat : batr){
+            batSm += (long)bat;
+        }
+        hi = batSm / n;
+        long res = -1;
+        while(lo<=hi){
+            long hrs = lo + (hi - lo)/2;
+            long batSum = 0l;
+            for(int bat : batr){
+                batSum += Math.min(bat, hrs);
+            }
+            if(batSum >= hrs*n){
+                res = hrs;
+                lo = hrs+1;
+            }else{
+                hi = hrs-1;
+            }
+        }
+        return res;
+    }
+}
+------------------------------------------
+class Solution {
+    public long maxRunTime(int n, int[] batr) {
+        PriorityQueue<Integer> maxCg = new PriorityQueue<>((a,b)->b-a);
+        long batSum = 0l;
+        for(int bat : batr){
+            maxCg.offer(bat);
+            batSum += bat;
+        }
+        while(!maxCg.isEmpty() && maxCg.peek() > batSum/n){
+            batSum -= maxCg.poll();
+            n--;
+        }
+        return batSum/n;
+    }
+}
+https://leetcode.com/problems/maximum-running-time-of-n-computers/discuss/1693347/Heap-vs.-Binary-Search
