@@ -1,0 +1,51 @@
+//Time complexity: O(n*sqrt(n)), n dfs calls and sqrt(n) for loop in each call
+//Auxiliary Space: O(n), to store the result in memo array
+class Solution {
+    private Boolean memo[] = null;
+    public boolean winnerSquareGame(int n) {
+        memo = new Boolean[n+1];
+        return canAliceWin(n);
+    }
+    private boolean canAliceWin(int n){
+        if(n == 0){
+          return false;
+        }
+        if(memo[n] != null)return memo[n];
+        int canBeRemStones = (int)Math.floor(Math.sqrt(n));
+        for(int st = 1; st<=canBeRemStones; st++){
+            int remv = st*st;
+            if(remv == n)return memo[n] = true;
+            if(!canAliceWin(n-remv)){
+                return  memo[n] = true;
+            }
+        } 
+        return memo[n] = false;
+    }
+}
+------------------------------------
+//Time complexity: O(n*sqrt(n))
+//Auxiliary Space: O(n), to store the result in res array
+class Solution {
+    public boolean winnerSquareGame(int n) {
+        if(n == 1) return true;
+        if(n == 2) return false;
+        boolean res[] = new boolean[n+1];
+        res[1] = true;
+        res[2] = false;
+        for(int indx = 3; indx<=n; indx++){
+            int canBeRem = (int)Math.floor(Math.sqrt(indx));
+            for(int st = 1; st<=canBeRem; st++){
+                int remv = st*st;
+                if(remv == indx){
+                    res[indx] = true;
+                    break;
+                }
+                if(!res[indx-remv]){
+                    res[indx] = true;
+                    break;
+                }
+            }
+        }
+        return res[n];
+    }
+}

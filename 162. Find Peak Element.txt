@@ -33,3 +33,80 @@ class Solution {
         return lo; 
     }
 }
+-----------------------------------
+class Solution {
+    public int findPeakElement(int[] nums) {
+        int len = nums.length, left = 0, right = len-1;
+        while(left < right){
+            int mid = left + (right - left)/2;
+            long num = (long)nums[mid];
+            // System.out.println("mid is found out to be: "+mid);
+            long rightNum = mid+1 < len ? nums[mid+1] : Long.MIN_VALUE;
+            long leftNum = mid-1>=0 ? nums[mid-1] : Long.MIN_VALUE;
+            if(leftNum < num && rightNum < num){
+                return mid;
+            }else if(leftNum > num){
+                right = mid;
+            }else if(rightNum > num){
+                left = mid + 1;
+            }
+        }
+        if(left != len){
+            long rightNum = left+1 < len ? nums[left+1] : Long.MIN_VALUE;
+            long leftNum = left-1>=0 ? nums[left-1] : Long.MIN_VALUE;
+            if(nums[left] > (long)rightNum && nums[left] > (long)leftNum)return left;
+        }
+        return 0;
+    }
+}
+--------------------------------------------
+class Solution {
+    public int findPeakElement(int[] nums) {
+        return (int)findPeak(nums, 0, nums.length-1);
+    }
+    private long findPeak(int nums[], int left, int right){
+        if(left == right){
+            if(left < nums.length){
+                long rightSide = left+1<nums.length ? nums[left+1] : Long.MIN_VALUE;
+                long leftSide = left-1>=0 ? nums[left-1] : Long.MIN_VALUE;
+                if(leftSide < nums[left] && rightSide < nums[left]) return left;
+            }
+            return Long.MIN_VALUE;
+        }
+        int mid = left + (right-left)/2;
+        long rightSide = mid+1<nums.length ? nums[mid+1] : Long.MIN_VALUE;
+        long leftSide = mid-1>=0 ? nums[mid-1] : Long.MIN_VALUE;
+        if(nums[mid] > leftSide && nums[mid] > rightSide) return mid;
+        else if(nums[mid]< rightSide){
+            return findPeak(nums, mid+1, right);
+        }else{
+            return findPeak(nums, left, mid);
+        }
+    }
+}
+-----------------------------
+class Solution {
+    public int findPeakElement(int[] nums) {
+        return findPeak(nums, 0, nums.length-1);
+    }
+    private int findPeak(int nums[], int left, int right){
+        if(left == right) return left;
+        int mid = left + (right - left)/2;
+        if(nums[mid] > nums[mid+1]) return findPeak(nums, left, mid);
+        else return findPeak(nums, mid+1, right);
+    }
+}
+--------------------------------
+public class Solution {
+    public int findPeakElement(int[] nums) {
+        int l = 0, r = nums.length - 1;
+        while (l < r) {
+            int mid = (l + r) / 2;
+            if (nums[mid] > nums[mid + 1])
+                r = mid;
+            else
+                l = mid + 1;
+        }
+        return l;
+    }
+}

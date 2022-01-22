@@ -1,0 +1,63 @@
+-----post's link----https://leetcode.com/problems/koko-eating-bananas/discuss/1703777/Java-or-Very-easy-to-understand-or-Explained-%3A)
+.Since we are required to find the minimum values in k such that sumation(for all values of i ceil(piles[i])) <= h(given time).(taking ceil because if koko eats all the bananas of a pile in less than an hour than she donot eat anything in that hour i.e. number of hrs for a pile cannot be fractional)
+.And all values of k can be in range 1 to max(piles) 
+.Above two observation provides us enough hint to use binary search to find the lower bound of k such that condition in the first observation is satisfied.
+//Time complexity: O(log(max(piles)))
+//Auxiliary Space: O(1)    
+//this one is the second template given the explore card of binary search on leetcode explore section
+class Solution {
+    public int minEatingSpeed(int[] piles, int h) {
+        int left = 1, right = Integer.MIN_VALUE;
+        for(int bana : piles){
+            right = Math.max(bana, right);
+        }
+        int maxBanas = right;
+        while(left < right){
+            int k = left + (right-left)/2;
+            int hrsReq = 0;
+            for(int bana : piles){
+                hrsReq += Math.ceil((double)bana/k);
+            }
+            if(hrsReq <= h){
+                right = k;
+            }else{
+                left = k+1;
+            }
+        }
+        if(left <= maxBanas){
+            int hrsReq = 0;
+            for(int bana : piles){
+                hrsReq += Math.ceil((double)bana/left);
+            }
+            if(hrsReq <= h){
+               return left;
+            }
+        }
+        return -1;
+    }
+}
+//this one is another template of binary search used above
+class Solution {
+    public int minEatingSpeed(int[] piles, int h) {
+        int res = -1, left = 1, right = Integer.MIN_VALUE;
+        for(int bana : piles){
+            right = Math.max(bana, right);
+        }
+        while(left <= right){
+            int k = left + (right-left)/2;
+            int hrsReq = 0;
+            for(int bana : piles){
+                hrsReq += Math.ceil((double)bana/k);
+            }
+            if(hrsReq <= h){
+                res = k;
+                right = k-1;
+            }else{
+                left = k+1;
+            }
+        }
+        return res;
+    }
+}
+Any corrections, suggestion or optimizations to code are welcomed. :)
+If you found this post helpful then please upvote and commnet to increase it's reach. :)    
