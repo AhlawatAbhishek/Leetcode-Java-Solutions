@@ -52,3 +52,53 @@ class Solution {
         
     }
 }            
+-------------------------------TLE----
+class Solution {
+    public List<Integer> sequentialDigits(int low, int high) {
+        List<Integer> res = new ArrayList<>();
+        for(int num = low; num<=high; num++){
+            if(hvSeq(num)){
+                res.add(num);
+            }
+        }
+        return res;
+    }
+    private boolean hvSeq(int num){
+        int lastDig = num % 10;
+        num /= 10;
+        while(num > 0){
+            int currDig = num % 10;
+            if(!(lastDig-1 == currDig)){
+                return false;
+            }
+            lastDig = currDig;
+            num /= 10;
+        }
+        return true;
+    }
+}
+----------------------------------------
+class Solution {
+    public List<Integer> sequentialDigits(int low, int high) {
+        String str = "123456789";
+        List<Integer> res = new ArrayList<>();
+        for(int len = getLen(low); len<=getLen(high); len++){
+            for(int indx = 0; indx<=9 - len; indx++){
+                String n = str.substring(indx, indx+len);
+                Integer num = Integer.parseInt(n);
+                if(num >= low && num <= high){
+                    res.add(num);
+                }
+            }
+        }
+        return res;
+    }
+    private int getLen(int num){
+        int len = 0;
+        while(num > 0){
+            len++;
+            num /= 10;
+        }
+        return len;
+    }
+}
