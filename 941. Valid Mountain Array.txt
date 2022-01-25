@@ -28,3 +28,66 @@ class Solution {
         }
     }
 }
+------------------------------------------------
+class Solution {
+    public boolean validMountainArray(int[] arr) {
+        if(arr.length < 3)return false;
+        boolean inc = false, dec = false;
+        for(int indx = 1; indx<arr.length; indx++){
+            if(arr[indx] > arr[indx-1]){
+                inc = true;
+            }else if(arr[indx] < arr[indx-1]){
+                dec = true;
+            }else{
+                return false;
+            }
+            if(inc == false && dec == true){
+                return false;
+            }else if(dec == true && arr[indx] >= arr[indx-1]){
+                return false;
+            }
+        }
+        return dec == true;
+    }
+}
+---------------------------------
+public boolean validMountainArray(int[] A) {
+        int n = A.length, i = 0, j = n - 1;
+        while (i + 1 < n && A[i] < A[i + 1]) i++;
+        while (j > 0 && A[j - 1] > A[j]) j--;
+        return i > 0 && i == j && j < n - 1;
+    }
+--------------------------------------------------------
+class Solution {
+public:
+    bool validMountainArray(vector<int>& arr) {
+        if(arr.size() < 3)return false;
+        bool inc = false, dec = false;
+        for(int indx = 1; indx<arr.size(); indx++){
+            if(arr[indx] > arr[indx-1]){
+                inc = true;
+            }else if(arr[indx] < arr[indx-1]){
+                dec = true;
+            }else{
+                return false;
+            }
+            if(inc == false && dec == true){
+                return false;
+            }else if(dec == true && arr[indx] >= arr[indx-1]){
+                return false;
+            }
+        }
+        return dec == true;
+    }
+};
+--------------------------------------------------------------
+class Solution {
+public:
+    bool validMountainArray(vector<int>& arr) {
+        int len = arr.size(), left = 0, right = len - 1;
+        if(len < 3)return false;
+        while(left < len-1 && arr[left] < arr[left + 1]) left++;
+        while(right > 0 && arr[right] < arr[right - 1]) right--;
+        return left>0 && left == right && right < len - 1;
+    }
+};

@@ -1,0 +1,14 @@
+https://leetcode.com/problems/detect-capital/discuss/1714625/java-very-easy-to-understand-short-and-concise
+class Solution {
+    public boolean detectCapitalUse(String word) {
+        int capCnt = 0, firstCapIndx = -1;
+        for(int indx = 0; indx<word.length(); indx++){
+            char c = word.charAt(indx);
+            if(c<='Z' && c>='A'){
+                capCnt++; 
+                if(indx == 0)firstCapIndx = 0;   
+            }
+        }
+        return capCnt == word.length() || (capCnt == 1 && firstCapIndx == 0) || capCnt == 0;
+    }
+}
