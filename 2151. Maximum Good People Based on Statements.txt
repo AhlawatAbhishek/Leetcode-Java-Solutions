@@ -1,0 +1,33 @@
+//a person can either be bad or good means we have two choices for each person. Let there be n number of persons then there will be 2^n choices to check for. This can easily be done using 
+class Solution {
+    static final int GOOD = 1, BAD = 0, UNKNOWN = 2;
+    public int maximumGood(int[][] statements) {
+        int n = statements.length, totalCombos = 1<<n, roles[] = new int[n];
+        int maxGood = 0;
+        for(int mask = 1; mask<totalCombos; mask++){
+             int currGood = applyMask(roles, mask);
+            if(possible(statements, roles)){
+                maxGood = Math.max(maxGood, currGood);
+            }
+        }
+        return maxGood;
+    }
+    private int applyMask(int roles[], int mask){
+        int goodCount = 0;
+        for(int indx = 0; indx<roles.length; indx++){
+            goodCount += roles[indx] = (mask&GOOD);
+            mask>>=1;
+        }
+        return goodCount;
+    }
+    private boolean possible(int stat[][], int roles[]){
+        for(int per1 = 0; per1<stat.length; per1++){
+            if(roles[per1] == BAD)continue;
+            for(int per2 = 0; per2<stat.length; per2++){
+                if(stat[per1][per2] == UNKNOWN)continue;
+                if(stat[per1][per2] != roles[per2])return false;
+            }
+        }
+        return true;
+    }
+}
