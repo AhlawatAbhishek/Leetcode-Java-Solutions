@@ -1,0 +1,48 @@
+class Solution {
+    public List<Integer> maxScoreIndices(int[] nums) {
+        List<Integer> res = new ArrayList<>();
+        int sum = 0, maxScore = 0, ones = 0, zeroes = 0;
+        for(int ele : nums){
+            sum += ele;
+        }
+        ones = sum;
+        for(int indx = 0; indx<=nums.length; indx++){
+            int num = indx<nums.length ? nums[indx] : -1;
+            int currScore = ones + zeroes;
+            if(currScore == maxScore){
+                res.add(indx);
+            }else if(currScore > maxScore){
+                maxScore = currScore;
+                res.clear();
+                res.add(indx);
+            }
+            if(num == 0){
+                zeroes++;
+            }else if(num == 1){
+               ones--;
+            }
+        }
+        return res;
+    }
+}
+--------------
+class Solution {
+    public List<Integer> maxScoreIndices(int[] nums) {
+        List<Integer> res = new ArrayList<>();
+        int len = nums.length, sums[] = new int[len+1], maxScore = 0;
+        for(int indx = 0; indx<len; indx++){
+            sums[indx+1] = sums[indx] + nums[indx];
+        }
+        for(int indx = 0; indx<=len; indx++){
+            int  ones = indx - sums[indx] , zeroes = sums[len] - sums[indx], score = ones + zeroes;
+            if(score == maxScore){
+                res.add(indx);
+            }else if(score > maxScore){
+                maxScore = score;
+                res.clear();
+                res.add(indx);
+            }
+        }
+        return res;
+    }
+}

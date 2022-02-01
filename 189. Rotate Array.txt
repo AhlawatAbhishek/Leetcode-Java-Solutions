@@ -15,3 +15,33 @@ class Solution {
         }
     }
 }
+----------------------------------
+class Solution {
+    public void rotate(int[] nums, int k) {
+        int len = nums.length;
+        k = k % len;
+        if(k == 0) return;
+        reverse(nums, 0, len - k - 1);
+        swap(nums, 0, len-1, k);
+        reverse(nums, 0, k-1);
+        reverse(nums, k, len-k-1);
+    }
+    private void swap(int nums[], int left, int right, int k){
+        while(left < right && k-->0){
+            int temp = nums[left];
+            nums[left] = nums[right];
+            nums[right] = temp;
+            left++;
+            right--;
+        }
+    }
+    private void reverse(int nums[], int start, int end){
+        while(start < end){
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            start++;
+            end--;
+        }
+    }
+} 

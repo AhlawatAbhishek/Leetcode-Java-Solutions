@@ -1,0 +1,80 @@
+//this one will give TLE, the approach is optimized constantly below
+//Time complexity: O(N^2)
+//Auxiliary Space: O(1)
+class Solution {
+    public int maxProfit(int[] prices) {
+        int len = prices.length, maxProf = 0;
+        for(int ind1 = 0; ind1<len; ind1++){
+            int buy = prices[ind1];
+            for(int ind2 = ind1+1; ind2<len; ind2++){
+                int currProf = prices[ind2] - buy;
+                if(currProf < 0) continue;
+                maxProf = Math.max(currProf, maxProf);
+            }
+        }
+        return maxProf;
+    }
+}
+---------------------------------------------
+//Time complexity: O(N)
+//Auxiliary Space: O(N)
+class Solution {
+    public int maxProfit(int[] prices) {
+        int len = prices.length, maxProf = 0;
+        int fuPrices[] = new int[len];
+        for(int indx = len-1; indx>=0; indx--){
+            fuPrices[indx] = indx+1>=len ? prices[indx] : Math.max(fuPrices[indx+1], prices[indx]);
+        }
+        for(int ind1 = 0; ind1<len; ind1++){
+            int currProf = fuPrices[ind1] - prices[ind1]; 
+            maxProf = Math.max(maxProf, currProf);
+        }
+        return maxProf;
+    }
+}
+---------------------------------------------------------------
+//Time complexity: O(N)
+//Auxiliary Space: O(1)
+class Solution {
+    public int maxProfit(int[] prices) {
+        int len = prices.length, maxProf = 0;
+        int currMaxPrice = prices[len-1];
+        for(int indx = len-2; indx>=0; indx--){
+            currMaxPrice = Math.max(prices[indx], currMaxPrice);
+            int currProf = currMaxPrice - prices[indx]; 
+            maxProf = Math.max(maxProf, currProf);
+        }
+        return maxProf;
+    }
+}
+--------------------------------------------------------------
+class Solution {
+public:
+    int maxProfit(vector<int>& prices)//this is pass by refrence
+    {
+        int len = prices.size(), maxProf = 0;
+        int currMaxPrice = prices[len-1];
+        for(int indx = len-2; indx>=0; indx--){
+            currMaxPrice = max(prices[indx], currMaxPrice);
+            int currProf = currMaxPrice - prices[indx]; 
+            maxProf = max(maxProf, currProf);
+        }
+        return maxProf;
+    }
+};
+-----------------------------------------------------------------------
+//Another approach could be the other way around by going in forward direction.
+//in this way we consider the minimum prices that have occured in past and sell accordingly
+public class Solution {
+    public int maxProfit(int prices[]) {
+        int minprice = Integer.MAX_VALUE;
+        int maxprofit = 0;
+        for (int i = 0; i < prices.length; i++) {
+            if (prices[i] < minprice)
+                minprice = prices[i];
+            else if (prices[i] - minprice > maxprofit)
+                maxprofit = prices[i] - minprice;
+        }
+        return maxprofit;
+    }
+}
