@@ -1,19 +1,38 @@
 class Solution {
     public List<Integer> findAnagrams(String s, String p) {
-        List<Integer> result = new ArrayList<>();
-        if(s.length() == 0 || s == null) return result;
-        
-        int[] char_counts = new int[26];
-        for(char c : p.toCharArray()){
-            char_counts[c-'a']++;
+         int charCnt[] = new int[26], pLen = p.length();
+         List<Integer> res = new ArrayList<>();
+        if(s.length() == 0) return res;
+        for(int indx = 0; indx<pLen; indx++){
+            charCnt[p.charAt(indx)-'a']++;
         }
-        
-        int left = 0, right = 0, count = p.length();
-        while(right < s.length()){
-            if(char_counts[s.charAt(right++) - 'a']-- >=1) count--;
-            if(count == 0) result.add(left);
-            if(right - left == p.length() && char_counts[s.charAt(left++) - 'a']++ >= 0) count++;
+        //Using the fact given in the anagrams are just the rearrangements of the characters
+        //therefore a sliding window approach combined with hashing using array can be worked out for this question.
+        int snakeLen = pLen, right = 0, left = 0, sLen = s.length();
+        while(right<sLen){
+            if(charCnt[s.charAt(right++)-'a']-->=1)snakeLen--;
+            if(snakeLen == 0) res.add(left);
+            if(right - left == pLen && charCnt[s.charAt(left++) - 'a']++>=0)snakeLen++;
         }
-        return result;
+        return res;
     }
 }
+--------------------------------------------------
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        int pLen = p.length();
+        vector<int> res, charCnt(26, 0);
+        if(s.length() == 0) return res;
+        for(int indx = 0; indx<pLen; indx++){
+            charCnt[p[indx]-'a']++;
+        }
+        int snakeLen = pLen, right = 0, left = 0, sLen = s.length();
+        while(right<sLen){
+            if(charCnt[s[right++]-'a']-->=1)snakeLen--;
+            if(snakeLen == 0) res.emplace_back(left);
+            if(right - left == pLen && charCnt[s[left++] - 'a']++>=0)snakeLen++;
+        }
+        return res;
+    }
+};

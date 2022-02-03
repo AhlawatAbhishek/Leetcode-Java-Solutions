@@ -1,19 +1,129 @@
 class Solution {
-    public int fourSumCount(int[] A, int[] B, int[] C, int[] D) {
-        Map<Integer, Integer> map = new HashMap<>();
-        for(int i : A){
-            for(int j : B){
-                int sum = i + j;
-                map.put(-sum, map.getOrDefault(-sum, 0)+1);
+    public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        HashMap<Integer, Integer> frMap = new HashMap<>();
+        for(int num : nums4){
+            frMap.put(num, frMap.getOrDefault(num, 0)+1);
+        }
+        int len1 = nums1.length, len2 = nums2.length, len3 = nums3.length, len4 = nums4.length;
+        int tupleCnt = 0;
+        for(int ind1 = 0; ind1<len1; ind1++){
+            for(int ind2 = 0; ind2<len2; ind2++){
+                for(int ind3 = 0; ind3<len3; ind3++){
+                    int sum = nums1[ind1] + nums2[ind2] + nums3[ind3];
+                    if(frMap.containsKey(-sum)){
+                        tupleCnt += frMap.get(-sum);
+                    }
+                }
             }
         }
-        int count = 0;
-        for(int k : C){
-            for(int l: D){
-                int sum = k+l;
-                count += map.getOrDefault(sum, 0);
-            }
-        }
-        return count;
+        return tupleCnt;
     }
 }
+------------------------------------------------
+class Solution {
+    public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        HashMap<Integer, Integer> oneMap = new HashMap<>(), twoMap = new HashMap<>();
+        int len1 = nums1.length, len2 = nums2.length, len3 = nums3.length, len4 = nums4.length;
+        int tupleCnt = 0, oIdx = 0, sIdx = 0, one[] = new int[len1*len2], two[] = new int[len3*len4];
+        for(int ind1 = 0; ind1<len1; ind1++){
+            for(int ind2 = 0; ind2<len2; ind2++){
+                one[oIdx++] = nums1[ind1] + nums2[ind2];
+            }
+        }
+        for(int ind1 = 0; ind1<len3; ind1++){
+            for(int ind2 = 0; ind2<len4; ind2++){
+                two[sIdx++] = nums3[ind1] + nums4[ind2];
+            }
+        }        
+        for(int num : one){
+            oneMap.put(num, oneMap.getOrDefault(num, 0)+1);
+        }
+        for(int num : two){
+            twoMap.put(num, twoMap.getOrDefault(num, 0)+1);
+        }
+        for(int indx = 0; indx<one.length; indx++){
+            if(twoMap.containsKey(-one[indx]))tupleCnt += twoMap.get(-one[indx]);
+        }
+        return tupleCnt;
+    }
+}
+----------------------------------
+class Solution {
+    public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        HashMap<Integer, Integer> oneMap = new HashMap<>(), twoMap = new HashMap<>();
+        int len1 = nums1.length, len2 = nums2.length, len3 = nums3.length, len4 = nums4.length;
+        int tupleCnt = 0;
+        for(int ind1 = 0; ind1<len1; ind1++){
+            for(int ind2 = 0; ind2<len2; ind2++){
+                int sum = nums1[ind1] + nums2[ind2];
+                oneMap.put(sum , oneMap.getOrDefault(sum , 0)+1);
+            }
+        }
+        for(int ind1 = 0; ind1<len3; ind1++){
+            for(int ind2 = 0; ind2<len4; ind2++){
+                int sum = nums3[ind1] + nums4[ind2];
+                if(oneMap.containsKey(-sum)){
+                  tupleCnt += oneMap.getOrDefault(-sum, 0);   
+                }
+            }
+        }        
+        return tupleCnt;
+    }
+}
+----------------------------this solution is imported and it a generalization for k input arrays
+class Solution {
+    public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        return kSum(new int[][]{nums1, nums2, nums3, nums4});
+    }
+    private int kSum(int lists[][]){
+        HashMap<Integer, Integer> map = new HashMap<>();
+        addToHash(lists, 0, 0, map);
+        return countComps(lists, lists.length/2, 0, map);
+    }
+    private void addToHash(int lists[][],int sum, int indx, HashMap<Integer, Integer> map){
+        int len = lists.length;
+        if(indx==len/2){
+            map.put(sum, map.getOrDefault(sum, 0)+1);
+        }else{
+            for(int num : lists[indx]){
+                addToHash(lists, sum+num, indx+1, map);
+            }
+        }
+    }
+    private int countComps(int lists[][], int indx, int comp, HashMap<Integer,Integer> map){
+        if(indx == lists.length){
+            return map.getOrDefault(-comp, 0);
+        }else{
+            int compCnt = 0;
+          for(int num : lists[indx]){
+                 compCnt += countComps(lists, indx+1, comp+num, map);
+          }
+          return compCnt;  
+        }
+    }
+}
+-----------------------------------------
+class Solution {
+public:
+    int fourSumCount(vector<int>& nums1, vector<int>& nums2, vector<int>& nums3, vector<int>& nums4) {
+        unordered_map<int, int> oneMap;
+        int len1 = nums1.size(), len2 = nums2.size(), len3 = nums3.size(), len4 = nums4.size();
+        int tupleCnt = 0;
+        for(int ind1 = 0; ind1<len1; ind1++){
+            for(int ind2 = 0; ind2<len2; ind2++){
+                int sum = nums1[ind1] + nums2[ind2];
+                auto itr = oneMap.find(sum);
+                oneMap[sum]++;
+            }
+        }
+        for(int ind1 = 0; ind1<len3; ind1++){
+            for(int ind2 = 0; ind2<len4; ind2++){
+                int sum = nums3[ind1] + nums4[ind2];
+                if(oneMap.find(-sum) != oneMap.end()){
+                  tupleCnt += oneMap[-sum];   
+                }
+            }
+        }        
+        return tupleCnt;
+    }
+};
