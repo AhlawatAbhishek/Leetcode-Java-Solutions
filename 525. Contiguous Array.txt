@@ -1,0 +1,91 @@
+class Solution {
+    public int findMaxLength(int[] nums) {
+        int len = nums.length, maxLen = 0;
+        for(int ind1 = 0; ind1<len; ind1++){
+            int ones = 0, zeroes = 0;
+            for(int ind2 = ind1; ind2<len; ind2++){
+                int num = nums[ind2];
+                if(num == 0){
+                    zeroes++;
+                }else{
+                    ones++;
+                }
+                if(zeroes == ones){
+                    maxLen = Math.max(maxLen, ind2 - ind1 + 1);
+                }
+            }
+        }
+        return maxLen;
+    }
+}
+----------------------------------------------------
+class Solution {
+    public int findMaxLength(int[] nums) {
+        HashMap<Integer, Integer> indxMap = new HashMap<>();
+        int maxLen = 0, sum = 0;
+        // indxMap.put(0, -1);
+        for(int indx = 0; indx<nums.length; indx++){
+            int num = nums[indx];
+            if(num == 0){
+                sum--;
+            }else{
+                sum++;
+            }
+            if(sum == 0){
+                maxLen = indx+1;
+            }else if(indxMap.containsKey(sum)){
+                maxLen = Math.max(maxLen, indx - indxMap.get(sum));
+            }else{
+              indxMap.put(sum, indx);     
+            }
+           
+        }
+        return maxLen;
+    }
+}
+------------------------------------------------------
+class Solution {
+    public int findMaxLength(int[] nums) {
+        HashMap<Integer, Integer> indxMap = new HashMap<>();
+        int maxLen = 0, sum = 0;
+        indxMap.put(0, -1);
+        for(int indx = 0; indx<nums.length; indx++){
+            int num = nums[indx];
+            if(num == 0){
+                sum--;
+            }else{
+                sum++;
+            }
+            if(indxMap.containsKey(sum)){
+                maxLen = Math.max(maxLen, indx - indxMap.get(sum));
+            }else{
+              indxMap.put(sum, indx);     
+            }
+           
+        }
+        return maxLen;
+    }
+}
+-----------------------------------------------------------------------
+class Solution {
+public:
+    int findMaxLength(vector<int>& nums) {
+        unordered_map<int, int> indxMap;
+        int maxLen = 0, sum = 0;
+        indxMap[0] = -1;
+        for(int indx = 0; indx<nums.size(); indx++){
+            int num = nums[indx];
+            if(num == 0){
+                sum--;
+            }else{
+                sum++;
+            }
+            if(indxMap.find(sum) != indxMap.end()){
+                maxLen = max(maxLen, indx - indxMap[sum]);
+            }else{
+              indxMap[sum] = indx;     
+            }
+        }
+        return maxLen;
+    }
+};
