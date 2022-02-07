@@ -1,0 +1,13 @@
+class Solution {
+    public int minimumTime(String s) {
+        int leftCost = 0, len = s.length(), minCost = len;
+        for(int indx = 0; indx<len; indx++){
+            //removing indx+1 number of train cars consecutively or removing train cars with cost of 'left' previous to this index and removing this index with cost 2 if this index contain a illegal train car   
+            leftCost = Math.min(leftCost + 2 * (s.charAt(indx) - '0'), indx+1);
+            //now remove the remaining right side consecutively(all of it and with every iteration take minimum of the below)
+            int rightCost = leftCost + len-1-indx;
+            minCost = Math.min(minCost, rightCost);
+        }
+        return minCost;
+    }
+}

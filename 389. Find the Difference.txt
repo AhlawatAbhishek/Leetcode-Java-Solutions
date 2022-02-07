@@ -1,0 +1,35 @@
+//Time complexity: O(n), n is length of t
+//Space complexity: O(26)
+class Solution {
+    public char findTheDifference(String s, String t) {
+        int chr[] = new int[26], sLen = s.length(), tLen = t.length();
+        for(int indx = 0; indx<sLen; indx++){
+            chr[s.charAt(indx) - 'a']++;
+        }
+        for(char c : t.toCharArray()){
+            chr[c-'a']--;
+        }
+        for(int indx = 0; indx<26; indx++){
+            if(chr[indx] < 0){
+                return (char)(indx + 'a');
+            }
+        }
+        return ' ';
+    }
+}
+--------------------------------------------------
+//Time complexity: O(n), n is length of t
+//Space complexity: O(1)
+class Solution {
+public:
+    char findTheDifference(string s, string t) {
+        int chBit = 0;
+        for(auto ch: s){
+            chBit ^= ch;
+        }
+        for(auto ch : t){
+            chBit ^= ch;
+        }
+        return (char)chBit;
+    }
+};

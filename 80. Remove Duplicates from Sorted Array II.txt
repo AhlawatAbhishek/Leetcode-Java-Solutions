@@ -1,0 +1,47 @@
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        int currCnt = 0, indx = 0, left = 0, len = nums.length, prev = nums[left];
+        while(left < len){
+           int currNum = nums[left];
+           if(prev == currNum){
+               currCnt++;
+               if(currCnt <= 2){
+                   nums[indx++] = nums[left];
+               }
+           }else{
+               currCnt = 1;
+               prev = currNum;
+               if(currCnt <= 2){
+                   nums[indx++] = nums[left];
+               }
+           } 
+           left++;  
+        }
+        return indx;
+    }
+}
+------------------------------------------------------
+C++----------------------------------------
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        int currCnt = 0, indx = 0, left = 0, len = nums.size(), prev = nums[left];
+        while(left < len){
+           int currNum = nums[left];
+           if(prev == currNum){
+               currCnt++;
+               if(currCnt <= 2){
+                   nums[indx++] = nums[left];
+               }
+           }else{
+               currCnt = 1;
+               prev = currNum;
+               if(currCnt <= 2){
+                   nums[indx++] = nums[left];
+               }
+           } 
+           left++;  
+        }
+        return indx;
+    }
+};
