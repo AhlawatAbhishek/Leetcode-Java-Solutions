@@ -1,0 +1,40 @@
+class Solution {
+    public int addDigits(int n) {
+        String num = Integer.toString(n);
+        while(num.length() > 1){
+            int sum = 0;
+            for(char c : num.toCharArray()){
+                sum += c - '0';
+            }
+            num = Integer.toString(sum);
+        }
+        return Integer.parseInt(num);
+    }
+}
+----------------------------------------------------------------
+class Solution {
+public:
+    int addDigits(int num) {
+       if(num == 0) return 0;
+       if(num % 9 == 0)return 9;
+       return num % 9; 
+    }
+};//This is formula of digital root
+----------------------------------------------------------------------------
+//time complexity: O(nLog10(n))
+//auxiliary space: O(1)
+class Solution {
+public:
+    int addDigits(int num) {
+       int digitSum = 0;
+       while(num > 0){
+           digitSum += num % 10;
+           num /= 10;
+           if(num == 0 && digitSum > 9){
+               num = digitSum;
+               digitSum = 0;
+           }
+       } 
+       return digitSum; 
+    }
+};
