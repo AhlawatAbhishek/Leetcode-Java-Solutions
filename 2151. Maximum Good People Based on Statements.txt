@@ -31,3 +31,37 @@ class Solution {
         return true;
     }
 }
+---------------------------------------
+class Solution {
+    public int maximumGood(int[][] statements) {
+//for n people total n bits from 0th bit to (n-1)th bit is required to show the different states, here if the ith bit is set means (i+1)th person is good otherwise he is bad
+ , for that also we need all the combinations one less then when the nth bit is set i.e. less than (1<<n)       
+//a total of 2^n combinations would be possible to have for n people to be either good or bad
+
+//and we have to check these many states or combinations against the statements given to find the maximum good people provided these statements are true        
+        int peop =  statements.length, bitMasks = (1<<(peop)), maxGood = 0;
+        for(int masks = 1; masks<bitMasks; masks++){
+                maxGood = Math.max(maxGood, countGood(masks, statements));
+        }
+        return maxGood;
+    }
+    private int countGood(int mask, int stat[][]){
+        int goodPersons = 0;
+        for(int per1 = 0; per1<stat.length; per1++){
+//we are only interested in checking for the statements of good people
+            if((mask&(1<<per1)) == 0)continue;
+            for(int per2 = 0; per2<stat.length; per2++){
+//continue for can't say statements
+                if(stat[per1][per2] == 2)continue;
+//if statement of a good person per1 is contradicted the return 0 from function as this combination(mask) cannot be true provided the given statements are true
+                //case1: accord to statement the person is bad but acc to combination the person is good
+                if(stat[per1][per2] == 0 && (mask & (1<<per2)) > 0)return 0;
+                //case2: accord to statement the person is good but accord. to combination(mask) the person is bad.
+                if(stat[per1][per2] == 1 && (mask & (1<<per2)) == 0)return 0;
+            }
+            //if all the conditions are statisfied then increase the number of goodPersons
+            goodPersons++;
+        }
+        return goodPersons;
+    }
+}
