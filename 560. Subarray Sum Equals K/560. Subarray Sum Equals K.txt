@@ -1,0 +1,41 @@
+//Post's link---https://leetcode.com/problems/subarray-sum-equals-k/discuss/1759606/C%2B%2Bor-Java-or-Handwritten-or-Easy-to-Understand-%3A)
+------------------c++-------------------
+//Time complexity: O(N), N is length of nums
+//Auxiliary space: O(N) 
+class Solution {
+public:
+    int subarraySum(vector<int>& nums, int k) {
+        unordered_map<int, int> freqMap; 
+        int prefSum = 0, subCnt = 0;
+        freqMap[0]++;//this line is basically to keep check when prefSum == k
+        for(auto num : nums){
+            prefSum += num;
+            // if(prefSum == k){
+            //     subCnt++;
+            // }
+            if(freqMap.find(prefSum - k) != freqMap.end()){
+               subCnt += freqMap[prefSum - k];
+            }
+            freqMap[prefSum]++;
+        }
+        return subCnt;
+    }
+};
+--------------java-------------------------------
+class Solution {
+    public int subarraySum(int[] nums, int k) {
+        HashMap<Integer, Integer> freqMap = new HashMap<>(); 
+        int prefSum = 0, subCnt = 0;
+        for(int num : nums){
+            prefSum += num;
+            if(prefSum == k){
+                subCnt++;
+            }
+            if(freqMap.containsKey(prefSum - k)){
+               subCnt += freqMap.get(prefSum - k);
+            }
+            freqMap.put(prefSum, freqMap.getOrDefault(prefSum, 0)+1);
+        }
+        return subCnt;
+    }
+}
