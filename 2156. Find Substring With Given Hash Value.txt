@@ -1,4 +1,4 @@
---------------------Wrong but passes the test cases----------------
+--------------------Wrong but passes the sample test cases----------------
 class Solution {
     public String subStrHash(String s, int power, int modulo, int k, int hashValue) {
         int len = s.length(), left = 0, right = left+k-1;
@@ -44,5 +44,27 @@ class Solution {
                 res = i;
         }
         return s.substring(res, res + k);
+    }
+}
+-------------------------------------
+class Solution {
+    public String subStrHash(String s, int power, int m, int k, int hashValue) {
+        long  pk = 1, currHash = 0;
+        int len = s.length(), exp = k-1;
+        while(exp-- > 0){
+            pk = (pk %m) * (power % m);
+        }
+        int end = len -1, res = 0;
+        for(int indx = len-1; indx>=0; indx--){
+           currHash = ((currHash * power) % m + (s.charAt(indx) - 'a' + 1))%m;
+           if(end - indx + 1 == k){
+               if(currHash == hashValue){
+                   res = indx;
+               }
+               currHash = ((currHash%m) - ((s.charAt(end) - 'a' + 1)%m * pk%m) + m)%m;
+               end--;
+           } 
+        }
+        return s.substring(res, res+k);
     }
 }
