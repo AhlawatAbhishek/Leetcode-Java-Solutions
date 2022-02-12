@@ -1,0 +1,168 @@
+--------------TLE in c++-----------------& accepted in java---------------------
+class Solution {
+public:
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        int lLen = wordList.size(), transLen = 0; 
+        vector<bool> visited (lLen, false); 
+       stack<string> stWrd;
+        stWrd.push(beginWord);
+        while(!stWrd.empty()){
+            vector<string> nextWrds;
+            while(!stWrd.empty()){
+                string popped = stWrd.top();
+                stWrd.pop();
+                if(popped == endWord){
+                    return transLen+1;
+                }
+                nextWrds.push_back(popped);
+            }
+            transLen++;
+            for(auto wrd : nextWrds){
+                for(int indx = 0; indx < lLen; indx++){
+                    string lisWrd = wordList[indx];
+                    if(oneDiff(wrd, lisWrd) && !visited[indx]){
+                        stWrd.push(lisWrd);
+                        visited[indx] = true;
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+    private:  
+        bool oneDiff(string wrd1, string wrd2){
+        int len1 =wrd1.length();
+        bool diffFound = false;
+        for(int indx = 0; indx<len1; indx++){
+            char c1 = wrd1[indx], c2 = wrd2[indx];
+            if(c1 != c2){
+                if(diffFound){
+                    return false;
+                }else diffFound = true;
+            }
+        }
+        return diffFound;
+    }
+};
+------------------------------------------------------------------
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+       int lLen = wordList.size(), transLen = 0; 
+       boolean visited[] = new boolean[lLen]; 
+       Stack<String> stWrd = new Stack<>();
+        stWrd.push(beginWord);
+        while(!stWrd.isEmpty()){
+            List<String> nextWrds = new ArrayList<>();
+            while(!stWrd.isEmpty()){
+                String popped = stWrd.pop();
+                if(popped.equals(endWord)){
+                    return transLen+1;
+                }
+                nextWrds.add(popped);
+            }
+            transLen++;
+            for(String wrd : nextWrds){
+                for(int indx = 0; indx < lLen; indx++){
+                    String lisWrd = wordList.get(indx);
+                    if(oneDiff(wrd, lisWrd) && !visited[indx]){
+                        stWrd.add(lisWrd);
+                        visited[indx] = true;
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+    private boolean oneDiff(String wrd1, String wrd2){
+        int len1 =wrd1.length();
+        boolean diffFound = false;
+        for(int indx = 0; indx<len1; indx++){
+            char c1 = wrd1.charAt(indx), c2 = wrd2.charAt(indx);
+            if(c1 != c2){
+                if(diffFound){
+                    return false;
+                }else diffFound = true;
+            }
+        }
+        return diffFound;
+    }
+}
+-----------------------------------c++-----------------------------------
+class Solution {
+public:
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+       int lLen = wordList.size(), transLen = 0, wLen = beginWord.length(); 
+       unordered_map<string, bool> visited;
+       unordered_map<string, vector<string>> dict;
+       for(auto wrd : wordList){
+           visited[wrd] = false;
+            for(int indx = 0; indx<wLen; indx++){
+                  string newWrd = wrd.substr(0, indx) + "*" + wrd.substr(indx+1, wLen);
+                  if(dict.find(newWrd) == dict.end())
+                   dict.insert(make_pair(newWrd, vector<string>()));   
+                  dict[newWrd].push_back(wrd);
+            }                   
+                        
+       }
+       queue<pair<string, int>> que;
+        que.push(make_pair(beginWord, 1));
+       while(!que.empty()){
+           pair<string, int> pr = que.front();
+           que.pop();
+           string wrd = pr.first;
+           int level = pr.second;
+           for(int indx =0; indx<wLen; indx++){
+               string newWrd = wrd.substr(0, indx) + "*" +wrd.substr(indx+1, wLen);
+              if(dict.find(newWrd) != dict.end()){ 
+               for(string sLi : dict[newWrd]){
+                   if(sLi == endWord){
+                       return level + 1;
+                   }
+                   if(visited[sLi] == false){
+                     que.push(make_pair(sLi, level+1));
+                     visited[sLi] = true;  
+                   }
+               }
+              }     
+           }
+       } 
+       return 0; 
+    }
+};
+-----------java----------------------------------------------
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+       int lLen = wordList.size(), transLen = 0, wLen = beginWord.length(); 
+       Map<String, Boolean> visited = new HashMap<>();
+       Map<String, List<String>> dict = new HashMap<>();
+       for(String wrd : wordList){
+           visited.put(wrd, false);
+            for(int indx = 0; indx<wLen; indx++){
+                  String newWrd = wrd.substring(0, indx) + "*" + wrd.substring(indx+1);
+                  dict.putIfAbsent(newWrd, new ArrayList<>());
+                  dict.get(newWrd).add(wrd);
+            }                   
+                        
+       }
+       Queue<Pair<String, Integer>> que = new LinkedList<>();
+        que.offer(new Pair(beginWord, 1));
+       while(!que.isEmpty()){
+           Pair<String, Integer> pr = que.poll();
+           String wrd = pr.getKey();
+           int level = pr.getValue();
+           for(int indx =0; indx<wLen; indx++){
+               String newWrd = wrd.substring(0, indx) + "*" +wrd.substring(indx+1);
+               for(String sLi : dict.getOrDefault(newWrd, new ArrayList<>())){
+                   if(sLi.equals(endWord)){
+                       return level + 1;
+                   }
+                   if(visited.get(sLi) == false){
+                     que.offer(new Pair(sLi, level+1));
+                     visited.put(sLi, true);  
+                   }
+               }
+           }
+       } 
+       return 0; 
+    }
+}
