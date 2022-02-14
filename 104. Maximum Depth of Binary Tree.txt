@@ -50,3 +50,61 @@ class Solution {
         return Math.max(left_depth, right_depth);
     }
 }
+--------------------------------------
+14-02-22---
+-----------------------------c++------------------------------
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+private:
+    unordered_map<TreeNode*, int> memo;
+public:
+    int maxDepth(TreeNode* root) {
+        return findDepth(root);
+    }
+private:
+    int findDepth(TreeNode *root){
+        if(root == NULL){
+            return 0;
+        }
+        if(memo.find(root) != memo.end()){
+            return memo[root];
+        }
+        int depth = max(findDepth(root->left), findDepth(root->right)) + 1;
+        memo[root] = depth; 
+        return depth;
+    }
+};
+-------------------------java------------------
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int maxDepth(TreeNode root) {
+        if(root == null){
+            return 0;
+        }
+        return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
+    }
+}
