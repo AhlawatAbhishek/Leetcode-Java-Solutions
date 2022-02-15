@@ -84,6 +84,33 @@ private:
         return depth;
     }
 };
+-----------------------
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        if(root == NULL) return 0;
+        stack<TreeNode *> st;
+        stack<int> depths;
+        depths.push(0);
+        int depth = 0;
+        st.push(root);
+        while(!st.empty()){
+            TreeNode * currNode = st.top();
+            int currDepth = depths.top();
+            st.pop();
+            depths.pop();
+            if(currNode != NULL){    
+                st.push(currNode->right);
+                st.push(currNode->left);
+                depth = max(currDepth+1, depth);
+                depths.push(currDepth+1);
+                depths.push(currDepth+1);
+            }    
+            
+        }    
+        return depth;
+    }
+};
 -------------------------java------------------
 /**
  * Definition for a binary tree node.
@@ -106,5 +133,39 @@ class Solution {
             return 0;
         }
         return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
+    }
+}
+-----------------------
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int maxDepth(TreeNode root) {
+      if(root == null) return 0;
+      Queue<TreeNode> queue = new LinkedList<>();
+      int depth = 0;
+      queue.offer(root);
+      while(!queue.isEmpty()){
+          depth++;
+          int size = queue.size();
+          while(size-->0){
+            TreeNode currNode = queue.poll();
+            if(currNode.left != null)queue.offer(currNode.left);
+            if(currNode.right != null)queue.offer(currNode.right);
+          }    
+      }
+      return depth;  
     }
 }

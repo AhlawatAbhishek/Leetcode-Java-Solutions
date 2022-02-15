@@ -1,0 +1,44 @@
+class Solution {
+    private Map<String, Integer> memo = new HashMap<>();
+    public int maximumANDSum(int[] nums, int numSlots) {
+        int slots[] = new int[numSlots+1];
+        Arrays.fill(slots, 2);
+        return findMaxArrg(nums, slots, 0);
+    }
+    private int findMaxArrg(int []nums, int []slots, int indx){
+        if(indx == nums.length)return 0;
+        String key = Arrays.toString(slots) + "*" + indx;
+        if(memo.containsKey(key)) return memo.get(key);
+        int maxSum = 0, num = nums[indx];
+        for(int s = 1; s<slots.length; s++){
+            if(slots[s] == 0) continue;
+            slots[s]--;
+            maxSum = Math.max(maxSum, (s&num) + findMaxArrg(nums, slots, indx+1));
+            slots[s]++;
+        }
+        memo.put(key, maxSum);
+        return maxSum;
+    }
+}
+----------------------------------------------------------------dp with bit mask---------------
+class Solution {
+    Integer memo[] = null;
+    public int maximumANDSum(int[] nums, int numSlots) {
+        //this will get mask as for eg: numSlots= 3, then mask will be 222
+        int mask = (int)Math.pow(3, numSlots)-1;
+        memo = new Integer[mask+1];
+        return findMax(nums, 0, numSlots, mask);
+    }
+    private int findMax(int nums[], int indx, int slots, int mask){
+        if(indx == nums.length) return 0;
+        if(memo[mask] != null) return memo[mask];
+        int maxAnd = 0;
+        for(int s = 1, bit = 1; s<=slots; s++, bit *= 3){
+            //this check for the slot is not empty, see the last link in the notes of this question for deatiled explanation
+            if((mask/bit)%3 > 0){
+                maxAnd = Math.max(maxAnd, (nums[indx]&s) + findMax(nums, indx+1, slots, mask - bit));
+            }
+        }
+        return memo[mask] = maxAnd;
+    }
+}
