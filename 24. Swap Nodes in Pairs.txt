@@ -45,3 +45,52 @@ class Solution {
         return temp.next;
     }
 }
+---------------c++--------------
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        if(head == NULL || head->next == NULL) return head;
+        ListNode* curr = head;
+        while(curr != NULL && curr->next != NULL){
+            int tempVal = curr->val;
+            curr->val = curr->next->val;
+            curr->next->val = tempVal;
+            curr = curr->next->next;
+        }
+        return head;
+    }
+};
+----------------------------java--------------------------------
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        if(head == null || head.next == null) return head;
+        ListNode curr = head;
+        while(curr != null && curr.next != null){
+            int tempVal = curr.val;
+            curr.val = curr.next.val;
+            curr.next.val = tempVal;
+            curr = curr.next.next;
+        }
+        return head;
+    }
+}
