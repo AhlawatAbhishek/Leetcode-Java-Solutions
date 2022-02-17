@@ -1,0 +1,73 @@
+-------------------------java-------------------------------------
+class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> res = new ArrayList<>(); 
+        HashSet<List<Integer>> set = new HashSet<>();
+        findCombs(candidates, 0, new ArrayList<Integer>(), set, target);
+        return set.stream().collect(Collectors.toList());
+    }
+    private void findCombs(int cand[], int idx, List<Integer> li, HashSet<List<Integer>> set, int target){
+        if(idx==cand.length || target <= 0){
+            if(target == 0)set.add(new ArrayList<>(li));
+            return;
+        }
+        for(int indx=idx; indx<cand.length; indx++){
+            int  curr = cand[indx];
+            li.add(curr);
+            findCombs(cand, indx, li, set, target-curr);
+            li.remove(li.size()-1);
+        }
+        
+    }
+}
+--------------------------------------c++---------------------------
+class Solution {
+public:
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        vector<vector<int>> res; 
+        set<vector<int>> set;
+        vector<int> vec;
+        findCombs(candidates, 0, vec, set, target);
+        res.insert(res.begin(), set.begin(), set.end());
+        return res;
+    }
+    private:
+    void findCombs(vector<int>&cand, int idx, vector<int>&li, set<vector<int>>&set, int target){
+        if(idx==cand.size() || target <= 0){
+            vector<int> vec;
+            vec.insert(vec.begin(), li.begin(), li.end());
+            if(target == 0)set.emplace(vec);
+            return;
+        }
+        for(int indx=idx; indx<cand.size(); indx++){
+            int  curr = cand[indx];
+            li.emplace_back(curr);
+            findCombs(cand, indx, li, set, target-curr);
+            li.pop_back();
+        }
+        
+    }
+};
+----------------------java dp---------------------------------------------
+//This solution is sudo polynomial in terms of time complexity as it is dependent on the input not the input length.
+//For the auxiliary space we are using a one-D array that is dependent on the value of target.
+class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> dp[] = new List[target+1];
+        for(int indx = 0; indx<target+1; indx++){
+            dp[indx] = new ArrayList<>();
+        }
+        dp[0].add(new ArrayList<>());
+        for(int indx = 0; indx<candidates.length; indx++){
+            int cand = candidates[indx];
+            for(int ind = cand; ind<=target; ind++){
+                for(List<Integer> prev:dp[ind-cand]){
+                    List<Integer> newPrev = new ArrayList<>(prev);
+                    newPrev.add(cand);
+                    dp[ind].add(newPrev);
+                }
+            }
+        }
+        return dp[target];
+    }
+}
