@@ -1,0 +1,114 @@
+class Solution {
+    public int minimumDeviation(int[] nums) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b)->(b-a));
+        int min = Integer.MAX_VALUE;
+        for(int num : nums){
+            if(num % 2 == 0){
+                pq.offer(num);
+                min = Math.min(min, num);
+            }else{
+                pq.offer((num * 2));
+                min = Math.min(min, (2*num));
+            }
+        }
+        int minDev = Integer.MAX_VALUE;
+        while(!pq.isEmpty()){
+            int max = pq.poll();
+            int diff = max-min;
+            minDev = Math.min(minDev, diff);
+            if(max % 2 == 0){
+                pq.offer(max/2);
+                min = Math.min(min, max/2);
+            }else break;
+        }
+        return minDev;
+    }
+}
+------------------------------------------------------
+class Ele{
+    int ele, r, c;
+    Ele(int e, int r, int c){
+        ele = e;
+        this.r =r;
+        this.c = c;
+    }
+}
+//Tc: say m is max num in nums, then lenght of longest list will be N*log M say it k, now using priorityqueue over it will be k * log      k
+//Sc: O(k)
+class Solution {
+    public int minimumDeviation(int[] nums) {
+        int len = nums.length;
+        List<List<Integer>> nList = new ArrayList<>();
+        for(int indx = 0; indx<len; indx++){
+            int num = nums[indx];
+            nList.add(new ArrayList<>());
+            if(num % 2 != 0){
+                nList.get(indx).add(num);
+                nList.get(indx).add(2*num);
+            }else{
+                while(num % 2 == 0){
+                    nList.get(indx).add(num);
+                    num /= 2;
+                }
+                nList.get(indx).add(num);
+                Collections.reverse(nList.get(indx));
+            }
+        }
+        int interv[] = smallestRange(nList); 
+        return interv[1] - interv[0];
+    }
+    public int[] smallestRange(List<List<Integer>> nums) {
+        int MAX = Integer.MAX_VALUE, MIN = Integer.MIN_VALUE;
+        int rows = nums.size(),curMin = MAX, curMax = MIN;
+        PriorityQueue<Ele> minH = new PriorityQueue<>((a, b)->(a.ele-b.ele));
+        for(int r = 0; r<rows; r++){
+            int val = nums.get(r).get(0);
+            Ele e = new Ele(val, r, 0);
+            curMin = Math.min(curMin, val);
+            curMax = Math.max(curMax, val);
+            minH.offer(e);
+        }
+        int rgLeft = curMin, rgRight = curMax;
+        while(true){
+            Ele currEl = minH.poll();
+            int r =currEl.r, c = currEl.c, val = currEl.ele;
+            if(nums.get(r).size()-1 == c)return new int[]{rgLeft, rgRight};
+            val = nums.get(r).get(c+1);
+            minH.offer(new Ele(val, r, c+1));
+            curMax = Math.max(curMax, val);
+            curMin = minH.peek().ele;
+            if(rgRight - rgLeft > curMax - curMin){
+                rgRight = curMax;
+                rgLeft = curMin;
+            }   
+        }
+    }
+}
+------------------------c++------------------------------------------
+class Solution {
+public:
+    int minimumDeviation(vector<int>& nums) {
+      priority_queue<int> pq;
+      int currMin = INT_MAX;
+      for(int num : nums){
+          if(num % 2 == 0){
+              currMin = min(currMin, num);
+              pq.push(num);
+          }else{
+              currMin = min(currMin, 2*num);
+              pq.push(2*num);
+          }
+      }
+      int minDev = INT_MAX;
+      while(!pq.empty()){
+          int currMax = pq.top();
+          pq.pop();
+          minDev = min(minDev, currMax - currMin);
+          if(currMax % 2 == 0){
+              currMin = min(currMin, currMax/2);
+              pq.push(currMax/2);
+          }else break;
+      }
+      return minDev;
+    }
+};
