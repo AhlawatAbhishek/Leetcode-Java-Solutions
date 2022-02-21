@@ -13,3 +13,61 @@ class Solution {
         return result;
     }
 }
+-------------------------java----------------------------------
+class Solution {
+    public int removeCoveredIntervals(int[][] intervals) {
+        Deque<int[]> st = new ArrayDeque<>();
+        Arrays.sort(intervals, (a,b)->(a[1]-b[1]));
+        for(int indx = 0; indx<intervals.length; indx++){
+            int curr[] = intervals[indx];
+            if(!st.isEmpty() && st.peekLast()[0] <= curr[0] && st.peekLast()[1]>=curr[1]){
+                continue;
+            }
+            while(!st.isEmpty() && st.peekLast()[0] >= curr[0] && st.peekLast()[1]<=curr[1]){
+                st.pollLast();
+            }
+            st.offerLast(curr);
+        }
+        return st.size();
+    }
+}
+--------------------------c++---------------------------------------------------
+class Solution {
+public:
+    int removeCoveredIntervals(vector<vector<int>>& intervals) {
+        deque<vector<int>> st;
+        sort(intervals.begin(), intervals.end(), [](const vector<int> &a, const vector<int> &b)->bool{return a[1]<b[1];});
+        for(int indx = 0; indx<intervals.size(); indx++){
+            vector<int> curr = intervals[indx];
+            if(!st.empty() && st.back()[0] <= curr[0] && st.back()[1]>=curr[1]){
+                continue;
+            }
+            while(!st.empty() && st.back()[0] >= curr[0] && st.back()[1]<=curr[1]){
+                st.pop_back();
+            }
+            st.push_back(curr);
+        }
+        return st.size();
+    }
+};
+--------------------------
+class Solution {
+    public int removeCoveredIntervals(int[][] intervals) {
+      Arrays.sort(intervals, (a,b) -> {
+          if(a[0] == b[0]){
+              return b[1] - a[1];
+          }else{
+              return a[0] - b[0];
+          }
+      });
+       int[] curr = new int[]{-1,-1};
+        int result = 0;
+        for(int in[] : intervals){
+            if(curr[1] < in[1]){
+                curr[1] = in[1];
+                result++;
+            }
+        }
+        return result;
+    }
+}

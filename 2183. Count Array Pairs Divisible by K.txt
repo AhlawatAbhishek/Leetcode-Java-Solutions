@@ -1,0 +1,30 @@
+class Solution {
+    public long coutPairs(int[] nums, int k) {
+        long cnt = 0, divCnt = 0;
+        int len = nums.length-1;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int indx = len; indx>=0; indx--){
+            int num = nums[indx], rem = num % k;
+            if(num % k == 0){
+                divCnt++;
+                cnt += (len - indx);
+            }else{
+                int lc = lcm(rem, k);
+                cnt += (divCnt) + map.getOrDefault(lc, 0);
+            }
+            map.put(rem, map.getOrDefault(rem, 0)+1);
+        }
+        return cnt;
+    }
+     int lcm(int a, int b)
+    {
+        return (a / gcd(a, b)) * b;
+    }
+     int gcd(int a, int b)
+    {
+        if (a == 0)
+            return b;
+        return gcd(b % a, a);
+    }
+   
+}

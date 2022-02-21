@@ -20,3 +20,61 @@ class Solution {
         return ans;
     }
 }
+---------Moore's voting algo--------c++----------------
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+         int currFreq = 1, mjFreq = 1, currMjEle = nums[0], len = nums.size();
+        for(int indx = 1; indx<len; indx++){
+            if(currMjEle == nums[indx]){
+                currFreq++;
+            }else{
+                currFreq--;
+                if(currFreq == 0){
+                    currMjEle = nums[indx];
+                    currFreq = 1;
+                }
+            }
+        }
+        return currMjEle;
+    }
+};
+-----------java----------------------
+class Solution {
+    public int majorityElement(int[] nums) {
+        int currFreq = 1, mjFreq = 1, currMjEle = nums[0], len = nums.length;
+        for(int indx = 1; indx<len; indx++){
+            if(currMjEle == nums[indx]){
+                currFreq++;
+            }else{
+                currFreq--;
+                if(currFreq == 0){
+                    currMjEle = nums[indx];
+                    currFreq = 1;
+                }
+            }
+        }
+        return currMjEle;
+    }
+}
+--------------------java-------------------------------------
+class Solution {
+    public int majorityElement(int[] nums) {
+      return getMajEle(nums, 0, nums.length-1);
+    }
+    private int getMajEle(int nums[], int left, int right){
+        if(left == right){
+            return nums[left];
+        }
+        int mid = left + (right - left)/2;
+        int leftMaj = getMajEle(nums, left, mid);
+        int rightMaj = getMajEle(nums, mid + 1, right);
+        if(leftMaj == rightMaj)return leftMaj;
+        int leftCnt = 0, rightCnt = 0;
+        for(int indx = left; indx<=right; indx++){
+            if(nums[indx] == leftMaj)leftCnt++;
+            if(nums[indx] == rightMaj)rightCnt++;
+        }
+        return leftCnt > rightCnt ? leftMaj : rightMaj;
+    }
+}
