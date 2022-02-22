@@ -1,0 +1,75 @@
+-------------java-------------
+class Solution {
+    public int titleToNumber(String title) {
+        HashMap<Character, Integer> alphaMap = new HashMap<>();
+        
+        for(int indx = 0; indx<26; indx++){
+            char c = (char)('A' + indx);
+            alphaMap.put(c, indx+1);
+        }
+        int exp = 0;
+        long tNum = 0;
+        for(int indx =title.length()-1; indx>=0; indx--){
+            char c = title.charAt(indx);
+            tNum += ((long)Math.pow(26, exp++)*alphaMap.get(c));
+        }
+        // System.out.println(tNum);
+        return (int)tNum;
+    }
+}
+---------------------------left to right java---------
+class Solution {
+    public int titleToNumber(String title) {
+        HashMap<Character, Integer> alphaMap = new HashMap<>();
+        
+        for(int indx = 0; indx<26; indx++){
+            char c = (char)('A' + indx);
+            alphaMap.put(c, indx+1);
+        }
+        int exp = 0;
+        long tNum = 0;
+        for(char c : title.toCharArray()){
+            tNum = 26*tNum+alphaMap.get(c);
+        }
+        return (int)tNum;
+    }
+}
+--------------------------------
+c++-----------right to left--------------
+class Solution {
+public:
+    int titleToNumber(string title) {
+         unordered_map<char, int> alphaMap;
+        for(int indx = 0; indx<26; indx++){
+            char c = (char)('A' + indx);
+            alphaMap[c] = indx+1;
+        }
+        int exp = 0;
+        long tNum = 0;
+        for(int indx =title.size()-1; indx>=0; indx--){
+            char c = title[indx];
+            tNum += ((long)pow(26, exp++)*alphaMap[c]);
+        }
+        // System.out.println(tNum);
+        return (int)tNum;
+    }
+};
+------------------
+c++--left to right-----------------
+class Solution {
+public:
+    int titleToNumber(string title) {
+         unordered_map<char, int> alphaMap;
+        for(int indx = 0; indx<26; indx++){
+            char c = (char)('A' + indx);
+            alphaMap[c] = indx+1;
+        }
+        int exp = 0;
+        long tNum = 0;
+        for(auto c : title){
+             tNum = 26*tNum+alphaMap[c];
+        }
+        // System.out.println(tNum);
+        return (int)tNum;
+    }
+};
