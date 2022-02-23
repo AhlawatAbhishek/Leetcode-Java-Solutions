@@ -1,0 +1,78 @@
+class Solution {
+    public long goodTriplets(int[] nums1, int[] nums2) {
+        HashMap<Integer, Integer> indxMap = new HashMap<>();
+        int indx = 0, n = nums1.length;
+        for(int num : nums2){
+            indxMap.put(num, indx++);
+        }
+        List<List<Integer>> trips = new ArrayList<>();
+        for(int ind1 = 0; ind1<n-2; ind1++){
+            for(int ind2 = ind1+1; ind2<n; ind2++){
+                for(int ind3 = ind2 + 1; ind3<n; ind3++){
+                    trips.add(Arrays.asList(nums1[ind1], nums1[ind2], nums1[ind3]));
+                }
+            }
+        }
+        int cnt = 0;
+        for(indx = 0; indx<trips.size(); indx++){
+            List<Integer> li = trips.get(indx);
+            int x = li.get(0), y = li.get(1), z = li.get(2);
+            x = indxMap.get(x);
+            y = indxMap.get(y);
+            z = indxMap.get(z);
+            if(x < y && y<z){
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+}
+-------------------------------------------Fenwick Tree Implementation----
+---This will not give TLE-----
+class Fenwick{
+    private int fenTree[] = null, size;
+    Fenwick(int size){
+        this.size = size+1;
+        fenTree = new int[size+1];
+    }
+    public void add(int val, int indx){
+        indx++;
+        while(indx<this.size){
+            fenTree[indx] += val;
+            indx += (indx & (-indx)); //adding the last set bit
+        }
+    }
+    //upto which index you want prefix sum
+    public int getPrefSum(int indx){
+        int sum = 0;
+        indx++;
+        while(indx>0){
+            sum += fenTree[indx];
+            indx -= (indx &(-indx));//turning off the last set bit
+        }
+        return sum;
+    }
+}
+class Solution {
+    public long goodTriplets(int[] nums1, int[] nums2) {
+        int len = nums1.length;
+        Map<Integer, Integer> numIndxMap = new HashMap<>();
+        for(int indx = 0; indx<len; indx++){
+            numIndxMap.put(nums2[indx], indx);
+        }
+        Fenwick fen = new Fenwick(len);
+        long res = 0;
+        for(int indx = 0; indx<len-1; indx++){
+             int numsOneIndxInTwo =numIndxMap.get(nums1[indx]);;//this mid element in two
+             long leftMatchesInTwo = fen.getPrefSum(numsOneIndxInTwo);
+             //nums In One Which Are Not Present on the left side of mid element under consideration in second array
+             long noMatchInOnesLeft = indx-leftMatchesInTwo;//these will be dicarded while considering the right side matches in second array
+             //num Of Ele On Right Of mid in second array
+             int eleOnRightInTwo = len - (numsOneIndxInTwo+1);//since indexing is zero based.
+             long rightMatchesInTwo = eleOnRightInTwo - noMatchInOnesLeft;
+             res += leftMatchesInTwo * rightMatchesInTwo;
+            fen.add(1, numsOneIndxInTwo);
+        }
+        return res;
+    }
+}

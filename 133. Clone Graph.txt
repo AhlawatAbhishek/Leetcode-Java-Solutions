@@ -1,26 +1,3 @@
-/*
-// Definition for a Node.
-class Node {
-    public int val;
-    public List<Node> neighbors;
-    
-    public Node() {
-        val = 0;
-        neighbors = new ArrayList<Node>();
-    }
-    
-    public Node(int _val) {
-        val = _val;
-        neighbors = new ArrayList<Node>();
-    }
-    
-    public Node(int _val, ArrayList<Node> _neighbors) {
-        val = _val;
-        neighbors = _neighbors;
-    }
-}
-*/
-
 class Solution {
     public Node cloneGraph(Node node) {
         return cloneGraph(node, new HashMap());
@@ -87,3 +64,135 @@ class Solution {
     }
     
 }
+----------------------------------------------------------------------------------------
+-----------c++----
+--dfs-----------------------
+class Solution {
+private:
+    unordered_map<int, Node*> visited;   
+public:
+    Node* cloneGraph(Node* node) {
+          if(node == NULL) return NULL;
+          return dfs(node);
+    }
+private:
+     Node*  dfs(Node* curr){
+        if(curr == NULL) return NULL;
+        if(visited.find(curr->val) != visited.end()){
+           return visited[curr->val];
+        }
+        vector<Node*> neigh = curr->neighbors;
+        vector<Node*> nei;
+        Node* currCopy;
+         currCopy = new Node(curr->val, nei);//here the copy is made in the constructor which will be separate than the nei vector declared here
+        visited[curr->val] =  currCopy;    
+        for(int indx = 0; indx<neigh.size(); indx++){
+            currCopy->neighbors.push_back(dfs(neigh[indx]));
+        }
+        return currCopy;
+    }    
+};
+--------bfs-----------
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    vector<Node*> neighbors;
+    Node() {
+        val = 0;
+        neighbors = vector<Node*>();
+    }
+    Node(int _val) {
+        val = _val;
+        neighbors = vector<Node*>();
+    }
+    Node(int _val, vector<Node*> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+};
+*/
+
+class Solution {
+public:
+    Node* cloneGraph(Node* node) {
+            if(node == NULL) return NULL;
+        unordered_map<int, Node*> visited;
+        queue<Node*> queue;
+        Node* src = new Node(node->val, {});
+        queue.push(node);
+        visited[node->val] =  src;
+        while(!queue.empty()){
+            int size = queue.size();
+            while(size-->0){
+                Node* currNode = queue.front(), *currCopy = visited[currNode->val];
+                queue.pop();
+                for(auto nei : currNode->neighbors){
+                    Node* newNode = NULL;
+                   if(visited.find(nei->val) != visited.end())newNode = visited[nei->val];
+                    else{
+                      newNode = new Node(nei->val, {});
+                      visited[nei->val] = newNode;
+                      queue.push(nei);  
+                    }
+                    currCopy->neighbors.push_back(newNode);
+                }
+            }
+        }
+        return src;
+    }
+};
+--------------------------------------java------------------
+----dfs------------------
+class Solution {
+    private HashMap<Integer, Node> visited = new HashMap<>();
+    public Node cloneGraph(Node node) {
+        if(node == null) return null;
+        return dfs(node);
+    }
+    private Node  dfs(Node curr){
+        if(curr == null) return null;
+        if(visited.containsKey(curr.val)){
+           return visited.get(curr.val);
+        }
+        List<Node> neigh = curr.neighbors;
+        ArrayList<Node> nei = new ArrayList<>();
+        Node currCopy = new Node(curr.val, nei);
+        visited.put(curr.val, currCopy);    
+        for(int indx = 0; indx<neigh.size(); indx++){
+            nei.add(dfs(neigh.get(indx)));
+        }
+        return currCopy;
+    }
+}
+----------------------------
+---------bfs------------------
+class Solution {
+    public Node cloneGraph(Node node) {
+        if(node == null) return null;
+        HashMap<Integer, Node> visited = new HashMap<>();
+        Queue<Node> queue = new LinkedList<>();
+        Node src = new Node(node.val, new ArrayList<>());
+        queue.offer(node);
+        visited.put(node.val, src);
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            while(size-->0){
+                Node currNode = queue.poll(), currCopy = visited.get(currNode.val);
+                for(Node nei : currNode.neighbors){
+                    Node newNode = null;
+                   if(visited.containsKey(nei.val))newNode = visited.get(nei.val);
+                    else{
+                      newNode = new Node(nei.val, new ArrayList<>());
+                      visited.put(nei.val, newNode);
+                      queue.offer(nei);  
+                    }
+                    currCopy.neighbors.add(newNode);
+                }
+            }
+        }
+        return src;
+    }
+}
+------------------------------

@@ -1,3 +1,4 @@
+----------------This one is during the contest and it gave wrong answer, though I was close ;)-------------
 class Solution {
     public long coutPairs(int[] nums, int k) {
         long cnt = 0, divCnt = 0;
@@ -20,6 +21,34 @@ class Solution {
     {
         return (a / gcd(a, b)) * b;
     }
+     int gcd(int a, int b)
+    {
+        if (a == 0)
+            return b;
+        return gcd(b % a, a);
+    }
+   
+}
+----this is correct----------------------------
+class Solution {
+    public long countPairs(int[] nums, int k) {
+        long cnt = 0;
+        int len = nums.length;
+        HashMap<Integer, Integer> gcdMap = new HashMap<>();
+        for(int indx = 0; indx<len; indx++){
+            int num = nums[indx];
+            int hcf =  gcd(num, k);
+            for(int gcd : gcdMap.keySet()){
+                if(((long)hcf * gcd)%k == 0)cnt += gcdMap.get(gcd);
+            }
+            gcdMap.put(hcf, gcdMap.getOrDefault(hcf, 0)+1);
+        }
+        return cnt;
+    }
+    //  int lcm(int a, int b)
+    // {
+    //     return (a / gcd(a, b)) * b;
+    // }
      int gcd(int a, int b)
     {
         if (a == 0)
