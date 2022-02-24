@@ -74,3 +74,236 @@ class Solution {
         return sorted_temp.next;
     }
 }
+-------------------------------24-02-22-------------------------------------------------
+-----c++--------------------------
+class Solution {
+public:
+    ListNode* sortList(ListNode* head) {
+        vector<int> nodes;
+        for(ListNode* curr =  head; curr != NULL; curr = curr->next){
+            nodes.emplace_back(curr->val);
+        }
+        int indx = 0;
+        sort(nodes.begin(), nodes.end());
+        for(ListNode* curr =  head; curr != NULL; curr = curr->next){
+            curr->val= nodes[indx++];
+        }
+        return head;
+    }
+};
+-------iterative merge sort c++------------------------------------------
+class Solution {
+private:
+    ListNode *tail = new ListNode(), *nextSubList = new ListNode(); 
+public:
+    ListNode* sortList(ListNode* head) {
+          if(head == NULL || head->next == NULL)return head;
+         ListNode *dummyHead = new ListNode(), *start = head;
+         int len = getLen(head);
+        for(int size = 1; size<len; size *=2){
+             tail = dummyHead;
+             while(start != NULL){
+                 if(start->next == NULL){
+                     tail->next = start;
+                     break;
+                 }
+                 ListNode *mid = split(start, size);
+                 //merge operation performed for O(log n) level / size values
+                 merge(start, mid);
+                 start = nextSubList;
+             }
+            start = dummyHead->next;
+        }
+        return dummyHead->next;
+    }
+private:
+    ListNode* split(ListNode* start, int size){
+        ListNode* midPrev = start, *end = start->next;
+        for(int indx = 1; indx<size && (midPrev->next != NULL || end->next != NULL); indx++){
+            if(end->next != NULL){
+                end = end->next->next != NULL ? end->next->next : end->next;
+            }
+            if(midPrev->next != NULL){
+                midPrev = midPrev->next;
+            }
+        }
+        ListNode *mid = midPrev->next;
+        midPrev->next = NULL;
+        nextSubList = end->next;
+        end->next = NULL;
+        return mid;
+    }    
+private:
+   void merge(ListNode* l1, ListNode* l2){
+        ListNode* dummyHead = new ListNode(), *newTail = dummyHead;
+        while(l1 != NULL && l2 != NULL){
+            if(l1->val < l2->val){
+                newTail->next = l1;
+                l1 = l1->next;
+            }else{
+                newTail->next = l2;
+                l2 = l2->next;
+            }
+            newTail = newTail->next;
+        }
+        newTail->next = (l1 != NULL) ? l1 : l2;
+        while(newTail->next != NULL)newTail = newTail->next;
+        tail->next = dummyHead->next;
+        tail = newTail;
+    }
+private: 
+    int getLen(ListNode* head){
+        int len = 0;
+        for(ListNode* curr = head; curr != NULL; curr = curr->next){
+            len++;
+        }
+        return len;
+    }
+};
+------------------------------------------------------------------------
+------------java-----------------------------------------------------------
+class Solution {
+    public ListNode sortList(ListNode head) {
+        List<Integer> nodes = new ArrayList<>();
+        for(ListNode curr = head; curr != null; curr = curr.next){
+            nodes.add(curr.val);
+        }
+        int indx = 0;
+        Collections.sort(nodes);
+        for(ListNode curr = head; curr != null; curr = curr.next){
+            curr.val = nodes.get(indx++);
+        }
+        return head;
+    }
+}
+--------recursive merge sort java--------------------------
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    private static ListNode dummyHead = new ListNode();
+    public ListNode sortList(ListNode head) {
+        if(head == null || head.next == null) return head;
+        return mergeSort(head);
+    }
+    private ListNode mergeSort(ListNode curr){
+        if(curr.next == null){
+            return curr;
+        }
+        
+            ListNode fast = curr, slow = curr, prev = slow;
+            while(fast != null && fast.next != null){
+                fast = fast.next.next;
+                prev = slow;
+                slow = slow.next;
+            }
+            prev.next = null;
+            return merge(mergeSort(curr), mergeSort(slow));
+        
+    }
+    private ListNode merge(ListNode l1, ListNode l2){
+        ListNode curr = dummyHead;
+        while(l1 != null && l2 != null){
+            if(l1.val<l2.val){
+                curr.next = l1;
+                l1 = l1.next;
+            }else{
+                curr.next = l2;
+                l2 = l2.next;
+            }
+            curr = curr.next;
+        }
+        if(l1 != null){
+            curr.next = l1;
+        }
+        if(l2 != null){
+            curr.next = l2;
+        }
+        ListNode head = dummyHead.next;
+        dummyHead.next = null;
+        return head;
+    }
+}
+---------iterative merge sort java------------------
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    private ListNode nextSubList = new ListNode(), tail = new ListNode();
+    public ListNode sortList(ListNode head) {
+        if(head == null || head.next == null)return head;
+        ListNode dummyHead = new ListNode(), start = head;
+        int len = getLen(head);
+        for(int size = 1; size<len; size *=2){
+             tail = dummyHead;
+             while(start != null){
+                 if(start.next == null){
+                     tail.next = start;
+                     break;
+                 }
+                 ListNode mid = split(start, size);
+                 //merge operation performed for O(log n) level / size values
+                 merge(start, mid);
+                 start = nextSubList;
+             }
+            start = dummyHead.next;
+        }
+        return dummyHead.next;
+    }
+    //Tc: O(log n)
+    private ListNode split(ListNode start, int size){
+        ListNode midPrev = start, end = start.next;
+        for(int indx = 1; indx<size && (midPrev.next != null || end.next != null); indx++){
+            if(end.next != null){
+                end = end.next.next != null ? end.next.next : end.next;
+            }
+            if(midPrev.next != null){
+                midPrev = midPrev.next;
+            }
+        }
+        ListNode mid = midPrev.next;
+        midPrev.next = null;
+        nextSubList = end.next;
+        end.next = null;
+        return mid;
+    }
+    //Time complexity: O(n)
+    private void merge(ListNode l1, ListNode l2){
+        ListNode dummyHead = new ListNode(), newTail = dummyHead;
+        while(l1 != null && l2 != null){
+            if(l1.val < l2.val){
+                newTail.next = l1;
+                l1 = l1.next;
+            }else{
+                newTail.next = l2;
+                l2 = l2.next;
+            }
+            newTail = newTail.next;
+        }
+        newTail.next = (l1 != null) ? l1 : l2;
+        while(newTail.next != null)newTail = newTail.next;
+        tail.next = dummyHead.next;
+        tail = newTail;
+    }
+    private int getLen(ListNode head){
+        int len = 0;
+        for(ListNode curr = head; curr != null; curr = curr.next){
+            len++;
+        }
+        return len;
+    }
+}
