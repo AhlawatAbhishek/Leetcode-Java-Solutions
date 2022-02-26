@@ -1,0 +1,55 @@
+class Solution {
+    private Integer memo[][] = null; 
+    public int shortestPathLength(int[][] graph) {
+       int vers = graph.length, mask = (1<<vers)-1;
+       int minLen = Integer.MAX_VALUE;
+       memo = new Integer[vers][mask+1]; 
+       for(int ver = 0; ver < vers; ver++){
+           minLen = Math.min(minLen, dfs(graph, ver, mask));
+       }
+       return minLen; 
+    }
+    private int dfs(int graph[][], int src, int mask){
+        if(memo[src][mask] != null) return memo[src][mask];
+        if((mask&(mask-1)) == 0)return 0;  
+        memo[src][mask] = Integer.MAX_VALUE-1;
+        for(int neig : graph[src]){
+            if((mask&(1<<neig)) != 0){
+                int alreadyVisited = dfs(graph, neig, mask);
+                int notVisited = dfs(graph, neig, mask ^ (1<<src));
+                int best = Math.min(alreadyVisited, notVisited);
+                memo[src][mask] = Math.min(memo[src][mask], 1+best);
+            }    
+        }   
+        return memo[src][mask];   
+    }
+}
+---------------------------C++------------------------------
+class Solution {
+    int memo[12][4096] = {};
+public:
+    int shortestPathLength(vector<vector<int>>& graph) {
+        int len = graph.size(),  maskk=(1<<len)-1;
+        int minLen = INT_MAX;
+        for(int v = 0; v<len; v++){
+            minLen = min(minLen, dfs(graph, maskk, v));
+        }
+        return (int)minLen;
+    }
+private:
+    int dfs(vector<vector<int>>& graph, int mask, int src){
+         if(memo[src][mask] != 0)return memo[src][mask];
+        if((mask&(mask-1)) == 0)return 0;
+       
+        memo[src][mask] = INT_MAX-1;
+        for(auto neigh : graph[src]){
+            if((mask&(1<<neigh)) != 0){
+                int alreadyVisited = dfs(graph, mask, neigh);
+                int notVisited = dfs(graph, mask^(1<<src), neigh);
+                int best = min(alreadyVisited, notVisited);
+                memo[src][mask] = min(memo[src][mask], best + 1);
+            }
+        }
+        return memo[src][mask];
+    }
+};
