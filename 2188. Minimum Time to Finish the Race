@@ -1,0 +1,33 @@
+class Solution {
+    private Long finLap[] = null, best[] = null;
+    private int maxLap = 1;
+    public int minimumFinishTime(int[][] tires, int changeTime, int numLaps) {
+        finLap = new Long[numLaps+1];
+        best = new Long[numLaps+1];
+        Arrays.fill(best, Long.MAX_VALUE);
+        Arrays.fill(finLap, Long.MAX_VALUE);
+        findBest(tires, changeTime, numLaps);  
+        return (int)findMinTime(numLaps, changeTime);
+    }
+    private void findBest(int tires[][], int changeTime, int numLaps){ 
+            for(int t[] : tires){
+                int fI = t[0], rI = t[1];
+                long time = fI, currTime = fI;
+                for(int lp = 1; lp<=numLaps && currTime < fI + changeTime; lp++){
+                    best[lp] = Math.min(time, best[lp]);
+                    maxLap = Math.max(maxLap, lp);
+                    currTime *= rI;
+                    time += currTime;
+                }
+            }
+    }
+    private long findMinTime(int numLap, int changeTime){
+        if(numLap == 0){
+            return -changeTime;
+        }
+        if(finLap[numLap] != Long.MAX_VALUE) return finLap[numLap];
+        for(int lp = 1; lp<=Math.min(maxLap, numLap); lp++)
+          finLap[numLap] = Math.min(finLap[numLap], best[lp] + changeTime + findMinTime(numLap - lp, changeTime));
+        return finLap[numLap];
+    }
+}
