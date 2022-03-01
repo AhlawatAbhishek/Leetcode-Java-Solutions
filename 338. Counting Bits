@@ -1,0 +1,93 @@
+class Solution {
+    public int[] countBits(int n) {
+        int ans[] = new int[n+1];
+        for(int num = 0; num<=n; num++){
+            ans[num] = countSetBits(num);
+        }
+        return ans;
+    }
+    private int countSetBits(int num){
+        int cnt = 0;
+        while(num > 0){
+            cnt++;
+            num = num&(num-1);
+        }
+        return cnt;
+    }
+}
+---playing with msb and dp----
+class Solution {
+    public int[] countBits(int n) {
+        int b = 1, x = 0;
+        int ans[] = new int[n+1];
+        while(b <= n){
+            while(b>x && b+x<=n){
+                ans[b+x] = ans[x++]+1;
+            }
+            x = 0;
+            b <<=1;//b *= 2
+        }
+        return ans;
+    }
+}
+---Turning off the last set bit----
+class Solution {
+    public int[] countBits(int n) {
+        int ans[] = new int[n+1];
+        int x = 1;
+        for(; x<= n; x++){
+            ans[x] = ans[(x&(x-1))] + 1;
+        }
+        return ans;
+    }
+}
+---------c++------------------------------------------------
+class Solution {
+public:
+    vector<int> countBits(int n) {
+        vector<int>ans(n+1, 0);
+        for(int num = 0; num<=n; num++){
+            ans[num] = countSetBits(num);
+        }
+        return ans;
+    }
+private:
+    int countSetBits(int num){
+        int cnt = 0;
+        while(num > 0){
+            cnt++;
+            num = num&(num-1);
+        }
+        return cnt;
+    } 
+};
+-------------playing with lsb and dp---
+class Solution {
+public:
+    vector<int> countBits(int n) {
+        vector<int>ans(n+1, 0);
+        int x = 0;
+        for(; x<= n; x++){
+            ans[x] = ans[x>>1] + (x&1);
+        }
+        return ans;
+    }
+};
+---playing with msb and dp----
+class Solution {
+public:
+    vector<int> countBits(int n) {
+        vector<int>ans(n+1, 0);
+        int b = 1, x = 0;
+        while(b <= n){
+            while(b>x && b+x<=n){
+                ans[b+x] = ans[x]+1;
+                x++;
+            }
+            x = 0;
+            b <<=1;//b *= 2
+        }
+        return ans;
+    }
+};
+----------------------------------

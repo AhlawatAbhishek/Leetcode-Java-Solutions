@@ -59,3 +59,29 @@ class Solution {
         return maxWidth;
     }
 }
+----------Using dfs---------------------------------------------------
+//Time Complexity: O(n), n is size of the tree, since each node is visited once
+//Auxiliary Space: O(h), h is height of binary tree, in worst case can be upto n. 
+                   //this space is for recursion call stack
+class Solution {
+    //level-first column number
+    private HashMap<Integer, Integer> lvColMap= new HashMap<>();
+    private int maxWidth = 1;
+    public int widthOfBinaryTree(TreeNode root) {
+        if (root == null)
+            return 0;
+        findMaxWidth(root, 0, 0);
+        return maxWidth;
+    }
+    private void findMaxWidth(TreeNode root, int col, int lvl){
+        if(root == null)return;
+        if(lvColMap.containsKey(lvl)){
+            int firstCol = lvColMap.get(lvl);
+            maxWidth = Math.max(maxWidth, col - firstCol + 1);
+        }else{
+            lvColMap.put(lvl, col);
+        }
+        findMaxWidth(root.left, 2*col, lvl+1);
+        findMaxWidth(root.right, 2*col + 1, lvl+1);
+    }
+}

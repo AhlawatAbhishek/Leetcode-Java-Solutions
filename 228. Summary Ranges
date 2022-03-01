@@ -1,3 +1,4 @@
+---------post's link: https://leetcode.com/problems/summary-ranges/discuss/1805663/C%2B%2B-or-Java-or-Short-and-Concise-or-Explained------------
 class Solution {
 public:
     vector<string> summaryRanges(vector<int>& nums) {
