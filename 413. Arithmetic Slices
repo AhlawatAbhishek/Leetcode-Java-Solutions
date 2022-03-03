@@ -1,0 +1,65 @@
+class Solution {
+    private int sum = 0;
+    public int numberOfArithmeticSlices(int[] nums) {
+        countSlice(nums, nums.length-1);
+        return sum;
+    }
+    private int countSlice(int []nums, int indx){
+        if(indx < 2) return 0;
+        int ans = 0;
+        if(nums[indx] - nums[indx-1] == nums[indx-1] - nums[indx-2]){
+              ans +=  1 + countSlice(nums, indx-1);
+              sum += ans;
+        }else{
+            countSlice(nums, indx-1);
+        }
+        return ans;
+    }
+}
+--------------------------------------------------
+public class Solution {
+    public int numberOfArithmeticSlices(int[] A) {
+        int dp = 0;
+        int sum = 0;
+        for (int i = 2; i < A.length; i++) {
+            if (A[i] - A[i - 1] == A[i - 1] - A[i - 2]) {
+                dp = 1 + dp;
+                sum += dp;
+            } else
+                dp = 0;
+        }
+        return sum;
+    }
+}	
+----------------------------------------------------
+class Solution {
+    public int numberOfArithmeticSlices(int[] nums) {
+        int len = nums.length, cnt = 0;
+      
+        for(int strt = 0; strt<len-2; strt++){
+              int d = nums[strt+1] - nums[strt];
+            for(int end = strt+2; end<len; end++){
+                if(d == nums[end] - nums[end-1]){
+                    cnt++;
+                }else break;
+            }
+        }
+        return cnt;
+    }
+}
+------------------------------------------------c++-------------------
+class Solution {
+public:
+    int numberOfArithmeticSlices(vector<int>& A) {
+         int dp = 0;
+        int sum = 0;
+        for (int i = 2; i < A.size(); i++) {
+            if (A[i] - A[i - 1] == A[i - 1] - A[i - 2]) {
+                dp = 1 + dp;
+                sum += dp;
+            } else
+                dp = 0;
+        }
+        return sum;
+    }
+};

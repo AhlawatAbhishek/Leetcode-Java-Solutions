@@ -1,0 +1,45 @@
+class Solution {
+    private Integer memo[][] = null;
+    public int minDistance(String t, String s) {
+        memo = new Integer[t.length()+1][s.length()+1];
+        return minD(s, t, 0, 0);
+    }
+    private int minD(String s, String t, int tI, int sI){
+        if(tI == t.length())return s.length()-sI;
+        if(sI == s.length())return t.length()-tI;
+        if(memo[tI][sI] != null) return memo[tI][sI];
+        if(s.charAt(sI) == t.charAt(tI)){
+            return memo[tI][sI] = minD(s, t, tI+1, sI+1);
+        }else{
+            int insrt = minD(s, t, tI, sI+1);
+            int del = minD(s, t, tI+1, sI);
+            int rep = minD(s, t, tI+1, sI+1);
+            return memo[tI][sI] = 1+Math.min(insrt, Math.min(del, rep));
+        }
+    }
+}
+-------------tabulation based solution------------------------
+class Solution {
+    public int minDistance(String t, String s) {
+        int sLen = s.length(), tLen = t.length();
+        int dp[][] = new int[sLen+1][tLen+1];
+        //in case t is empty, then insert all the chars of s
+        for(int sI = 0; sI<dp.length; sI++){
+            dp[sI][0] = sI;
+        }
+        //in case s is empty then delete all the chars of t
+        for(int tI = 0; tI<dp[0].length; tI++){
+            dp[0][tI] = tI;
+        }
+        for(int sI = 1; sI<dp.length; sI++){
+            for(int tI = 1; tI<dp[0].length; tI++){
+                if(s.charAt(sI-1) == t.charAt(tI-1)){
+                    dp[sI][tI] = dp[sI-1][tI-1];
+                }else{
+                    dp[sI][tI] = 1 + Math.min(dp[sI][tI-1], Math.min(dp[sI-1][tI-1], dp[sI-1][tI]));
+                }
+            }
+        }
+        return dp[sLen][tLen];
+    }
+}

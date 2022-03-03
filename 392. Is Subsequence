@@ -1,0 +1,66 @@
+class Solution {
+    public boolean isSubsequence(String s, String t) {
+        int indx = 0, len = s.length();
+        if(len == 0) return true;
+        if(len > t.length())return false;
+        for(char c : t.toCharArray()){
+            if(s.charAt(indx) == c){
+                indx++;
+            }
+            if(indx==len){
+                return true;
+            }
+        }
+        return false;
+    }
+}
+--------follow up, my way-----------
+class Solution {
+    public boolean isSubsequence(String s, String t) {
+        int indx = 0, len = s.length();
+        if(len == 0) return true;
+        if(len > t.length())return false;
+        HashMap<Character, Deque<Integer>> charIndxMp = new HashMap<>();
+        for(int ind = 0; ind<t.length(); ind++){
+            char ch = t.charAt(ind);
+            charIndxMp.putIfAbsent(ch, new ArrayDeque<>());
+            charIndxMp.get(ch).offerLast(ind);
+        }
+        int prev = -1;
+        for(; indx<len; indx++){
+            char c = s.charAt(indx);
+            if(charIndxMp.containsKey(c)){
+                Deque<Integer> deq = charIndxMp.get(c);
+                int currIndx = prev;
+                while(!deq.isEmpty() && deq.peekFirst() < prev){
+                    currIndx = deq.pollFirst();
+                }
+                if(deq.isEmpty())return false;
+                else currIndx = deq.pollFirst();
+                if(currIndx > prev){
+                    prev = currIndx;
+                }else return false;
+                if(deq.isEmpty())charIndxMp.remove(c);
+            }else return false;
+        }
+        return true;
+    }
+}
+-------------------------------------------c++--------------------------------
+class Solution {
+public:
+    bool isSubsequence(string s, string t) {
+        int indx = 0, len = s.length();
+        if(len == 0) return true;
+        if(len > t.length())return false;
+        for(auto c : t){
+            if(s[indx] == c){
+                indx++;
+            }
+            if(indx==len){
+                return true;
+            }
+        }
+        return false;
+    }
+};
