@@ -1,0 +1,79 @@
+class Solution {
+    public double champagneTower(int prd, int qR, int qG) {
+        int  len = 1;
+        double gls[][] = new double[qR+1][];
+        for(int r = 0; r<= qR; r++){
+            gls[r] = new double[len++];
+        }
+        gls[0][0] = prd;
+        if(gls[0][0]>=1)gls[0][0]--;
+        for(int r = 1; r<=qR; r++){
+            int rLen = gls[r].length;
+            for(int c = 0; c<rLen; c++){
+                if(c == 0){
+                    double recv = 0;
+                    recv += (1.0*gls[r-1][c])/2;
+                    gls[r-1][c] = (1.0*gls[r-1][c])/2;
+                    gls[r][c] = recv;    
+                }else if(c == rLen-1){
+                    double recv = 0;
+                    recv += gls[r-1][c-1];
+                    gls[r-1][c-1] = 0;
+                    gls[r][c] = recv; 
+                }else{
+                    double recv = 0;
+                    recv += (1.0*gls[r-1][c])/2;
+                    gls[r-1][c] = (1.0*gls[r-1][c])/2;
+                    recv += gls[r-1][c-1];
+                    gls[r-1][c-1] = 0;
+                    gls[r][c] = recv;
+                }
+                if(c != qG && gls[r][c] >= 1)gls[r][c]--;
+            }
+        }
+        return gls[qR][qG] > 1.00000 ? 1.00000 : gls[qR][qG];
+    }
+}
+---though the above approach is correct but the below approach is more convinient--------------
+----java------------------
+class Solution {
+public:
+    double champagneTower(int prd, int qR, int qG) {
+        double gls[101][101] ={{0}};
+        gls[0][0] = prd;
+        for(int r = 0; r<=qR; r++){
+            for(int c = 0; c<=r; c++){
+//fill oneself and distribute half to the c & c+1 columns below
+                double exs = (gls[r][c] - 1.0) / 2.0;
+//propagate to the below level
+               if (exs > 0) {
+                    gls[r + 1][c] += exs;
+                    gls[r + 1][c + 1] += exs;
+               }
+            }
+        }
+//cannot be more than full
+        return min(1.00000, gls[qR][qG]);
+    }
+};
+----------------c++-------------------------------
+class Solution {
+    public double champagneTower(int prd, int qR, int qG) {
+        double gls[][] = new double[101][101];
+        gls[0][0] = prd;
+        for(int r = 0; r<=qR; r++){
+            for(int c = 0; c<=r; c++){
+//fill oneself and distribute half to the c & c+1 columns below
+                double exs = (gls[r][c] - 1.0) / 2.0;
+//propagate to the below level
+               if (exs > 0) {
+                    gls[r + 1][c] += exs;
+                    gls[r + 1][c + 1] += exs;
+               }
+            }
+        }
+//cannot be more than full
+        return Math.min(1.00000, gls[qR][qG]);
+    }
+}
+--------------post's link-------https://leetcode.com/problems/champagne-tower/discuss/1817935/Java-or-C%2B%2B-or-DP-or-Handwritten-Illustrationsor-Short-and-concise-code
