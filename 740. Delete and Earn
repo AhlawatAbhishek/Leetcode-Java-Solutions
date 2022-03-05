@@ -1,0 +1,106 @@
+class Solution {
+    private HashMap<Integer, List<Integer>> graph = new HashMap<>();
+    private HashMap<Integer, Integer> freqMp = new HashMap<>();
+    private Set<Integer> visited = new HashSet<>();
+    public int deleteAndEarn(int[] nums) {
+        Arrays.sort(nums); 
+        for(int indx = 0; indx<nums.length; indx++){
+            int num = nums[indx];
+            freqMp.put(num, freqMp.getOrDefault(num, 0)+1);
+            graph.putIfAbsent(num, new ArrayList<>());
+            if(graph.containsKey(num-1)){
+                graph.get(num-1).add(indx);
+            }
+        }
+        return findMax(nums, 0);
+    }
+    private int findMax(int nums[], int indx){
+        if(indx == nums.length)return 0;
+        int currSrc = nums[indx];
+        if(visited.contains(currSrc)){
+            return findMax(nums, indx+1);
+        }
+        int taken = currSrc * freqMp.get(currSrc);
+        for(int neigh : graph.get(currSrc)){
+            visited.add(nums[neigh]);
+        }
+        visited.add(currSrc);
+        taken += findMax(nums, indx+1);
+        for(int neigh : graph.get(currSrc)){
+            visited.remove(nums[neigh]);
+        }
+        visited.remove(currSrc);
+        int notTaken = findMax(nums, indx+1);
+        return Math.max(taken, notTaken);
+    }
+}
+-------------------------Does not give TLE---------------------
+Intuition: .Some how keep the array sorted and for each number we have two cases:
+            1: Either this number is to be deleted because we have chosen num-1 previously
+            2: Or this number is safe and is not marked for deletion because of prev. choices made
+           
+           .Now in both of these case we have further two choices: either take this number or leave it.    
+                 
+Time complexity & Auxiliary Space: O(10001) ~ O(1)
+---------------------java--------------------------------
+    public int deleteAndEarn(int[] nums) {
+        int freq[] = new int [10001];
+        for(var num : nums){
+            freq[num]++;
+        }
+        int usePrevLg = 0, avoidPrevLg = 0, prevLg = -1;
+        for(int num = 0; num<10001; num++){
+            if(freq[num] > 0){
+                int prevBest = Math.max(usePrevLg, avoidPrevLg);
+                //if this num is to be deleted bcz of prev choices made
+                if(prevLg + 1 == num){
+                    //use curr num
+                    usePrevLg = num * freq[num] + avoidPrevLg;
+                    //avoid curr num
+                    avoidPrevLg = prevBest;
+                }else{//if this num is not to be deleted because of prev choices made
+                    //use curr num
+                    usePrevLg = num * freq[num] + prevBest;
+                    //avoid currNum
+                    avoidPrevLg = prevBest;                    
+                }
+                //update the prev largest num
+                prevLg = num;
+            }
+        }
+        //return max of two choices 
+        return Math.max(usePrevLg, avoidPrevLg);
+    }
+}
+-------------------------c++-----------------------
+class Solution {
+public:
+    int deleteAndEarn(vector<int>& nums) {
+        vector<int>freq(10001, 0);
+        for(auto num : nums){
+            freq[num]++;
+        }
+        int usePrevLg = 0, avoidPrevLg = 0, prevLg = -1;
+        for(int num = 0; num<10001; num++){
+            if(freq[num] > 0){
+                int prevBest = max(usePrevLg, avoidPrevLg);
+                //if this num is to be deleted bcz of prev choices made
+                if(prevLg + 1 == num){
+                    //use curr num
+                    usePrevLg = num * freq[num] + avoidPrevLg;
+                    //avoid curr num
+                    avoidPrevLg = prevBest;
+                }else{//if this num is not to be deleted because of prev choices made
+                    //use curr num
+                    usePrevLg = num * freq[num] + prevBest;
+                    //avoid currNum
+                    avoidPrevLg = prevBest;                    
+                }
+                //update the prev largest num
+                prevLg = num;
+            }
+        }
+        //return max of two choices 
+        return max(usePrevLg, avoidPrevLg);
+    }
+};
