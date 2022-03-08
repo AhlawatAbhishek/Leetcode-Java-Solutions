@@ -1,0 +1,47 @@
+class Solution {
+    private final int mod = 1000000007;
+    private Long memo[][] = null;
+    public int countOrders(int n) {
+        memo = new Long[n+1][n+1];
+        return (int)countWays(n, n);
+    }
+    private long countWays(int unpick, int undel){
+        if(unpick == 0 && undel == 0)return 1;
+        if(unpick <0 || undel <0 || undel < unpick)return 0;
+        if(memo[unpick][undel] != null)return memo[unpick][undel];
+        long pick = unpick % mod * countWays(unpick-1, undel) % mod;
+        long drop = 0;
+         drop = (undel - unpick) % mod * countWays(unpick, undel-1) % mod;   
+        return memo[unpick][undel] = (pick + drop) % mod;
+    }
+}
+---------------------------above is memoization and below is tabulation---------------------
+class Solution {
+    private final int mod = 1000000007;
+    public int countOrders(int n) {
+        //first dimension if for number of unpicked orders and second is for number of undelivered orders
+        long order[][] = new long[n+1][n+1];
+        int len = order.length;
+        
+        //now populate the oder with the recurrence relation
+        for(int d = 0; d<=n; d++){
+            for(int p = 0; p<=n; p++){
+ //if there is no unpicked and undelieverd order than we will count it towards number of legit permutations
+               if(d == 0&& p == 0){
+                   order[d][p] = 1;
+                   continue;
+               } 
+                long pick = 0, drop = 0;
+                if(p  > 0){
+                   pick =  p % mod * order[p-1][d] % mod;
+                }
+//if the number of unpicked ordres donot exceeds the number of undelieverd orders, mean we have done delievery before pickup       
+                if(d > p){
+                    drop = (d-p) % mod * order[p][d-1] % mod;
+                }
+                order[p][d] += (pick + drop) % mod;
+            }
+        }
+        return (int)order[n][n];
+    }
+}

@@ -1,0 +1,51 @@
+ public List<Integer> replaceNonCoprimes(int[] A) {
+        LinkedList<Integer> res = new LinkedList();
+        for (int a : A) {
+            while (true) {
+                int last = res.isEmpty() ? 1 : res.getLast();
+                int x = gcd(last, a);
+                if (x == 1) break; // co-prime
+                a *= res.removeLast() / x;//this step is really dope ponder upon it for a while
+            }
+            res.add(a);
+        }
+        return res;
+    }
+
+    private int gcd(int a, int b) {
+        return b > 0 ? gcd(b, a % b) : a;
+    }
+ ------------------------------------------------------------------------------------
+ class Solution {
+    public List<Integer> replaceNonCoprimes(int[] nums) {
+        Deque<Integer> st = new ArrayDeque<>();
+        for(int num : nums){
+            if(st.isEmpty()){
+                st.offerLast(num);
+                continue;
+            }
+            int chck = num;
+            while(!st.isEmpty() && gcd(st.peekLast(), chck) != 1){
+                chck = lcm(chck, st.pollLast());
+            }
+            st.offerLast(chck);
+        }
+        List<Integer> res = new ArrayList<>();
+        while(!st.isEmpty()){
+            res.add(st.pollFirst());
+        }
+        return res;
+    }
+     private int gcd(int a, int b)
+    {
+        if (a == 0)
+            return b;
+        return gcd(b % a, a);
+    }
+    private int lcm(int a, int b)
+    {
+        return (a / gcd(a, b)) * b;
+    }
+}
+
+      
