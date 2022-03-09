@@ -1,0 +1,50 @@
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if(head == NULL || head->next == NULL)return head;
+        ListNode* dummyHead = new ListNode(-200),  *prev = dummyHead, *curr = head;
+        dummyHead->next = head;
+        while(curr != NULL){
+            ListNode *currPrev = curr;
+            int val = curr->val;
+            while(curr->next != NULL && val == curr->next->val){
+                curr = curr->next;
+            }
+            if(curr == currPrev){
+                // cout<<"prevVal chng from: "<<prev.val<<" to: "<<curr.val<<"\n";
+                prev = curr;
+                curr = curr->next;
+            }else{
+                curr = curr->next;
+                // cout<<"prev next chng from: "<<currPrev.val<< " to: "<<curr.val<<"\n";
+                prev->next = curr;
+            }
+        }
+        return dummyHead->next;
+    }
+};
+-----------------------------------------------------
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        if(head == null || head.next == null)return head;
+        ListNode dummyHead = new ListNode(-200),  prev = dummyHead, curr = head;
+        dummyHead.next = head;
+        while(curr != null){
+            ListNode currPrev = curr;
+            int val = curr.val;
+            while(curr.next != null && val == curr.next.val){
+                curr = curr.next;
+            }
+            if(curr == currPrev){
+                // System.out.println("prevVal chng from: "+ prev.val+ " to: " + curr.val);
+                prev = curr;
+                curr = curr.next;
+            }else{
+                curr = curr.next;
+                // System.out.println("prev next chng from: "+ currPrev.val+ " to: " + curr.val);
+                prev.next = curr;
+            }
+        }
+        return dummyHead.next;
+    }
+}
