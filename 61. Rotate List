@@ -1,0 +1,90 @@
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if(head == NULL || head->next == NULL)return head;
+        int len = 0;
+        for(ListNode *curr = head; curr != NULL; curr = curr->next){
+            len++;
+        }
+        if(k % len == 0) return head;
+        k %= len;
+        ListNode *newHead = reverse(head), *curr = NULL, *prev = curr;
+        for(curr = newHead; curr != NULL&&k > 0; curr = curr->next, k--){
+            prev = curr;
+        }
+        prev->next = NULL;
+        prev = newHead;
+        newHead = reverse(newHead);
+        curr = reverse(curr);
+        prev->next = curr;
+        return newHead;
+    }
+private:
+    ListNode* reverse(ListNode *l1){
+        ListNode *curr =l1, *prev = NULL;
+        while(curr != NULL){
+            ListNode *next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+};
+--------------------------------------java------------------------------
+class Solution {
+    public ListNode rotateRight(ListNode head, int k) {
+        if(head == null || head.next == null || k == 0)return head;
+        int len = 0;
+        for(ListNode curr = head; curr != null; curr = curr.next){
+            len++;
+        }
+        if(k % len == 0) return head;
+        k %= len;
+        ListNode newHead = reverse(head), curr = null, prev = curr;
+        for(curr = newHead; curr != null&&k > 0; curr = curr.next, k--){
+            prev = curr;
+        }
+        prev.next = null;
+        prev = newHead;
+        newHead = reverse(newHead);
+        curr = reverse(curr);
+        prev.next = curr;
+        return newHead;
+    }
+    private ListNode reverse(ListNode l1){
+        ListNode curr =l1, prev = null;
+        while(curr != null){
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+}
+------chain forming and breaking solution java------
+class Solution {
+    public ListNode rotateRight(ListNode head, int k) {
+        if(head == null || head.next == null || k == 0)return head;
+        int len = 0;
+        ListNode curr = null, prev = curr;
+        for(curr = head; curr != null; curr = curr.next){
+            len++;
+            prev = curr;
+        }
+        if(k % len == 0) return head;
+        k %= len;
+        //break the chain formed below after these many nodes
+        k = (len - k);
+        //form the chain by connecting head and tail
+        prev.next = head;
+        prev = null;
+        for(curr = head; k > 0; curr = curr.next, k--){
+            prev = curr;
+        }
+        prev.next = null;
+        // return the node on the right side of the link that is broken
+        return curr;
+    }
+}
