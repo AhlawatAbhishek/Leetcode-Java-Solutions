@@ -1,0 +1,73 @@
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        if(head == NULL)return head;
+        for(Node *curr = head; curr != NULL; curr = curr->next->next){
+            Node *next = curr->next, *newNode = new Node(curr->val);
+            curr->next = newNode;
+            newNode->next = next;
+        }
+        for(Node *curr = head; curr != NULL; curr = curr->next->next){
+            curr->next->random = curr->random == NULL ? NULL : curr->random->next;
+        }
+        Node *newHead = head->next;  
+        for(Node *curr = head; curr != NULL; curr = curr->next){
+            Node *next = curr->next->next;
+            curr->next->next = curr->next->next == NULL ? NULL : curr->next->next->next;
+            curr->next = next;
+        }
+        return newHead;
+    }
+};
+---------------------------------------------------------
+class Solution {
+    public Node copyRandomList(Node head) {
+        if(head == null)return head;
+        for(Node curr = head; curr != null; curr = curr.next.next){
+            Node next = curr.next, newNode = new Node(curr.val);
+            curr.next = newNode;
+            newNode.next = next;
+        }
+        for(Node curr = head; curr != null; curr = curr.next.next){
+            curr.next.random = curr.random == null ? null : curr.random.next;
+        }
+        Node newHead = head.next;  
+        for(Node curr = head; curr != null; curr = curr.next){
+            Node next = curr.next.next;
+            curr.next.next = curr.next.next == null ? null : curr.next.next.next;
+            curr.next = next;
+        }
+        return newHead;
+    }
+}
+----------------------------------------------------------------------------------
+class Solution {
+    public Node copyRandomList(Node head) {
+        if(head == null){
+            return null;
+        }
+        Map<Node, Node> map = new HashMap<>();
+        Node ptr2 = new Node(head.val);
+        map.put(head, ptr2);
+        Node ptr = head;
+        while(ptr != null){
+            Node randomNode = ptr.random;
+            Node nextNode = ptr.next;
+            if(randomNode != null){
+                if(!map.containsKey(randomNode)){
+                map.put(randomNode, new Node(randomNode.val));
+            }
+            }
+           ptr2.random = map.get(randomNode);
+            if(nextNode != null){
+            if(!map.containsKey(nextNode)){
+                map.put(nextNode, new Node(nextNode.val));
+            }
+            ptr2.next = map.get(nextNode);
+        }
+        ptr = ptr.next;
+        ptr2 = ptr2.next;
+        }
+         return map.get(head);
+    }
+}
