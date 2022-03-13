@@ -71,3 +71,20 @@ class Solution {
          return map.get(head);
     }
 }
+---------------------Using recursion, Time : O(n) && space: O(n)
+class Solution {
+    private Map<Node, Node> copyMp = new HashMap<>();
+    public Node copyRandomList(Node head) {
+        if(head == null)return head;
+        return copy(head);
+    }
+    private Node copy(Node head){
+        if(head == null) return head;
+        if(copyMp.containsKey(head))return copyMp.get(head);
+        Node newNode = new Node(head.val);
+        copyMp.put(head, newNode);
+        newNode.next = copy(head.next);
+        newNode.random = copy(head.random);
+        return newNode;
+    }
+}

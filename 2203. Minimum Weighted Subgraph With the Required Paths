@@ -1,0 +1,50 @@
+#define pii pair<int, int>
+#define pll pair<ll, ll>
+#define Vc vector
+#define ll long long
+#define pb push_back    
+#define ff first
+#define ss second    
+const ll MAX =  1e10;
+class Solution {
+private:
+    static void dijkstra(Vc<Vc<pll>> &al, Vc<ll>&dv, ll src){
+        priority_queue<pll, Vc<pll>, greater<pll>> pq;
+        pq.push({dv[src], src});
+        while(!pq.empty()){
+            auto pr = pq.top();
+            ll v = pr.ss, dist = pr.ff;
+            pq.pop();
+            if(dv[v] != dist)continue;
+            for(auto neigh : al[v]){
+                ll u = neigh.ss, len = neigh.ff;
+                if(dv[v] + len < dv[u]){
+                    dv[u] = dv[v] + len;
+                    pq.push({dv[u], u});
+                }
+            }
+        }
+    }
+public:
+    long long minimumWeight(int n, vector<vector<int>>& edges, int src1, int src2, int dest)     {
+        ll res = LLONG_MAX;
+        Vc<ll> s1d(n, MAX), s2d(n, MAX), dd(n, MAX); 
+        s1d[src1] = s2d[src2] = dd[dest] = 0; 
+        Vc<Vc<pll>> al(n), ral(n);
+        for(auto &edg : edges){
+            ll frm = edg[0], to = edg[1], wt = edg[2];
+            al[frm].pb({wt, to});
+            ral[to].pb({wt, frm});
+        }
+        dijkstra(al, s1d, src1);
+        dijkstra(al, s2d, src2);
+        dijkstra(ral, dd, dest);
+        if(s1d[dest] == MAX || s2d[dest] == MAX){
+            return -1;
+        }
+        for(int indx = 0;indx<n; indx++){
+            res = min(res, s1d[indx] + s2d[indx] + dd[indx]);
+        }
+        return res;
+    }
+};
