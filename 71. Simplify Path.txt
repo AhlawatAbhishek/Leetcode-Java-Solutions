@@ -41,3 +41,95 @@ class Solution {
         return result.toString();
     }
 }
+------------------------------------------------------------
+---------------------java----------------------------------------
+my own solution.--------------------------------
+class Solution {
+    public String simplifyPath(String path) {
+        StringBuilder sb = new StringBuilder();
+        Deque<Character> st = new ArrayDeque<>();
+        int len = path.length();
+        for(int indx = 0; indx<len; indx++){
+            char currCh = path.charAt(indx);
+            if(currCh == '/'){
+               char ch = '/';
+               while(indx < len && path.charAt(indx) == '/'){
+                   indx++;
+               } 
+               indx--; 
+               if((!st.isEmpty() && st.peekLast() != '/') || st.isEmpty())st.offerLast(ch); 
+            }else if(currCh == '.'){
+                while(indx<len && path.charAt(indx) == '.'){
+                    sb.append('.');
+                    indx++;
+                }
+                indx--;
+                if(sb.length()>2){
+                    for(char c : sb.toString().toCharArray()){
+                        st.offerLast(c);
+                    }
+                }else if(sb.length() == 2){
+                   if((indx+1 == len || path.charAt(indx+1) == '/') && path.charAt(indx-2) == '/'){ 
+                    int slCnt = 0;
+                    while(st.size() > 1 && slCnt < 2){
+                        if(st.peekLast() == '/'){
+                            slCnt++;
+                        }
+                        if(slCnt <= 1)st.pollLast();
+                    }
+                   }else{
+                       st.offerLast('.');
+                       st.offerLast('.');
+                   }    
+                }else{
+                      if(!((indx+1 == len || path.charAt(indx+1) == '/')) || path.charAt(indx -1) != '/'){ 
+                       st.offerLast('.');   
+                   }
+                }
+                sb.setLength(0);
+            }else{
+                st.offerLast(currCh);
+            }
+        }
+        if(!st.isEmpty() && st.peekLast() == '/')st.pollLast();
+        while(!st.isEmpty()){
+            sb.append(st.pollLast());
+        }
+        if(sb.length() == 0)sb.append('/');
+        sb.reverse();
+        return sb.toString();
+    }
+}
+-----------------------c++-------------------------------
+class Solution {
+public:
+    string simplifyPath(string path) {
+        istringstream ss(path);
+        deque<string> st;
+        string token;//token it will contain the first chuck after the stringstream is split for the first time with delimiter
+        char delim = '/';//delimiter
+        while(getline(ss, token, delim)){
+            if(token == "" || token == "."){
+                continue;
+            }
+            if(token == ".." && !st.empty()){
+                st.pop_front();
+            }
+            if(token != ".."){
+                st.push_front(token);
+            }
+        }
+        string res = "";
+        while(!st.empty()){
+            res += "/" + st.back();
+            st.pop_back();
+        }
+        return res == "" ? "/" : res;
+    }
+};
+
+
+
+
+
+
