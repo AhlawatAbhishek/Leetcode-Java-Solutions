@@ -1,0 +1,156 @@
+class Solution {
+    public String minRemoveToMakeValid(String str) {
+        Deque<Integer> st = new ArrayDeque<>();
+        char s[] = str.toCharArray();
+        for(int indx = 0; indx<s.length; indx++){
+            char ch = s[indx];
+            if(ch == '('){
+                st.offerLast(indx);
+            }else if(ch == ')'){
+                if(st.isEmpty()){
+                    s[indx] = '1';
+                }else{
+                    st.pollLast();
+                }
+            }
+        }
+        while(!st.isEmpty()){
+            s[st.pollLast()] = '1';
+        }
+        StringBuilder ans = new StringBuilder();
+        for(var ch : s){
+            if(ch != '1'){
+                ans.append(ch);
+            }
+        }
+        return ans.toString();
+    }
+}
+-----------
+class Solution {
+
+    private StringBuilder removeInvalidClosing(CharSequence string, char open, char close) {
+        StringBuilder sb = new StringBuilder();
+        int balance = 0;
+        for (int i = 0; i < string.length(); i++) {
+            char c = string.charAt(i);
+            if (c == open) {
+                balance++;
+            } if (c == close) {
+                if (balance == 0) continue;
+                balance--;
+            }
+            sb.append(c);
+        }  
+        return sb;
+    }
+
+    public String minRemoveToMakeValid(String s) {
+        StringBuilder result = removeInvalidClosing(s, '(', ')');
+        result = removeInvalidClosing(result.reverse(), ')', '(');
+        return result.reverse().toString();
+    }
+}
+---------------------
+class Solution {
+
+    public String minRemoveToMakeValid(String s) {
+
+        // Pass 1: Remove all invalid ")"
+        StringBuilder sb = new StringBuilder();
+        int openSeen = 0;
+        int balance = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '(') {
+                openSeen++;
+                balance++;
+            } if (c == ')') {
+                if (balance == 0) continue;
+                balance--;
+            }
+            sb.append(c);
+        }
+
+        // Pass 2: Remove the rightmost "("
+        StringBuilder result = new StringBuilder();
+        int openToKeep = openSeen - balance;
+        for (int i = 0; i < sb.length(); i++) {
+            char c = sb.charAt(i);
+            if (c == '(') {
+                openToKeep--;
+                if (openToKeep < 0) continue;
+            }
+            result.append(c);
+        }
+
+        return result.toString();
+    }
+}
+---------------------------------------
+class Solution {
+    public String minRemoveToMakeValid(String s) {
+        char ch[] = s.toCharArray();
+        int count = 0;
+        for(int i = 0; i<ch.length; i++){
+            if(ch[i] == '('){
+                count++;
+            }else if(ch[i] == ')'){
+                if(count > 0){
+                    count--;
+                }else{
+                   ch[i] = 0; 
+                }
+            }
+        }
+        count = 0;
+        for(int i = ch.length -1 ; i >= 0; i--){
+            if(ch[i] == ')'){
+                count++;
+            }else if(ch[i] == '('){
+                if(count > 0){
+                    count--;
+                }else{
+                   ch[i] = 0; 
+                }
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        for(char c : ch){
+            if(c != 0){
+                sb.append(c+"");
+            }
+        }
+        return sb.toString();
+    }
+}
+------------------c++---------------------------------
+class Solution {
+public:
+    string minRemoveToMakeValid(string s) {
+        stack<int> st;
+        for(int indx = 0; indx<s.size(); indx++){
+            char ch = s[indx];
+            if(ch == '('){
+                st.push(indx);
+            }else if(ch == ')'){
+                if(st.empty()){
+                    s[indx] = '1';
+                }else{
+                    st.pop();
+                }
+            }
+        }
+        while(!st.empty()){
+            s[st.top()] = '1';
+            st.pop();
+        }
+        string ans = "";
+        for(auto ch : s){
+            if(ch != '1'){
+                ans += ch;
+            }
+        }
+        return ans;
+    }
+};
