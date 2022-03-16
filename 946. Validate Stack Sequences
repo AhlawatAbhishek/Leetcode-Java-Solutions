@@ -1,0 +1,62 @@
+class Solution {
+    public boolean validateStackSequences(int[] pushed, int[] popped) {
+        
+        int len = popped.length, ppIndx = 0;
+        Deque<Integer> st = new ArrayDeque<>();
+        for(int pu : pushed){
+            st.offerLast(pu);
+            while(!st.isEmpty() && st.peekLast() == popped[ppIndx]){
+                st.pollLast();
+                ppIndx++;
+            }
+            
+        }
+        return ppIndx == len;
+    }
+}
+-----------------------
+class Solution {
+    public boolean validateStackSequences(int[] pushed, int[] popped) {
+        Stack<Integer> st = new Stack<>();
+        int index = 0;
+        for(int i = 0; i<pushed.length; i++){
+            st.push(pushed[i]);
+            while(index < popped.length && !st.isEmpty() && st.peek() == popped[index]){
+       
+                index++;
+                st.pop();
+            }
+     
+        }
+      
+
+        while(index < popped.length){
+              if(st.isEmpty()){
+                return false;
+              }
+            if(st.peek() != popped[index]){
+                return false;
+            }else{
+                st.pop();
+                index++;
+            }
+        }
+        return true;
+    }
+}
+==================c++=================
+class Solution {
+public:
+    bool validateStackSequences(vector<int>& pushed, vector<int>& popped) {
+        int len = pushed.size(), ppIndx = 0;
+        stack<int> st;
+        for(auto pu : pushed){
+            st.push(pu);
+            while(!st.empty() && st.top() == popped[ppIndx]){
+                st.pop();
+                ppIndx++;
+            }
+        }
+        return len == ppIndx;
+    }
+};
