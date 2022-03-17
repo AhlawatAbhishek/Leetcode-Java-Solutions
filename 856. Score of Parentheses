@@ -1,0 +1,135 @@
+//Time complexity: ~O(n^2), as for each pair of parenthesis we are pushing two things in the stack and if add all things between ')' & -1 for each pair of ')' and '-1'
+
+//Auxiliary Space: O(n)
+class Solution {
+public:
+    int scoreOfParentheses(string s) {
+        stack<int> exp;
+        int res = 0;
+        for(auto ex : s){
+            if(ex == '('){
+                exp.push(-1);
+            }else{
+                int sum = 0;
+                while(!exp.empty() && exp.top() != -1){
+                    sum += exp.top();
+                    exp.pop();
+                }
+                exp.pop();
+                if(sum == 0){
+                    exp.push(1);
+                }else{
+                    exp.push(sum * 2);
+                }
+            }
+        }
+        int ans = 0;
+        while(!exp.empty()){
+            ans += exp.top();
+            exp.pop();
+        }
+        return ans;
+    }
+};
+----imported--------
+class Solution {
+public:
+    int scoreOfParentheses(string s) {
+       return getScore(s, 0, s.size()-1);  
+    }
+private:
+    int getScore(string s, int left, int right){
+        int ans = 0, bal = 0;
+        for(int indx = left; indx<= right; indx++){
+            bal += s[indx] == '('? 1 : -1;
+            if(bal == 0){
+                if(left + 1 == indx){
+                    ans++;
+                }else{
+                    ans += 2*getScore(s, left+1, indx-1);
+                }
+                left = indx+1;
+            }
+        }
+        return ans;
+    }
+};
+------------
+class Solution {
+public:
+    int scoreOfParentheses(string s) {
+        int ans = 0, bal = 0;
+        for(int indx = 0; indx<s.size(); indx++){
+            char ch = s[indx];
+            if(ch == '(')bal++;
+            else{
+                bal--;
+                if(s[indx-1] == '('){
+                    ans += 1<<bal;
+                }
+            }
+        }
+        return ans;
+    }
+};
+-----------------------java--------------------------
+class Solution {
+    public int scoreOfParentheses(String s) {
+        Deque<Integer> exp = new ArrayDeque<>();
+        exp.offerLast(0);
+        int res = 0;
+        for(var ex : s.toCharArray()){
+            if(ex == '('){
+                exp.offerLast(0);
+            }else{
+                int insideScore  = exp.pollLast();
+                int prevScore = exp.pollLast();
+                exp.offerLast(prevScore+Math.max(2*insideScore, 1));
+            }
+        }
+        return exp.pollLast();
+    }
+}
+--------------------------------
+class Solution {
+    public int scoreOfParentheses(String s) {
+        Deque<Integer> exp = new ArrayDeque<>();
+        exp.offerLast(0);
+        int res = 0;
+        for(var ex : s.toCharArray()){
+            if(ex == '('){
+                exp.offerLast(0);
+            }else{
+                int insideScore  = exp.pollLast();
+                int prevScore = exp.pollLast();
+                exp.offerLast(prevScore+Math.max(2*insideScore, 1));
+            }
+        }
+        return exp.pollLast();
+    }
+}
+------------------------------------
+class Solution {
+    public int scoreOfParentheses(String S) {
+        Stack<Integer> st = new Stack<>();
+        int count = 0;
+        for(int i = 0; i<S.length(); i++){
+            char ch = S.charAt(i);
+            int value = 0;
+            if(ch == '('){
+                st.push(0);
+            }else if(ch == ')'){
+                while(st.peek() != 0){
+                    value  += st.pop();
+                }
+                value = Math.max(2*value, 1);
+                st.pop();
+                st.push(value);
+            }
+        }
+        while(!st.isEmpty()){
+            count += st.pop();
+        }
+        return count;
+    }
+}
