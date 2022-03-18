@@ -1,0 +1,142 @@
+-------c++-------------------------------------
+--------------This one is not correct--------------------------
+class Solution {
+struct Chr{
+    char ch;
+    int indx;
+    Chr(char c, int i){
+        ch = c;
+        indx = i;
+    }
+};
+public:
+    string removeDuplicateLetters(string s) {
+        set<char> unique;
+        vector<Chr> chrs;
+        for(int indx = s.size()-1; indx>=0; indx--){
+            char currCh = s[indx];
+            if(unique.find(currCh) == unique.end()){
+                chrs.push_back(Chr(currCh, indx));
+                unique.insert(currCh);
+            }
+        }
+        
+        sort(chrs.begin(), chrs.end(), [](Chr a, Chr b){
+            return a.ch < b.ch; 
+        });
+        sort(chrs.begin(), chrs.end(), [](Chr a, Chr b){
+            return a.indx < b.indx;
+        });
+        unique.clear();
+        for(auto chr: chrs){
+             unique.insert(chr.ch);
+        }
+        string ans = "";
+        for(int indx = chrs[0].indx; indx<s.size(); indx++){
+            if(unique.find(s[indx]) != unique.end()){
+                auto itr = unique.find(s[indx]);
+                ans += s[indx];
+                unique.erase(itr);
+            }
+        }
+        
+        // for(auto chr: chrs){
+        //     // cout<<chr.ch<<" ";
+        //     ans += chr.ch;
+        // }
+        return ans;
+    }
+};
+--------------correct-----------------
+
+class Solution {
+public:
+    string removeDuplicateLetters(string s) {
+          if(s.size() == 0)return "";
+          int pos = 0;
+          int chrs[26] = {0};
+          for(auto c : s)chrs[c-'a']++;
+          for(int indx = 0; indx<s.size(); indx++){
+              if(s[indx] < s[pos]){
+                  pos = indx;
+              }
+              if(--chrs[s[indx]-'a'] == 0)break;
+          }
+        string subS = s.substr(pos+1);
+        // replace(subS.begin(), subS.end(), ""+s[pos], "");
+        subS.erase(remove(
+                subS.begin(), subS.end(), s[pos]),
+            subS.end());
+        return s[pos]+removeDuplicateLetters(subS);
+    }
+};
+--------------------------------------java---------------------------------
+public class Solution {
+    public String removeDuplicateLetters(String s) {
+        // find pos - the index of the leftmost letter in our solution
+        // we create a counter and end the iteration once the suffix doesn't have each unique character
+        // pos will be the index of the smallest character we encounter before the iteration ends
+        int[] cnt = new int[26];
+        int pos = 0;
+        for (int i = 0; i < s.length(); i++) cnt[s.charAt(i) - 'a']++;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) < s.charAt(pos)) pos = i;
+            if (--cnt[s.charAt(i) - 'a'] == 0) break;
+        }
+        // our answer is the leftmost letter plus the recursive call on the remainder of the string
+        // note that we have to get rid of further occurrences of s[pos] to ensure that there are no duplicates
+        return s.length() == 0 ? "" : s.charAt(pos) + removeDuplicateLetters(s.substring(pos + 1).replaceAll("" + s.charAt(pos), ""));
+    }
+}
+--------------------------------------------------------------------------------
+class Solution {
+    public String removeDuplicateLetters(String s) {
+        int len = s.length();
+        HashMap<Character, Integer> lastOcc = new HashMap<>();
+        for(int indx = 0; indx<len; indx++){
+            lastOcc.put(s.charAt(indx), indx);
+        }
+        Set<Character> seen = new HashSet<>();
+        Deque<Character> st = new ArrayDeque<>();
+        for(int indx = 0; indx<len; indx++){
+           char ch = s.charAt(indx);
+           if(!seen.contains(ch)){
+               while(!st.isEmpty() && ch < st.peekLast() && lastOcc.get(st.peekLast()) > indx){
+                   seen.remove(st.pollLast());
+               }
+               seen.add(ch);
+               st.offerLast(ch);
+           } 
+        }
+        StringBuilder res = new StringBuilder();
+        for(char c : st){
+            res.append(c);
+        }
+        return res.toString();
+    }
+}
+-------------------------------stack simulation using string builder same idea as above code------------
+class Solution {
+    public String removeDuplicateLetters(String s) {
+       StringBuilder sb = new StringBuilder();
+        int count[] = new int[26];
+        boolean used[]  = new boolean[26];
+        char chs[] = s.toCharArray();
+        for(char c : chs){
+            count[c - 'a']++;
+        }
+        for(char c : chs){
+            count[c - 'a']--;
+            if(used[c - 'a']){
+                continue;
+            }
+            while(sb.length() > 0 && c < sb.charAt(sb.length()-1) && count[sb.charAt(sb.length()-1) - 'a']>0){
+                used[sb.charAt(sb.length()-1)- 'a'] = false;
+                sb.deleteCharAt(sb.length()-1);
+            }
+            sb.append(c);
+            used[c - 'a'] = true;
+        }
+        return sb.toString();
+    }
+}
