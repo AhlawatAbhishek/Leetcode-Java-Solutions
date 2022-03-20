@@ -1,0 +1,31 @@
+#define ll long long
+class Solution {
+public:
+    vector<int> maximumBobPoints(int numArrows, vector<int>& aliceArrows) {
+        ll maxConf = -1, maxScore = INT_MIN;
+        for(ll mask = 0; mask<(1<<12); mask++){
+            ll currScr = 0, arUsed = 0;
+            for(ll aIndx = 0; aIndx<12; aIndx++){
+                //if aIndx is in the current config
+                if((mask & (1<<aIndx)) > 0){
+                     ll ar = aliceArrows[aIndx]+1;
+                     currScr += aIndx;
+                     arUsed +=ar;
+                }
+                if(arUsed <= numArrows && maxScore < currScr){ 
+                         maxScore = currScr;
+                         maxConf = mask;
+                }
+            }
+        }
+        vector<int> bobAr(12, 0);
+        for(ll aIndx = 0; aIndx<12; aIndx++){
+            if((maxConf & (1<<aIndx)) > 0){
+                bobAr[aIndx] = aliceArrows[aIndx]+1;
+                numArrows -= bobAr[aIndx];
+            }
+        }
+        bobAr[11] += numArrows;
+        return bobAr;
+    }
+};

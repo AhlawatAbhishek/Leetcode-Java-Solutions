@@ -1,0 +1,55 @@
+class Solution {
+public:
+    int minDominoRotations(vector<int>& tops, vector<int>& bottoms) {
+        unordered_map<int, int> freqEleMp;
+        int len = tops.size();
+        for(int indx = 0; indx<len; indx++){
+            int top = tops[indx], bot = bottoms[indx];
+            if(top == bot){
+                freqEleMp[top]++;
+            }else{
+                freqEleMp[top]++;
+                freqEleMp[bot]++;
+            }
+        }
+        int maxFreq = 0, maxEl = -1;
+        for(auto pr : freqEleMp){
+            if(maxFreq< pr.second){
+                maxFreq = pr.second;
+                maxEl = pr.first;
+            }
+        }
+        if(maxFreq < len)return -1;
+        maxFreq = len;
+        int frTop = 0, frBot = 0;
+        for(auto ele : tops){
+            if(ele == maxEl)frTop++;
+        }
+        for(auto ele : bottoms){
+            if(ele == maxEl)frBot++;
+        }
+        return min(maxFreq - frTop, maxFreq - frBot);
+    }
+};
+-------------java--------------------
+class Solution {
+    public int minDominoRotations(int[] tops, int[] bottoms) {
+        int top = tops[0], bot = bottoms[0];
+        int tOps = countOps(tops, bottoms, top), bOps = countOps(tops, bottoms, bot);
+        int minOps = Integer.MAX_VALUE;
+        if(tOps != -1)minOps = Math.min(minOps, tOps);
+        if(bOps != -1)minOps = Math.min(minOps, bOps);
+        return minOps == Integer.MAX_VALUE ? -1 : minOps;
+    }
+    private int countOps(int tops[], int[] bottoms, int x){
+        int len = tops.length, dist = 0, tX = 0, bX = 0;
+        for(int indx = 0; indx<len; indx++){
+            int t = tops[indx], b = bottoms[indx];
+            dist += (t == x || b == x) ? 1 : 0;
+            tX += (t == x) ? 1 : 0;
+            bX += (b == x) ? 1 : 0;
+        }
+        if(dist < len)return -1;
+        return Math.min(len - tX, len - bX);
+    }
+}
