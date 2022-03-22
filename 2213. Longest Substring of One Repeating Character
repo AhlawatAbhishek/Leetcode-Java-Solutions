@@ -1,0 +1,80 @@
+class Solution {
+    public int[] longestRepeating(String s, String qChs, int[] qInds) {
+       int sLen = s.length();
+       char str[] = s.toCharArray(); 
+       TreeMap<Integer, Integer> lengths = new TreeMap<>(), spans = new TreeMap<>();
+       for(int start = 0, end = 1; end<= sLen; end++){
+           if(end == sLen || str[start] != str[end]){
+               spans.put(start, end-1);
+               int spanLen = end - start;
+               lengths.put(spanLen, lengths.getOrDefault(spanLen, 0)+1);
+               start = end;
+           }
+       }
+       int res[] = new int[qInds.length]; 
+       for(int indx = 0; indx<qInds.length; indx++){
+           char chng = qChs.charAt(indx);
+           int chngIndx = qInds[indx];
+           if(str[chngIndx] != chng){
+               str[chngIndx] = chng;
+               int strtIndx = spans.floorKey(chngIndx);
+               int endIndx = spans.remove(strtIndx);
+               int spanLen = endIndx - strtIndx + 1;
+               if(lengths.get(spanLen) == 1){
+                   lengths.remove(spanLen);
+               }else{
+                   lengths.put(spanLen, lengths.get(spanLen)-1);
+               }
+               if(chngIndx > strtIndx){
+                   spans.put(strtIndx, chngIndx-1);
+                   spanLen = chngIndx - strtIndx;
+                   lengths.put(spanLen, lengths.getOrDefault(spanLen, 0)+1);
+               }
+               if(chngIndx < endIndx){
+                   spans.put(chngIndx+1, endIndx);
+                   spanLen = endIndx - chngIndx;
+                   lengths.put(spanLen, lengths.getOrDefault(spanLen, 0)+1);
+               }
+               strtIndx = endIndx = chngIndx;
+               if(chngIndx > 0 && str[chngIndx] == str[chngIndx-1]){
+                   strtIndx = spans.floorKey(chngIndx);
+                   int endKey = spans.remove(strtIndx);
+                   spanLen = endKey - strtIndx + 1;
+                   if(lengths.get(spanLen) == 1){
+                       lengths.remove(spanLen);
+                   }else{
+                       lengths.put(spanLen, lengths.get(spanLen) -1);
+                   }
+               }
+               if(chngIndx<sLen-1&& str[chngIndx] == str[chngIndx+1]){
+                   int strtKey = spans.ceilingKey(chngIndx);
+                   endIndx = spans.remove(strtKey);
+                   spanLen = endIndx - strtKey + 1;
+                   if(lengths.get(spanLen) == 1){
+                       lengths.remove(spanLen);
+                   }else{
+                       lengths.put(spanLen, lengths.get(spanLen)-1);
+                   }
+               }
+               spanLen = endIndx - strtIndx + 1;
+               spans.put(strtIndx, endIndx);
+               lengths.put(spanLen, lengths.getOrDefault(spanLen, 0)+1);
+           }
+           res[indx] = lengths.lastKey();
+           
+       } 
+       return res; 
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,68 @@
+class Solution {
+public:
+    vector<int> partitionLabels(string s) {
+        int chrsLast[26] = {0};
+        for(int indx = 0; indx<s.size();indx++){
+            chrsLast[s[indx]-'a'] = indx;
+        }
+        vector<int> res;
+        int anchor = -1, end = chrsLast[s[0]-'a'];
+        for(int indx = 0;indx<s.size(); indx++){
+            
+            if(chrsLast[s[indx]-'a'] != indx){
+                end = max(end, chrsLast[s[indx]-'a']);
+            }
+            if(end == indx){
+                res.push_back(end-anchor);
+                anchor = end;
+                if(indx + 1 < s.size())end = chrsLast[s[indx+1]-'a'];
+            }
+            
+        }
+        return res;
+    }
+};
+---------java------------
+class Solution {
+    public List<Integer> partitionLabels(String s) {
+        char str[] = s.toCharArray();
+        int len = str.length;
+        TreeMap<Integer, Character> firstOcc = new TreeMap<>();
+        TreeMap<Character, Integer> lastOcc = new TreeMap<>();
+        for(int indx = 0; indx<len; indx++){
+            char currCh = str[indx];
+            if(!lastOcc.containsKey(currCh))
+              firstOcc.put(indx, currCh);
+            lastOcc.put(currCh, indx);
+        }
+        int lastBreak = -1;
+        List<Integer> res = new ArrayList<>();
+        for(int indx = 0; indx<len; indx++){
+            char currCh = str[indx];
+            if(lastOcc.get(currCh) == indx){
+                Integer lower = firstOcc.lowerKey(indx);       
+                Map<Integer, Character> lesser = null;
+                boolean isPos = true;
+              if(lower != null){
+                  lesser = firstOcc.headMap(lower, true);
+                
+                for(Map.Entry<Integer, Character> entry : lesser.entrySet()){
+                    char chr = entry.getValue();
+                    if(chr == currCh)continue;
+                    if(lastOcc.get(chr) > indx){
+                        isPos = false;
+                        break;
+                    }
+                }
+              }
+                if(isPos){
+                    int start = lastBreak;
+                    int secLen = indx - start;
+                    lastBreak = indx;
+                    res.add(secLen);
+                }
+            }
+        }
+        return res;
+    }
+}
