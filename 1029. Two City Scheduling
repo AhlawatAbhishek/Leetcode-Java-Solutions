@@ -1,0 +1,69 @@
+class Solution {
+    public int twoCitySchedCost(int[][] costs) {
+         Arrays.sort(costs, (a, b)->(Math.abs(b[0] - b[1]) - Math.abs(a[0] - a[1])));
+        int n = costs.length /2;
+        List<Integer> a = new ArrayList<>(), b = new ArrayList();
+        for(var cost : costs){
+            if(cost[0] < cost[1]){
+                if(a.size() < n){
+                    a.add(cost[0]);
+                }else{
+                    b.add(cost[1]);
+                }
+            }else{
+                if(b.size() < n){
+                    b.add(cost[1]);
+                }else{
+                    a.add(cost[0]);
+                }
+            }
+        }
+        int total = 0;
+        for(var cost : a){
+            total += cost;
+        }
+        for(var cost : b){
+            total += cost;
+        }
+        return total;
+        
+     
+    }
+}
+----------------------------------
+#define pb push_back
+class Solution {
+public:
+    int twoCitySchedCost(vector<vector<int>>& costs) {
+        sort(costs.begin(), costs.end(), [](const vector<int>&a, const vector<int>&b)-> bool {
+            return abs(a[0] - a[1]) > abs(b[0] - b[1]);
+        });
+        int n = costs.size() /2;
+        vector<int> a, b;
+        for(auto cost : costs){
+            if(cost[0] < cost[1]){
+                if(a.size() < n){
+                    a.pb(cost[0]);
+                }else{
+                    b.pb(cost[1]);
+                }
+            }else{
+                if(b.size() < n){
+                    b.pb(cost[1]);
+                }else{
+                    a.pb(cost[0]);
+                }
+            }
+        }
+        int total = 0;
+        for(auto cost : a){
+            total += cost;
+        }
+        for(auto cost : b){
+            total += cost;
+        }
+        return total;
+        
+        return 0;
+    }
+};
