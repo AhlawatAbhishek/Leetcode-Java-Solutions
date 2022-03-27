@@ -1,0 +1,92 @@
+struct Row{
+    int indx, sol;
+    Row(int i, int s){
+        indx = i;
+        sol = s;
+    }
+};
+class Solution {
+public:
+    vector<int> kWeakestRows(vector<vector<int>>& mat, int k) {
+        int rows = mat.size(), cols = mat[0].size(), ind = 0;
+        vector<Row> res;
+        vector<int> ans;
+        for(int r = 0; r<rows; r++){
+            int sols = 0;
+            for(int c = 0; c<cols; c++){
+                if(mat[r][c] == 1)sols++;
+            }
+            res.push_back(Row(r, sols));
+        }
+        sort(res.begin(), res.end(), [](const Row& r1, const Row& r2)->bool{
+            if(r1.sol == r2.sol){
+                return r1.indx < r2.indx;
+            }else{
+                return r1.sol < r2.sol;
+            }
+        });
+        while(k-->0){
+            ans.push_back(res[ind++].indx);
+        }
+        return ans;
+    }
+};
+-----------------------------------------------------java--------------------------------
+class Row{
+    int indx, sol;
+    Row(int i, int s){
+        indx = i;
+        sol = s;
+    }
+}
+class Solution {
+    public int[] kWeakestRows(int[][] mat, int k) {
+       int rows = mat.length, cols = mat[0].length, ind = 0;
+        Row res[] = new Row[rows];
+        int [] ans = new int[k];
+        for(int r = 0; r<rows; r++){
+            int sols = 0;
+            for(int c = 0; c<cols; c++){
+                if(mat[r][c] == 1)sols++;
+                
+            }
+            res[r] =  new Row(r, sols);
+        }
+        Arrays.sort(res, (r1, r2)->{
+            if(r1.sol == r2.sol){
+                return r1.indx - r2.indx;
+            }else{
+                return r1.sol - r2.sol;
+            }
+        });
+        while(k-->0){
+            ans[ind] = res[ind].indx;
+            ind++;
+        }
+        return ans;   
+    }
+}
+---------------------------
+class Solution {
+    public int[] kWeakestRows(int[][] mat, int k) {
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b) -> a[0]!=b[0] ? b[0]-a[0] : b[1]-a[1]);
+        int[] res = new int[k];
+        
+        for(int i = 0; i < mat.length; i++) {
+            int soldiers = 0;
+            for(int j = 0; j < mat[0].length; j++) {
+                if(mat[i][j] == 1) soldiers++;
+                else break;
+            }
+            pq.offer(new int[]{soldiers, i});
+        }
+        
+        while(pq.size() > k){
+            pq.poll();
+        }
+        
+        while(k > 0) res[--k] = pq.poll()[1];
+        
+        return res;
+    }
+}

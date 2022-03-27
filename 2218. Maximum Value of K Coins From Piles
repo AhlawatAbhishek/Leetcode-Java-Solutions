@@ -1,0 +1,102 @@
+class Solution {    
+private:
+    int maxz = 0;
+public:
+    int maxValueOfCoins(vector<vector<int>>& piles, int k) {
+        findMax(piles, 0, k, 0);
+        return maxz;
+    }
+private:
+    void findMax(vector<vector<int>>& piles, int indx, int k, int currSum){
+        if(indx ==  piles.size() || k == 0){
+            maxz = max(currSum, maxz);
+            return;
+        }
+        int cSum = 0;
+        for(int ind = 0; ind<piles[indx].size()&&k>0; ind++, k--){
+               findMax(piles, indx+1, k, currSum);
+                cSum += piles[indx][ind];
+               findMax(piles, indx+1, k-1, currSum + cSum);
+        }
+    }
+};
+-------------------------------
+class Solution {    
+private:
+    int memo[1000][2000] = {{-1}};
+public:
+    int maxValueOfCoins(vector<vector<int>>& piles, int k) {
+        return findMax(piles, 0, k);
+    }
+private:
+    int findMax(vector<vector<int>>& piles, int indx, int k){
+        
+        if(indx ==  piles.size() || k == 0){
+           return 0;
+        }
+        if(memo[indx][k]){
+            return memo[indx][k];
+        }
+        int maxz = 0, cSum = 0;
+        for(int ind = 0; ind<piles[indx].size()&&k>0; ind++, k--){
+                cSum += piles[indx][ind];
+               int leav = findMax(piles, indx+1, k);
+               int take = findMax(piles, indx+1, k-1)+ cSum;
+               maxz = max(maxz, max(leav, take));
+        }
+        memo[indx][k] = max(maxz, memo[indx][k]);
+        return maxz;
+    }
+};
+--------------These ones are correct and donot give TLE-----------------
+class Solution {    
+private:
+    int memo[1001][2001] = {{-1}};
+public:
+    int maxValueOfCoins(vector<vector<int>>& piles, int k) {
+        return findMax(piles, 0, k);
+    }
+private:
+    int findMax(vector<vector<int>>& piles, int indx, int k){
+        
+        if(indx ==  piles.size() || k == 0){
+           return 0;
+        }
+        if(memo[indx][k]){
+            return memo[indx][k];
+        }
+        int maxz = findMax(piles, indx+1, k), cSum = 0;
+        for(int ind = 0; ind< piles[indx].size() &&  ind<k; ind++){
+                cSum += piles[indx][ind];
+               int take = findMax(piles, indx+1, k-1-ind)+ cSum;
+               maxz = max(maxz, take);
+        }
+        memo[indx][k] = maxz;
+        return maxz;
+    }
+};
+---------------java================
+class Solution {
+    private Integer memo[][] = null;
+    public int maxValueOfCoins(List<List<Integer>> piles, int k) {
+        memo = new Integer[piles.size()+1][k+1];
+         return findMax(piles, 0, k);
+    }
+    private int findMax(List<List<Integer>> piles, int indx, int k){
+        
+        if(indx ==  piles.size() || k == 0){
+           return 0;
+        }
+        if(memo[indx][k] != null){
+            return memo[indx][k];
+        }
+        int leav = findMax(piles, indx+1, k);
+        int maxz = leav, cSum = 0;
+        for(int ind = 0; ind<Math.min(piles.get(indx).size(), k); ind++){
+                cSum += piles.get(indx).get(ind);
+               int take = findMax(piles, indx+1, k-ind-1)+ cSum;
+               maxz = Math.max(maxz, take);
+        }
+        return memo[indx][k] = maxz;
+    }
+}
