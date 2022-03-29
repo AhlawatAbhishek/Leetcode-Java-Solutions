@@ -1,0 +1,98 @@
+class Solution {
+public:
+    int findDuplicate(vector<int>& arr) {
+        int slow = arr[0], fast = arr[0];
+        do{
+            slow = arr[slow];
+            fast = arr[arr[fast]];
+        }while(slow != fast);
+        slow = arr[0];
+        while(slow != fast){
+            slow = arr[slow];
+            fast = arr[fast];
+        }
+        return fast;
+    }
+};
+------------------------c++------------------------------
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+        int len = nums.size(), left = 1, right = len-1;
+        int ans = -1;
+        while(left <= right){
+            int mid = left + (right - left)/2;
+            if(eqOrLess(nums, mid) > mid){
+                ans = mid;
+                right = mid-1;
+            }else{
+                left = mid+1;
+            }
+        }
+        return ans;
+    }
+private:
+    int eqOrLess(const vector<int>& nums,int num){
+        int count = 0;
+        for(auto ele : nums){
+            if(ele <= num){
+                count++;
+            }
+        }
+        return count;
+    }
+};
+------------------c++-----------------------------------------
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+          int maxNum = findMax(nums);
+        int pos = (int)(log2(maxNum));
+        int ans = 0;
+        for(int bit = 0; bit<=pos; bit++){
+            int setCnt = 0;
+            for(int num = 1; num<=maxNum; num++){
+                setCnt += (num & (1<<bit)) == 0 ? 0 : 1; 
+            }
+            for(int num : nums){
+                setCnt -= (num & (1<<bit)) == 0 ? 0 : 1;
+            }
+            if(setCnt < 0)ans |= (1<<bit);
+        }
+        return ans;
+    }
+private:
+    int findMax(vector<int>& nums){
+        int maxNum = nums[0];
+        for(int num : nums){
+            maxNum = max(maxNum, num);
+        }
+        return maxNum;
+    }
+};
+---------------------------------java------------------------
+class Solution {
+    public int findDuplicate(int[] nums) {
+        int maxNum = findMax(nums);
+        int pos = (int)(Math.log(maxNum) / Math.log(2));
+        int ans = 0;
+        for(int bit = 0; bit<=pos; bit++){
+            int setCnt = 0;
+            for(int num = 1; num<=maxNum; num++){
+                setCnt += (num & (1<<bit)) == 0 ? 0 : 1; 
+            }
+            for(int num : nums){
+                setCnt -= (num & (1<<bit)) == 0 ? 0 : 1;
+            }
+            if(setCnt < 0)ans |= (1<<bit);
+        }
+        return ans;
+    }
+    private int findMax(int nums[]){
+        int maxNum = nums[0];
+        for(int num : nums){
+            maxNum = Math.max(maxNum, num);
+        }
+        return maxNum;
+    }
+}
