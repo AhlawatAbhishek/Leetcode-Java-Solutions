@@ -1,0 +1,154 @@
+class Solution {
+private:
+    int minn = INT_MAX;
+public:
+    int splitArray(vector<int>& nums, int m) {
+        findMinMax(nums, m-1, INT_MIN, 0, 0);
+        return minn;
+    }
+private:
+    void findMinMax(vector<int>& nums, int m, int maxSum, int currSum, int indx){
+        if(indx == nums.size() && m != 0){
+            return;
+        }
+        if(m == 0){
+            while(indx < nums.size()){
+                currSum += nums[indx++];
+            }
+            int maxx = max(maxSum, currSum);
+            minn = min(minn, maxx);
+            return;
+        }
+        currSum += nums[indx];
+        
+        findMinMax(nums, m-1, max(maxSum, currSum), 0, indx+1);
+        findMinMax(nums, m, maxSum, currSum, indx+1);
+    }
+};
+---------------c++---------------this is wrong though------------------------
+class Solution {
+private:
+    int memo[1001][51]={{0}};
+public:
+    int splitArray(vector<int>& nums, int m) {
+        return findMinMax(nums, m-1, INT_MIN, 0, 0);
+    }
+private:
+    int findMinMax(vector<int>& nums, int m, int maxSum, int currSum, int indx){
+        if(memo[indx][m] != 0)return memo[indx][m];
+        if(indx == nums.size() && m != 0){
+            return INT_MAX;
+        }
+        if(m == 0){
+            while(indx < nums.size()){
+                currSum += nums[indx++];
+            }
+            maxSum = max(maxSum, currSum);
+            return maxSum;
+        }
+        currSum += nums[indx];
+        int excMx = findMinMax(nums, m-1, max(maxSum, currSum), 0, indx+1);
+        int incMx = findMinMax(nums, m, maxSum, currSum, indx+1);
+        memo[indx][m] =  min(excMx, incMx);
+        return memo[indx][m];
+    }
+};
+------------------c++--------------------------
+class Solution {
+private:
+    int memo[1001][51] = {{0}};
+public:
+    int splitArray(vector<int>& nums, int m) {
+        int len = nums.size();
+        vector<int> prefSum(len);
+        prefSum[0] = nums[0];
+        for(int indx = 1; indx<len; indx++){
+            prefSum[indx] = prefSum[indx-1] + nums[indx];
+        }
+        return findMinMax(prefSum, 0, m, len);
+    }
+private:
+    int findMinMax(vector<int>&prefSum, int indx, int m, int len){
+        if(memo[indx][m] != 0)return memo[indx][m];
+        if(m == 1){
+            return memo[indx][m] = prefSum[len-1] - ((indx == 0) ? 0 : prefSum[indx-1]); 
+        }
+        int minSum = INT_MAX;
+        for(int ind = indx; ind<=len-m; ind++){
+            int currSegSum = prefSum[ind] - ((indx == 0) ? 0 : prefSum[indx-1]);
+            int currMaxSeg = max(currSegSum, findMinMax(prefSum, ind+1, m-1, len));
+            minSum = min(minSum, currMaxSeg);
+            if(currSegSum >= currMaxSeg){
+                break;
+            }
+        }
+        return memo[indx][m] = minSum;
+    }
+};
+---------------java-----------------------
+class Solution {
+    public int splitArray(int[] nums, int m) {
+        int maxEle = Integer.MIN_VALUE, sum = 0;
+        for(int num : nums){
+            maxEle = Math.max(maxEle, num);
+            sum += num;
+        }
+        int minMxSum = 0, left = maxEle, right = sum;
+        while(left <= right){
+            int mid = left + (right - left)/2;
+            if(findReqSp(nums, mid) <= m){
+                minMxSum = mid;
+                right = mid - 1;
+            }else{
+                left = mid + 1;
+            }
+        }
+        return minMxSum;
+    }
+    private int findReqSp(int nums[], int sLimit){
+        int req = 1, runSum = 0;
+        for(int num : nums){
+            if(runSum + num <= sLimit){
+                runSum += num;
+            }else{
+                req++;
+                runSum = num;
+            }
+        }
+        return req;
+    }
+}
+----------------------------------java---------------------------------------
+class Solution {
+    private Integer memo[][] = new Integer[1001][51];
+    
+    public int splitArray(int nums[], int m) {
+        int len = nums.length;
+        int []prefSum = new int[len + 1];
+        prefSum[0] = nums[0];
+        for(int indx = 0; indx<len; indx++){
+            prefSum[indx+1] = nums[indx] + prefSum[indx];
+        }
+        return findMinMax(prefSum, 0, m);
+    }
+    
+    
+    private int findMinMax(int []prefSum, int indx, int m){
+        int len = prefSum.length - 1;
+        if(memo[indx][m] != null)return memo[indx][m];
+        if(m == 1){
+            return memo[indx][m] = prefSum[len] - prefSum[indx]; 
+        }
+        int minSum = Integer.MAX_VALUE;
+        for(int ind = indx; ind<=len-m; ind++){
+            int currSegSum = prefSum[ind+1] - prefSum[indx];
+            int currMaxSeg = Math.max(currSegSum, findMinMax(prefSum, ind+1, m-1));
+            minSum = Math.min(minSum, currMaxSeg);
+            if(currSegSum >= currMaxSeg){
+                break;
+            }
+        }
+        return memo[indx][m] = minSum;
+    }
+}
+
