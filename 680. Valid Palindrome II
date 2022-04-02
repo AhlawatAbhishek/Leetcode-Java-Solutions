@@ -1,0 +1,54 @@
+class Solution {
+    public boolean validPalindrome(String s) {
+        return check(s.toCharArray(), 0, s.length()-1);
+    }
+    private boolean isPalin(char[] s, int left, int right){      
+        while(left < right){
+            if(s[left] != s[right]){
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true; 
+    }
+    private boolean check(char[] s, int left, int right){
+      while(left < right){
+        if(s[left] != s[right]){
+            return isPalin(s, left+1, right) || isPalin(s, left, right-1);
+        }
+        left++;
+        right--;
+      }
+      return true;  
+    }
+};
+--------------------c++--------------------------------
+class Solution {
+public:
+    bool validPalindrome(string s) {
+        return check(s, 0, s.size()-1);
+    }
+private:    
+    bool isPalin(string s, int left, int right){      
+        while(left < right){
+            if(s[left] != s[right]){
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true; 
+    }
+private:
+    bool check(string s, int left, int right){
+      while(left < right){
+        if(s[left] != s[right]){
+            return isPalin(s, left+1, right) || isPalin(s, left, right-1);
+        }
+        left++;
+        right--;
+      }
+      return true;  
+    }
+};
