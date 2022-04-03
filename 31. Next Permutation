@@ -1,0 +1,91 @@
+class Solution {
+    public void nextPermutation(int[] nums) {
+         int len = nums.length, indx = len -1;
+        boolean chng = false;
+        for(; indx>=1 ; indx--){
+            if(nums[indx-1] < nums[indx]){
+                chng = true;
+                break;
+            }
+        }
+        if(!chng)Arrays.sort(nums);
+        else{
+            int diff = Integer.MAX_VALUE, swInd = -1;
+            for(int ind = indx; ind<len; ind++){
+                if(nums[ind] > nums[indx-1]){
+                    int df = nums[ind] - nums[indx-1];
+                    if(diff > df){
+                        diff = df;
+                        swInd = ind;
+                    }
+                }
+            }
+            int temp = nums[indx-1];
+            nums[indx-1] = nums[swInd];
+            nums[swInd] = temp;
+            //Here insted of sorted we can just reverse the array also that would also work in the same way, though sort is more intuitive ;)
+            //Reverse works because the elements after indx-1 were already sorted in descending order
+            Arrays.sort(nums, indx, len);
+        }    
+    }
+}
+---------------------------------java-----------------------
+class Solution {
+    public void nextPermutation(int[] nums) {
+        int i = nums.length - 2;
+        while(i >= 0 && nums[i] >= nums[i+1]){
+            i--;
+        }
+        if(i >=0){
+            int j = nums.length-1;
+            while(j >= 0 && nums[j] <= nums[i]){
+                j--;
+            }
+            swap(nums, i, j);
+        }
+        reverse(nums, i+1, nums.length-1);
+    }
+    public void swap(int [] nums, int i, int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j]  = temp;
+    }
+    public void reverse(int [] nums, int start, int end){
+        while(start <= end){
+            swap(nums, start, end);
+            start++;
+            end--;
+        }
+    }
+}
+-------------------c++---------------------------------------
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        int len = nums.size(), indx = len -1;
+        bool chng = false;
+        for(; indx>=1 ; indx--){
+            if(nums[indx-1] < nums[indx]){
+                chng = true;
+                break;
+            }
+        }
+        if(!chng)sort(nums.begin(), nums.end());
+        else{
+            int diff = INT_MAX, swInd = -1;
+            for(int ind = indx; ind<len; ind++){
+                if(nums[ind] > nums[indx-1]){
+                    int df = nums[ind] - nums[indx-1];
+                    if(diff > df){
+                        diff = df;
+                        swInd = ind;
+                    }
+                }
+            }
+            int temp = nums[indx-1];
+            nums[indx-1] = nums[swInd];
+            nums[swInd] = temp;
+            sort(nums.begin()+indx, nums.end());
+        }
+    }
+};
