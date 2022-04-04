@@ -76,3 +76,100 @@ class Solution {
         return head;
     }
 }
+--------------------------java-------------------------------------
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode swapNodes(ListNode head, int k) {
+        int len = 0;
+        ListNode kth = null;
+        for(ListNode curr = head; curr!=null ;curr = curr.next){
+            len++;
+            if(len == k){
+                kth = curr;
+            }
+        }
+        // cout<<"len is:"<<len<<"\n";
+        ListNode curr = head; 
+        int reqIndx = len - k, currIndx = 1;
+        // cout<<"reqIndx is: "<<reqIndx<<"\n";
+        for(;currIndx<=reqIndx && curr != null; curr = curr.next, currIndx++){
+        }
+        int temp = kth.val;
+        kth.val = curr.val;
+        curr.val = temp;
+        return head;
+    }
+}
+------------------------------------c++-----------------------------------------
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* swapNodes(ListNode* head, int k) {
+        int len = 0;
+        ListNode * kth = NULL;
+        for(ListNode *curr = head; curr!=NULL ;curr = curr->next){
+            len++;
+            if(len == k){
+                kth = curr;
+            }
+        }
+        // cout<<"len is:"<<len<<"\n";
+        ListNode *curr = head; 
+        int reqIndx = len - k, currIndx = 1;
+        // cout<<"reqIndx is: "<<reqIndx<<"\n";
+        for(; curr!=NULL && currIndx<=reqIndx && curr != NULL; curr = curr->next, currIndx++){
+        }
+        int temp = kth->val;
+        kth->val = curr->val;
+        curr->val = temp;
+        return head;
+    }
+};
+-------------------------------------c++------------------------------------------------------
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* swapNodes(ListNode* head, int k) {
+        int len = 0;
+        ListNode * kth = NULL, *endKth = NULL;
+        for(ListNode *curr = head; curr!=NULL ;curr = curr->next){
+            len++;
+            if(endKth != NULL)endKth = endKth->next;
+            if(len == k){
+                kth = curr;
+                endKth = head;
+            }
+        }
+        int temp = endKth->val;
+        endKth->val = kth->val;
+        kth->val = temp;
+        return head;
+    }
+};
