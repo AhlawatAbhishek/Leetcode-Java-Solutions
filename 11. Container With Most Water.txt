@@ -10,3 +10,42 @@ class Solution {
         return water;
     }
 }
+----------------------------c++---------------------------------
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int len = height.size();
+        vector<int> leftG(len, -1), rightG(len, -1);
+        int maxWat = 0, left = 0, right = len-1;
+        while(left < right){
+            int leftH = height[left], rightH = height[right];
+            maxWat = max(maxWat, min(leftH, rightH)*(right - left));
+            if(leftH < rightH){
+                left++;
+            }else{
+                right--;
+            }
+        }
+        return maxWat;
+    }    
+};
+------------------------java-------------------------------
+class Solution {
+    public int maxArea(int[] height) {
+        int len = height.length;
+        int leftG[] = new int[len], rightG[] = new int[len];
+        Arrays.fill(leftG, -1);
+        Arrays.fill(rightG, -1);
+        int maxWat = 0, left = 0, right = len-1;
+        while(left < right){
+            int leftH = height[left], rightH = height[right];
+            maxWat = Math.max(maxWat, Math.min(leftH, rightH)*(right - left));
+            if(leftH < rightH){
+                left++;
+            }else{
+                right--;
+            }
+        }
+        return maxWat;
+    }
+}
