@@ -15,9 +15,9 @@ class Solution {
                     if(e1<e2 && e2 < e3){
                         ans += (f1*f2*f3);
                     }else if(e1 == e2 && e2 != e3){
-                        ans += (f3 * ((f1 * (f1 -1))/ 2));
+                        ans += (f3 * ((f1 * (f1 -1))/ 2));//this is nC2 after f3
                     }else if(e1 == e2 && e2 == e3){
-                        ans += (f1 * (f2-1) * (f3-2))/ 6;
+                        ans += (f1 * (f2-1) * (f3-2))/ 6;// this is nC3 as all three are same it's like choosing 3 numbers form same numbers
                     }
                 }
             }
@@ -26,4 +26,60 @@ class Solution {
     }
                
   } 
-    
+  ------------------------------------------------------------------------------------------
+  class Solution
+{
+    public
+    int threeSumMulti(int[] arr, int t)
+    {
+        long mod = 1000000007;
+        long cnt = 0;
+        Arrays.sort(arr);
+        for(int indx = 0; indx < arr.length - 2; indx++)
+        {
+            int left = indx + 1, right = arr.length - 1;
+            long target = t - arr[indx];
+            while(left < right)
+            {
+                if(arr[left] + arr[right]> target)
+                {
+                    right--;
+                }
+                else if(arr[left] + arr[right]< target)
+                {
+                    left++;
+                }
+                else
+                {
+                    if(arr[left] == arr[right])
+                    {
+                        long eleCnt = right - left + 1;
+                        long combs = (eleCnt * (eleCnt - 1)) / 2;
+                        cnt = ((cnt % mod) + (combs % mod)) % mod;
+                        break;
+                    }
+                    else
+                    {
+                        int scnd = 1, third = 1;
+                        while(left+1 < right && arr[left] == arr[left + 1])
+                        {
+                            left++;
+                            scnd++;
+                        }
+                        while(right-1> left && arr[right] == arr[right - 1])
+                        {
+                            right--;
+                            third++;
+                        }
+                        long prod = ((scnd % mod) * (third % mod)) % mod;
+                        cnt = ((cnt % mod) + (prod % mod)) % mod;
+                        left++;
+                        right--;
+                    }
+                }
+            }
+        }
+        return (int)cnt;
+    }
+}
+---//This above code can be very easily converted in c++ just by changing Array.sort(arr) to sort(arr.begin(), arr.end()) and long to long long, also mod can be written as 1e9 + 7  
