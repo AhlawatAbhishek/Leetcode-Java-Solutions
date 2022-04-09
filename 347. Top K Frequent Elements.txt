@@ -22,3 +22,125 @@ class Solution {
         return res;
     }
 }
+----------------java----------------
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        HashMap<Integer, Integer>  freqMp = new HashMap<>();
+        for(var num : nums)freqMp.put(num, freqMp.getOrDefault(num, 0)+1);
+        int res[] = new int[k];
+        PriorityQueue<Map.Entry<Integer, Integer>> pq = new PriorityQueue<>((a,b)->(a.getValue() - b.getValue()));
+        for(Map.Entry<Integer, Integer> entry : freqMp.entrySet()){
+            pq.offer(entry);
+            if(pq.size() > k)pq.poll();
+        }
+        int indx = 0;
+        while(!pq.isEmpty()){
+            res[indx++] = pq.poll().getKey();
+        }
+        return res;
+    }
+}
+-----------------------------c++--------------------------
+--bucket sort----
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_set<int> res;
+        int len = nums.size();
+        unordered_map<int, int> freqMp;
+        vector<vector<int>> buck(len+1);
+        for(int indx = 0; indx<=len; indx++){
+            buck.push_back({});
+        }
+        for(auto num : nums){
+          freqMp[num]++;
+          buck[freqMp[num]].push_back(num);  
+        }
+        for(int indx = len; indx >= 0 && k > 0; indx--){
+            if(buck[indx].size() != 0){
+                for(auto ele : buck[indx]){
+                    if(res.find(ele) == res.end()){
+                        res.insert(ele);
+                        k--;
+                    }
+                }
+            }
+        }
+        vector<int> ans;
+        for(auto ele : res)ans.push_back(ele);
+        return ans;
+    }
+};
+-------quick sort------
+class Solution {
+private:
+    unordered_map<int, int> freqMp;
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        for(auto num : nums) freqMp[num]++;
+        nums.clear();
+        for(auto pr : freqMp)nums.push_back(pr.first);
+         int len = nums.size();
+        vector<int> ans;
+        quickSort(nums, 0, len-1, len-k);
+        for(int indx = len-1; indx>=0 && k > 0; indx--, k--){
+            ans.push_back(nums[indx]);
+        }    
+        return ans;
+    }
+private:
+    void swap(vector<int> &nums, int indx1, int indx2){
+        int temp = nums[indx1];
+        nums[indx1] = nums[indx2];
+        nums[indx2] = temp;
+    }
+private:
+    int doPart(vector<int>& nums, int left, int right, int pivot){
+        swap(nums, right, pivot);
+        int storeIndx = left, indx = left;
+        for(; indx<right; indx++){
+            if(freqMp[nums[indx]] < freqMp[nums[right]]){
+                swap(nums, storeIndx++, indx); 
+            }
+        }
+        swap(nums, storeIndx, right);
+        return storeIndx;
+    }
+private:
+    void quickSort(vector<int>& nums, int left, int right, int k){
+        if(left < right){
+            int pivot = left + 1 + (rand() % (right - left));
+            pivot = doPart(nums, left, right, pivot);
+            if(pivot == k)return;
+            else if(pivot < k)quickSort(nums, pivot+1, right, k);
+            else quickSort(nums, left, pivot - 1, k);
+        }
+    }
+};
+--------------------------------------------min Heap---------------------------
+class Solution {
+    struct prComp{
+        bool operator()(pair<int, int> const& p1, pair<int, int> const& p2){
+            return p1.second > p2.second;
+        }
+    };
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int, int> freqMp;
+        for(auto num : nums)freqMp[num]++;
+        priority_queue<pair<int, int>, vector<pair<int, int>>, prComp> pq;
+        vector<int> res;
+        for(auto pr : freqMp){
+            // cout<<"ele: "<<pr.first<<" freq: "<<pr.second<<"\n";
+            pq.push(pr);
+            if(pq.size() > k)pq.pop();
+        }
+        while(!pq.empty()){
+            auto pr = pq.top();
+            cout<<"ele: "<<pr.first<<" freq: "<<pr.second<<"\n";
+            res.push_back(pq.top().first);
+            pq.pop();
+        }
+        return res;
+    }
+};
