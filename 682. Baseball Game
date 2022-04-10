@@ -1,0 +1,54 @@
+class Solution {
+public:
+    int calPoints(vector<string>& ops) {
+        stack<int> opSt;
+        for(auto c : ops){
+           if(c == "+"){
+               int op1 = opSt.top();
+               opSt.pop();
+               int op2 = opSt.top();
+               opSt.push(op1);
+               opSt.push((op1 + op2));
+           }else if(c == "C"){
+               opSt.pop();
+           }else if(c == "D"){
+               int op1 = 2*opSt.top();
+               opSt.push(op1);
+           }else{
+              opSt.push(stoi(c));
+           }
+        }
+        int res = 0l;
+        while(!opSt.empty()){
+            res += opSt.top();
+            opSt.pop();
+        }
+        return res;
+    }
+};
+------------------------------java----------------------------
+class Solution {
+    public int calPoints(String[] ops) {
+        Stack<Integer> opSt = new Stack<>();
+        for(String c : ops){
+           if(c.equals("+")){
+               int op1 = opSt.pop();
+               int op2 = opSt.peek();
+               opSt.push(op1);
+               opSt.push((op1 + op2));
+           }else if(c.equals("C")){
+               opSt.pop();
+           }else if(c.equals("D")){
+               int op1 = 2*opSt.peek();
+               opSt.push(op1);
+           }else if(Character.isDigit(c.charAt(0)) || (c.length() > 1 && Character.isDigit(c.charAt(1)))){
+               opSt.push(Integer.parseInt(c));
+           }
+        }
+        int sum = 0;
+        while(!opSt.isEmpty()){
+            sum += opSt.pop();
+        }
+        return sum;
+    }
+}
