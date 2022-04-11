@@ -1,0 +1,70 @@
+class Solution {
+    public List<List<Integer>> shiftGrid(int[][] gr, int k) {
+        int rows = gr.length, cols = gr[0].length;
+        List<List<Integer>> grid = new ArrayList<>();
+        for(int r = 0; r<rows; r++){
+            grid.add(new ArrayList<>());
+            for(int c = 0; c<cols; c++){
+                grid.get(r).add(0);
+            }
+        }
+        for(int r = 0; r<rows; r++){
+            for(int c = 0; c<cols; c++){
+                int newC = (c + k) % cols;
+                int rowShift = (c+k) / cols;
+                int newR = (r + rowShift) % rows;
+                grid.get(newR).set(newC,  gr[r][c]);
+            }
+        }
+        return grid;
+    }
+}
+--------------------------------------------------------------
+class Solution {
+public:
+    vector<vector<int>> shiftGrid(vector<vector<int>>& gr, int k) {
+        int rows = gr.size(), cols = gr[0].size();
+        vector<vector<int>> grid(rows, vector<int>(cols, 0));
+        for(int r = 0; r<rows; r++){
+            for(int c = 0; c<cols; c++){
+                int newC = (c + k) % cols;
+                int rowShift = (c+k) / cols;
+                int newR = (r + rowShift) % rows;
+                grid[newR][newC] = gr[r][c];
+            }
+        }
+        return grid;
+    }
+}
+---------------------------------------------------------------------
+class Solution {
+public:
+    vector<vector<int>> shiftGrid(vector<vector<int>>& grid, int k) {
+        int rows = grid.size(), cols = grid[0].size();
+        vector<int> oneD(rows * cols, 0);
+        int indx = 0;
+        for(auto &row : grid){
+            for(auto ele : row){
+                oneD[indx++] = ele;
+            }
+        }
+        while(k -- > 0) 
+         shift(grid, oneD);
+        return grid;
+    }
+private:
+    void shift(vector<vector<int>>&grid, vector<int>&oneD){
+        int rows = grid.size(), cols = grid[0].size();
+        int rightMost = oneD[oneD.size()-1];
+        for(int indx = oneD.size()-1; indx>=1; indx--){
+            oneD[indx] = oneD[indx-1];
+        }
+        oneD[0] = rightMost;
+        int indx = 0;
+        for(int r = 0; r<rows; r++){
+            for(int c = 0; c<cols; c++){
+                grid[r][c] = oneD[indx++];
+            }
+        }
+    }
+};    
