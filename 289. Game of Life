@@ -1,0 +1,86 @@
+class Solution
+{
+public:
+    void gameOfLife(vector<vector<int>> &bo)
+    {
+        int rows = bo.size(), cols = bo[0].size();
+        vector<vector<int>> board(rows, vector<int>(cols, 0));
+        int dirs[8][2] = {{1, 1}, {-1, -1}, {0, 1}, {1, 0}, {0, -1}, {-1, 0}, {1, -1}, {-1, 1}};
+        for(int r = 0; r < rows; r++)
+        {
+            for(int c = 0; c < cols; c++)
+            {
+                int liveCnt = 0, val = bo[r][c];
+                for(auto dir : dirs)
+                {
+                    int x = r + dir[0], y = dir[1] + c;
+                    if(x < 0 || x >= rows || y < 0 || y >= cols)
+                    {
+                        continue;
+                    }
+                    if(bo[x][y] == 1)liveCnt++;
+                }
+                board[r][c] = bo[r][c];
+                if(val == 0)
+                {
+                    if(liveCnt == 3)board[r][c] = 1;
+                }
+                else
+                {
+                    if(liveCnt > 3 || liveCnt < 2)board[r][c] = 0;
+                }
+            }
+        }
+        for(int r = 0; r < rows; r++)
+        {
+            for(int c = 0; c < cols; c++)
+            {
+                bo[r][c] = board[r][c];
+            }
+        }
+    }
+};
+----------------------------java-------------------------------
+class Solution {
+    public void gameOfLife(int[][] bo) {
+        int rows = bo.length, cols = bo[0].length;
+        int dirs[][] = {{1, 1}, {-1, -1}, {0, 1}, {1, 0}, {0, -1}, {-1, 0}, {1, -1}, {-1, 1}};
+        for(int r = 0; r<rows; r++){
+            for(int c = 0; c<cols; c++){
+                int liveCnt = 0, val = bo[r][c];
+                if(val == 2)val = 0;
+                else if(val == -1)val = 1;
+                for(var dir : dirs)
+                {
+                    int x = r + dir[0], y = dir[1] + c;
+                    if(x < 0 || x >= rows || y < 0 || y >= cols)
+                    {
+                        continue;
+                    }
+                    int vl = bo[x][y];
+                    if(vl == 2)vl = 0;
+                    else if(vl == -1)vl = 1;
+                    if(vl == 1)liveCnt++;
+                }
+                if(val == 0)
+                {
+                    if(liveCnt == 3)bo[r][c] = 2;
+                }
+                else
+                {
+                    if(liveCnt > 3 || liveCnt < 2)bo[r][c] = -1;
+                }
+            }
+        }
+        for(int r = 0; r < rows; r++)
+        {
+            for(int c = 0; c < cols; c++)
+            {
+                int val = bo[r][c];
+                if(val == -1)val = 0;
+                else if(val == 2) val = 1;
+                bo[r][c] = val;
+            }
+        }
+    }
+}
