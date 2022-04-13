@@ -93,3 +93,42 @@ class Solution {
         return arr;
     }
 }
+-------------------------------------c++-----------------------------
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        vector<vector<int>> res(n, vector<int>(n, 0));
+        int dir = 1, top = 0, bottom = n-1, left = 0, right = n-1, cnt = 1;
+        while(top<=bottom && left <= right){
+            if(dir == 1){
+                for(int indx = left; indx<=right; indx++){
+                    res[top][indx] = cnt++;
+                }
+                top++;
+                dir = 2;
+            }
+            if(dir == 2){
+                for(int indx = top; indx<=bottom; indx++){
+                    res[indx][right] = cnt++;
+                }
+                right--;
+                dir = 3;
+            }
+            if(dir == 3){
+                for(int indx = right; indx>= left; indx--){
+                   res[bottom][indx] = cnt++;   
+                }
+                bottom--;
+                dir = 4;
+            }
+            if(dir == 4){
+                for(int indx = bottom; indx>=top; indx--){
+                    res[indx][left] = cnt++;
+                }
+                left++;
+                dir = 1;
+            }
+        }
+        return res;
+    }
+};
