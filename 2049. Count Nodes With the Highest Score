@@ -1,0 +1,69 @@
+#include <bits/stdc++.h>
+#define ll  long long
+using namespace std;
+class Solution
+{
+    unordered_map<ll, ll> scrCnt;
+public:
+    int countHighestScoreNodes(vector<int> &par)
+    {
+        unordered_map<ll, vector<ll>> graph;
+        ll len = par.size();
+        for(ll indx = 0; indx < len; indx++)
+        {
+            ll p = par[indx];
+            if(p != -1)
+            {
+                graph[p].push_back(indx);
+            }
+        }
+        calcSrc(0, graph, par.size());
+        ll maxScr = 0, cnt = 0;
+        for(auto pr : scrCnt)
+        {
+            ll scr = pr.first, freq = pr.second;
+            if(scr > maxScr)
+            {
+                maxScr = scr;
+                cnt = freq;
+            }
+        }
+        return  cnt;
+    }
+private:
+    ll calcSrc(ll src, unordered_map<ll, vector<ll>> &graph, ll totNodes)
+    {
+        vector<ll> &childs = graph[src];
+        ll prod = 1, tSize = 1;
+        for(ll indx = 0; indx < childs.size(); indx++)
+        {
+            ll size = calcSrc(childs[indx], graph, totNodes);
+            prod *= size;
+            tSize += size;
+        }
+        prod *= max(1ll, (totNodes - tSize));
+        scrCnt[prod]++;
+        return tSize;
+    }
+};
+------------------------------------------------------------
+class Solution {
+int dfs(vector<vector<int>> &al, vector<long long> &s, int i) {
+    long long prod = 1, sum = 1;
+    for (int j : al[i]) {
+        int cnt = dfs(al, s, j);
+        prod *= cnt;
+        sum += cnt;
+    }
+    s[i] = prod * (max(1ll, (long long)al.size() - sum));
+    return i != 0 ? sum : count(begin(s), end(s), *max_element(begin(s), end(s)));
+}
+public:     
+int countHighestScoreNodes(vector<int>& p) {
+    vector<vector<int>> al(p.size());
+    vector<long long> s(p.size());
+    for (int i = 1; i < p.size(); ++i)
+        al[p[i]].push_back(i);
+    return dfs(al, s, 0);
+}
+};
