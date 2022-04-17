@@ -48,3 +48,49 @@ class Solution {
         return dummyRoot;
     }
 }
+----------------------------java-----------------------------
+
+class Solution {
+    public TreeNode increasingBST(TreeNode root) {
+        ArrayList<TreeNode> list = new ArrayList<>();
+        populateList(root, list);
+        TreeNode newRoot = null;
+        for(int indx = 0; indx<list.size()-1; indx++){
+            TreeNode node = list.get(indx), nextNode = list.get(indx+1);
+            if(newRoot == null)newRoot = node;
+            node.left = null;
+            node.right = nextNode;
+            nextNode.left = null;
+        }
+        return newRoot == null ? (list.size() == 0 ? null : list.get(0)) : newRoot;
+        
+    }
+    private void populateList(TreeNode root, ArrayList<TreeNode> li){
+        if(root == null)return;
+        populateList(root.left, li);
+        li.add(root);
+        populateList(root.right, li);
+    }
+}
+------------------c++---------------------------------------
+
+class Solution {
+private:
+    TreeNode * curr = NULL;
+public:
+    TreeNode* increasingBST(TreeNode* root) {
+        TreeNode * ans = new TreeNode();
+        curr = ans;
+        reLink(root);
+        return ans->right;
+    }
+private:     
+    void reLink(TreeNode * root){
+        if(root == NULL)return;
+        reLink(root->left);
+        curr->right = root;
+        curr = root;
+        root->left = NULL;
+        reLink(root->right);
+    }
+};
