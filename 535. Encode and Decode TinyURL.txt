@@ -35,3 +35,25 @@ public class Codec {
 // Your Codec object will be instantiated and called as such:
 // Codec codec = new Codec();
 // codec.decode(codec.encode(url));
+-----------------------------------------
+int id = 1;
+    HashMap<Integer, String> map = new HashMap<>();
+    // Encodes a URL to a shortened URL.
+    public String encode(String longUrl) {
+        String code = "http://tinyurl.com/"+id;
+        map.put(id, longUrl);
+        id++;
+        return code;
+    }
+
+    // Decodes a shortened URL to its original URL.
+    public String decode(String code) {
+        StringBuilder id = new StringBuilder();
+        int len = code.length(), indx = len-1;
+        while(indx >= 0 && code.charAt(indx) != '/'){
+            id.append(code.charAt(indx--));
+        }
+        id.reverse();
+        int idd = Integer.parseInt(id.toString());
+        return map.get(idd);
+    }
