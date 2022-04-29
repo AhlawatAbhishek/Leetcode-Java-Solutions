@@ -1,0 +1,52 @@
+class Solution {
+    public boolean isBipartite(int[][] graph) {
+        int n = graph.length;
+        if(n == 0 || graph[n-1].length == 0)return true;
+        HashMap<Integer, Character> visited = new HashMap<>();
+        Deque<Integer> que = new ArrayDeque<>();
+        for(int node = 0; node < n; node++){
+            if(graph[node] == null || graph[node].length == 0){
+                que.offerLast(node);
+                visited.put(node, 'R');
+            }
+        }
+        int src = -1;
+        for(int indx = 0; indx<n; indx++){
+            if(!visited.containsKey(indx)){
+                src = indx;
+                break;
+            }
+        }
+        que.offerLast(src);
+        visited.put(src, 'R');
+        while(!que.isEmpty()){
+            int size = que.size();
+            while(size -- > 0){
+                int currNode = que.pollFirst();
+                char currClr = visited.get(currNode), nClr = (currClr == 'R') ? 'B' : 'R';
+                if(graph[currNode] == null || graph[currNode].length == 0)continue;
+                for(var neigh : graph[currNode]){
+                    if(!visited.containsKey(neigh)){
+                        que.offer(neigh);
+                        visited.put(neigh, nClr);
+                    }
+                }
+            }
+           if(que.isEmpty()){
+            for(int indx = 0; indx<n; indx++){
+                if(!visited.containsKey(indx)){
+                    que.push(indx);
+                    visited.put(indx, 'R');
+                    break;
+                }
+            }
+           }    
+        }
+        for(int indx = 0; indx<n; indx++){
+            for(var neigh : graph[indx]){
+                if(visited.get(neigh) == visited.get(indx))return false;
+            }
+        }
+        return true;
+    }
+}
