@@ -1,0 +1,37 @@
+class Solution {
+    public int[] sortArrayByParity(int[] nums) {
+        int indx = 0, len = nums.length, res[] = new int[len];
+        for(int ind = 0; ind<len; ind++){
+            if(nums[ind] % 2 == 0){
+                res[indx++] = nums[ind]; 
+            }
+        }
+        for(int ind = 0; ind<len; ind++){
+            if(nums[ind] % 2 == 1){
+                res[indx++] = nums[ind]; 
+            }
+        }
+        return res;
+    }
+}
+---------------------
+class Solution {
+    public int[] sortArrayByParity(int[] nums) {
+        int len = nums.length, left = 0, right = len-1;
+        while(left < right){
+            while(left < len && nums[left]  % 2 == 0){
+                left++;
+            }
+            while(right >= 0 && nums[right] % 2 == 1){
+                right--;
+            }
+            // System.out.println("left is: "+ left + " right is: " + right);
+            if(left < len && right >= 0 && left < right){
+                int temp = nums[left];
+                nums[left] = nums[right];
+                nums[right] = temp;
+            }
+        }
+        return nums;
+    }
+}
