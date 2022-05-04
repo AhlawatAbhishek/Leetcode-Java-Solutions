@@ -18,3 +18,24 @@ class Solution {
         return ops;
     }
 }
+-------------------------
+class Solution {
+    public int maxOperations(int[] nums, int k) {
+        int cnt = 0;
+        Arrays.sort(nums);
+        int len = nums.length, left = 0, right = len-1;
+        while(left < right){
+            int sum = nums[left] + nums[right];
+            if(sum < k){
+                left++;
+            }else if(sum > k){
+                right--;
+            }else{
+                cnt++;
+                left++;
+                right--;
+            }
+        }
+        return cnt;
+    }
+}
