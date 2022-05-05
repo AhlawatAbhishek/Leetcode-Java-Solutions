@@ -1,0 +1,52 @@
+class MyStack {
+    Deque<Integer> pr = new ArrayDeque<Integer>();
+    Deque<Integer> sc = new ArrayDeque<Integer>();
+    public MyStack() {
+        
+    }
+    
+    public void push(int x) {
+        while(!pr.isEmpty()){
+            sc.offerLast(pr.pollFirst());
+        }
+        pr.offerLast(x);
+        while(!sc.isEmpty()){
+            pr.offerLast(sc.pollFirst());
+        }
+    }
+    
+    public int pop() {
+        return pr.pollFirst();        
+    }
+    
+    public int top() {
+        return pr.peekFirst();
+    }
+    
+    public boolean empty() {
+        return pr.isEmpty();
+    }
+}
+///using only single queue--
+/*
+private LinkedList<Integer> q1 = new LinkedList<>();
+
+// Push element x onto stack.
+public void push(int x) {
+    q1.add(x);
+    int sz = q1.size();
+    while (sz > 1) {
+        q1.add(q1.remove());
+        sz--;
+    }
+}
+*/
+
+/**
+ * Your MyStack object will be instantiated and called as such:
+ * MyStack obj = new MyStack();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.top();
+ * boolean param_4 = obj.empty();
+ */
