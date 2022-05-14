@@ -1,0 +1,117 @@
+DFS----
+class Solution {
+    HashMap<Integer, List<Pair<Integer, Integer>>> graph = new HashMap<>();
+    HashMap<Integer, Integer> dist = new HashMap<>();
+    // private int dist[] = null;
+    public int networkDelayTime(int[][] times, int n, int k) {
+        // dist[] = new int[n];
+        for(int nd = 1; nd<=n; nd++){
+            dist.put(nd, Integer.MAX_VALUE);
+        }
+        for(var time : times){
+            int u = time[0], v = time[1], w = time[2];
+            graph.putIfAbsent(u, new ArrayList<>());
+            graph.putIfAbsent(v, new ArrayList<>());
+            graph.get(u).add(new Pair<Integer, Integer>(v, w));
+            // graph.get(v).add(new Pair<Integer, Integer>(u, w));
+        }
+        dist.put(k, 0);
+        dfs(k, 0);
+        int tTk = 0;
+        for(var entry : dist.entrySet()){
+            tTk = Math.max(tTk, entry.getValue());
+        }
+        return tTk == Integer.MAX_VALUE ? -1 : tTk;
+    }
+    private void dfs(int src, int dis){
+        for(var neigh : graph.get(src)){
+            int node = neigh.getKey(), wt = neigh.getValue();
+            if(dis + wt < dist.get(node)){
+                dist.put(node, wt + dis);
+                dfs(node, wt+dis);
+            }
+        }
+    }
+}
+----BFS-----
+class Solution {
+    public int networkDelayTime(int[][] times, int n, int k) {
+       HashMap<Integer, List<Pair<Integer, Integer>>> graph = new HashMap<>();
+            HashMap<Integer, Integer> dist = new HashMap<>();
+        for(var time : times){
+            int u = time[0], v = time[1], w = time[2];
+            graph.putIfAbsent(u, new ArrayList<>());
+            graph.putIfAbsent(v, new ArrayList<>());
+            graph.get(u).add(new Pair<Integer, Integer>(v, w));
+        }
+        for(int nd = 1; nd<=n; nd++){
+            dist.put(nd, Integer.MAX_VALUE);
+        }
+        dist.put(k, 0);
+        Deque<Pair<Integer, Integer>> deq = new ArrayDeque<>();
+       
+        deq.offerLast(new Pair<Integer, Integer>(k, 0));       
+        int tTk = 0;
+        while(!deq.isEmpty()){
+            int size = deq.size();
+            while(size-->0){
+                Pair<Integer, Integer> crPr = deq.pollFirst();
+                int currNode = crPr.getKey(), currDist = crPr.getValue();
+                for(var neigh : graph.get(currNode)){
+                    int node = neigh.getKey(), wt = neigh.getValue();
+                    if(dist.get(node) > currDist + wt){
+                        deq.offerLast(new Pair<Integer, Integer>(node, wt+currDist));
+                        dist.put(node, wt+currDist);
+                    } 
+                }
+            }
+        }
+        for(var entry : dist.entrySet()){
+            tTk = Math.max(tTk, entry.getValue());
+        }
+        return tTk == Integer.MAX_VALUE ? -1 : tTk;
+    }
+}
+----Dijkstra-------
+class Solution {
+    public int networkDelayTime(int[][] times, int n, int k) {
+       HashMap<Integer, List<Pair<Integer, Integer>>> graph = new HashMap<>();
+        HashMap<Integer, Integer> dist = new HashMap<>();
+        for(var time : times){
+            int u = time[0], v = time[1], w = time[2];
+            graph.putIfAbsent(u, new ArrayList<>());
+            graph.putIfAbsent(v, new ArrayList<>());
+            graph.get(u).add(new Pair<Integer, Integer>(v, w));
+        }
+        for(int nd = 1; nd<=n; nd++){
+            dist.put(nd, Integer.MAX_VALUE);
+        }
+        dist.put(k, 0);
+        dijkistra(graph, dist);
+        int tTk = 0;
+        for(var entry : dist.entrySet()){
+            tTk = Math.max(tTk, entry.getValue());
+        }
+        return tTk == Integer.MAX_VALUE ? -1 : tTk;
+    }
+    private void dijkistra(HashMap<Integer, List<Pair<Integer, Integer>>> graph, HashMap<Integer, Integer> dist){
+        PriorityQueue<Pair<Integer, Integer>> minDist = new PriorityQueue<>((a, b)->(a.getValue() - b.getValue()));
+        for(var entry : dist.entrySet()){
+            minDist.offer(new Pair<Integer, Integer>(entry.getKey(), entry.getValue()));
+        }
+        HashSet<Integer> relaxed = new HashSet<>();
+        while(!minDist.isEmpty()){
+                Pair<Integer, Integer> crPr = minDist.poll();
+                int currNode = crPr.getKey(), currDist = crPr.getValue();
+                if(relaxed.contains(currNode) || !graph.containsKey(currNode))continue;
+                relaxed.add(currNode);
+                for(var neigh : graph.get(currNode)){
+                    int node = neigh.getKey(), wt = neigh.getValue();
+                    if(dist.get(node) > currDist + wt){
+                        minDist.offer(new Pair<Integer, Integer>(node, wt+currDist));
+                        dist.put(node, wt+currDist);
+                    } 
+                }
+        }
+    }
+}
