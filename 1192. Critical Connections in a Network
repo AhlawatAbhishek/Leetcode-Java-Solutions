@@ -1,0 +1,84 @@
+class Solution {
+    private HashMap<Integer, Integer> ranks = new HashMap<>();
+    private HashMap<Integer, Set<Integer>> graph = new HashMap<>();
+    private HashSet<Pair<Integer, Integer>> incl = new HashSet<>();
+    
+    public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+        for(var li : connections){
+           int u = li.get(0), v = li.get(1);
+            graph.putIfAbsent(u, new HashSet<>());
+            graph.putIfAbsent(v, new HashSet<>());
+            graph.get(u).add(v);
+            graph.get(v).add(u);
+            incl.add(new Pair<Integer, Integer>(Math.min(u, v), Math.max(u, v)));
+        }
+        
+        findBrid(0, 0);
+        List<List<Integer>> res = new ArrayList<>();
+        for(var pr : incl){
+            List<Integer> li = new ArrayList<>();
+            li.add(pr.getKey()); li.add(pr.getValue());
+            res.add(li);
+        }
+        return res;
+    }
+    private int findBrid(int src, int currRank){
+        if(ranks.containsKey(src))return ranks.get(src);
+        int minRank = currRank; 
+        ranks.put(src, currRank);
+        var neighs = graph.get(src);
+        for(var neigh : neighs){
+          if(ranks.containsKey(neigh) && ranks.get(neigh) == currRank - 1){
+              continue;
+          }
+          int recRank = findBrid(neigh, currRank+1);
+          minRank = Math.min(minRank, recRank);
+          if(recRank <= currRank){
+              incl.remove(new Pair<Integer, Integer>(Math.min(src, neigh), Math.max(src, neigh)));
+          }  
+        }
+        return minRank;
+    }
+}
+-------------------Tarjan's Algorithm---------------------
+class Solution {
+    int time =0;
+    List<List<Integer>> result;
+    public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+        List<Integer>[] adj = new ArrayList[n];
+        
+        for (int i = 0; i < n; i++) adj[i] = new ArrayList<>();
+        
+        for(List<Integer> edge:connections){
+            int a = edge.get(0);
+            int b = edge.get(1);
+            
+            adj[a].add(b);
+            adj[b].add(a);
+        }
+        
+        boolean[] visited = new boolean[n];
+        int[] timestamp = new int[n];
+        result = new ArrayList<>();
+        dfs(adj,visited,timestamp,0,-1);
+        return result;
+    }
+    
+    void dfs(List<Integer>[] adj,boolean[] visited,int[] timestamp,int vertex, int prev){
+        visited[vertex]=true;
+        timestamp[vertex] = time++;
+        int currentTimeStamp = timestamp[vertex];
+        
+        
+        for(int v : adj[vertex]){
+            if(v == prev) continue;
+            
+            if(!visited[v]) dfs(adj,visited,timestamp,v,vertex);
+            
+            timestamp[vertex] = Math.min(timestamp[vertex],timestamp[v]);
+            
+            if(currentTimeStamp < timestamp[v]) result.add(Arrays.asList(vertex,v));
+            
+        }
+    }
+}
