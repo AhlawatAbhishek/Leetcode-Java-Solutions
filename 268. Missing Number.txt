@@ -16,3 +16,16 @@ class Solution {
         return ans;
     }
 }
+------------------------bit manipulation-------------------------------
+class Solution {
+    public int missingNumber(int[] nums) {
+        int allXor = 0;
+        for(var num : nums){
+            allXor ^= num;
+        }
+        for(int num = 0; num <= nums.length; num++){
+            allXor ^= num;
+        }
+        return allXor;
+    }
+}
