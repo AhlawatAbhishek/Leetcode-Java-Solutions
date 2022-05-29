@@ -50,3 +50,28 @@ class Solution {
         return res;
     }
 }
+---------------------------------------------------------------
+class Solution {
+    public int maxProduct(String[] words) {
+        int maxProd = 0;
+        for(int indx = 0; indx<words.length; indx++){
+            int chrs[] = new int[26];
+            for(var c : words[indx].toCharArray()){
+                chrs[c - 'a']++;
+            }          
+            for(int indx1 = indx+1; indx1<words.length; indx1++){
+                boolean isMatch = false;
+                for(var c : words[indx1].toCharArray()){
+                    if(chrs[c - 'a'] > 0){
+                        isMatch = true;
+                        break;
+                    }
+                }    
+                if(!isMatch){
+                    maxProd = Math.max(maxProd, words[indx].length() * words[indx1].length());
+                }
+            }
+        }
+        return maxProd;
+    }
+}
