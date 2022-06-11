@@ -15,3 +15,36 @@ class Solution {
         return len;
     }
 }
+------------------------------------------------
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int len = s.length();
+        s = s.trim();
+        if(len != 0 && s.length() == 0){
+            return 1;
+        }
+        if(len == 1 || len == 0){
+            return s.length();
+        }
+        int chrs[] = new int[256];
+        Arrays.fill(chrs, -1);
+        char sCh[] = s.toCharArray();
+        int left = 0, right = 1, currLen = 1, maxLen = 1;
+        chrs[sCh[left]] = 0;
+        while(right<len){
+            if(chrs[sCh[right]] != -1){
+                int shiftIndx = chrs[sCh[right]]+1;
+                for(int ind = left; ind<shiftIndx; ind++){
+                    chrs[sCh[ind]] = -1;
+                }
+                maxLen = Math.max(maxLen, right-left);
+                left = shiftIndx;
+                chrs[sCh[right]] = right++;
+            }else{
+                maxLen = Math.max(maxLen, right-left+1);
+                chrs[sCh[right]] = right++;                
+            } 
+        }
+        return maxLen;
+    }
+}
