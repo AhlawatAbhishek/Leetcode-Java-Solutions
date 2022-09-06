@@ -1,0 +1,47 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode pruneTree(TreeNode root) {
+        if(root.left == null && root.right == null && root.val == 1)return root;
+       Pair<TreeNode, Boolean> rPr = prT(root);
+       return rPr.getKey();
+    }
+    public Pair<TreeNode, Boolean> prT(TreeNode root) {
+        if(root == null)return new Pair<TreeNode, Boolean>(null, false);
+        if((root.left == null && root.right == null && root.val == 1))return new Pair<TreeNode, Boolean>(null, true);
+        if(root.left == null && root.right == null && root.val == 0)return new Pair<TreeNode, Boolean>(null, false);
+        Pair<TreeNode, Boolean> leftP = prT(root.left);
+        Pair<TreeNode, Boolean> rightP = prT(root.right);
+        int wRCnt = 0;
+        if(leftP.getValue() ==  false){
+            System.out.println("Prune left");
+            root.left = null;
+            wRCnt++;
+        }
+        
+        if(rightP.getValue() ==  false){
+            System.out.println("Prune right");
+            root.right = null;
+            wRCnt++;
+        }
+        if(wRCnt == 2 && root.val == 0){
+            return new Pair<TreeNode, Boolean>(null, false);
+        }else{
+            return new Pair<TreeNode, Boolean>(root, true);
+        }
+        
+    }
+}
