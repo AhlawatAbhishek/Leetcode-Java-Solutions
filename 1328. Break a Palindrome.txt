@@ -29,3 +29,56 @@ class Solution {
         return new String(charArr);
     }
 }
+-----------------------------------------------c++----------------------------
+#define ll long long
+#define sza(x) ((int)x.size())
+#define fo(i, a, b) for (ll i = a; i < b; i++)
+class Solution
+{
+public:
+    string breakPalindrome(string palindrome)
+    {
+        if (sza(palindrome) == 1)
+        {
+            return "";
+        }
+        bool done = false;
+        int hlf = sza(palindrome) / 2;
+        fo(indx, 0, hlf)
+        {
+            if (indx == hlf - 1 && palindrome[indx] != 'a')
+            {
+                palindrome[indx] = 'a';
+                done = true;
+                break;
+            }else if (palindrome[indx] != 'a')
+            {
+                done = true;
+                palindrome[indx] = 'a';
+                break;
+            }
+        }
+        if (!done)
+        {
+            if (sza(palindrome) % 2)
+                hlf++;
+            fo(indx, hlf, sza(palindrome))
+            {
+
+                if (indx == (sza(palindrome) - 1))
+                {
+                    if (palindrome[indx] != 'a')
+                        palindrome[indx] = 'a';
+                    else
+                        palindrome[indx] = 'b';
+                }else if (palindrome[indx] != 'a')
+                {
+                    done = true;
+                    palindrome[indx] = 'a';
+                    break;
+                }
+            }
+        }
+        return palindrome;
+    }
+};
