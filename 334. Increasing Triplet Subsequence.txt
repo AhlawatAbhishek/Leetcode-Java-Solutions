@@ -16,3 +16,21 @@ class Solution {
         return false;
     }
 }
+---------------c++------------
+class Solution {
+public:
+    bool increasingTriplet(vector<int>& nums) {
+        vector<int> arr;
+        arr.push_back(nums[0]);
+        for(int indx = 1; indx<nums.size(); indx++){
+            auto itr = lower_bound(arr.begin(), arr.end(), nums[indx]);
+            if(itr == arr.end()){
+                arr.push_back(nums[indx]);
+            }else{
+                auto idx = itr - arr.begin();
+                arr[idx] = nums[indx];
+            }
+        }
+        return arr.size() >= 3;
+    }
+};
