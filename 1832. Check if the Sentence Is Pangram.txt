@@ -1,0 +1,12 @@
+class Solution {
+    public boolean checkIfPangram(String sentence) {
+        int chrs[] = new int[26];
+        for(var ch : sentence.toCharArray()){
+            chrs[ch-'a']++;
+        }
+        for(var c : chrs){
+            if(c == 0)return false;
+        }
+        return true;
+    }
+}
