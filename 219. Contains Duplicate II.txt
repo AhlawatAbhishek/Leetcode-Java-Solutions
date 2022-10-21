@@ -1,0 +1,16 @@
+class Solution {
+public:
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+        unordered_map<int, vector<int>> numIndxMp;
+        for(int indx = 0; indx<nums.size(); indx++){
+            numIndxMp[nums[indx]].push_back(indx);
+        }
+        for(auto pr : numIndxMp){
+            auto vc = pr.second;
+            for(int indx = 1; indx<vc.size(); indx++){
+                if(vc[indx] - vc[indx-1] <= k)return true;
+            }
+        }
+        return false;
+    }
+};
