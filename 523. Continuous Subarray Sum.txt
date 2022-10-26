@@ -1,0 +1,17 @@
+class Solution {
+    public boolean checkSubarraySum(int[] nums, int k) {
+        int currSum = 0;
+        HashMap<Integer, Integer> sumMap = new HashMap<>();
+        sumMap.put(0, -1);
+        for(int indx = 0; indx<nums.length; indx++){
+            currSum = (currSum %  k  + nums[indx] % k)%k;
+            Integer loc = sumMap.get(currSum);
+            if(loc != null){
+                if(indx - loc > 1)return true;
+            }else{
+                sumMap.put(currSum, indx);                
+            }  
+        }
+        return false;
+    }
+}
