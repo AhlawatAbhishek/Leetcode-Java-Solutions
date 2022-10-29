@@ -27,3 +27,22 @@ class Solution {
         return dToBloom;
     }
 }
+--------------------------------------------------------------------
+class Solution {
+    public int earliestFullBloom(int[] plantTime, int[] growTime) {
+        int pG[][] = new int[plantTime.length][2];
+        for(int indx = 0; indx<plantTime.length; indx++){
+            pG[indx][0] = plantTime[indx];
+            pG[indx][1] = growTime[indx];
+        }
+        Arrays.sort(pG, (a, b)->(b[1] - a[1]));
+        int prevP = 0, maxB = 0;
+        for(int indx = 0; indx<pG.length; indx++){
+            int currP = prevP + pG[indx][0];
+            int currB = currP + pG[indx][1];
+            prevP = currP;
+            maxB = Math.max(currB, maxB);
+        }
+        return maxB;
+    }
+}
