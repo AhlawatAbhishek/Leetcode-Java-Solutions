@@ -1,0 +1,18 @@
+class Solution {
+   public int[] findBall(int[][] grid) {
+        int m = grid.length, n = grid[0].length, answer[] = new int[n];
+        for(int c = 0; c<n; c++){
+            int currC = 0, prevC = c;
+            for(int r = 0; r<m; r++){
+                currC = prevC + grid[r][prevC];
+                if(currC == -1 || currC == n || grid[r][prevC] != grid[r][currC]){
+                    currC = -1;
+                    break;
+                }
+                prevC = currC;
+            }
+            answer[c] = currC;
+        }
+       return answer;
+    }
+}
