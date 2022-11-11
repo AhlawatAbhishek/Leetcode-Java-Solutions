@@ -1,0 +1,22 @@
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        int indx = 0, ind = 0;
+        while(indx < nums.length){
+            if(indx == 0){
+                System.out.println("indx: "+indx + "---ind: "+ ind);
+                nums[ind] = nums[indx];
+            }else{
+                while(indx < nums.length && nums[indx] == nums[ind]){
+                    indx++;
+                }
+                
+                if(indx < nums.length){
+                    ind++;
+                    nums[ind] = nums[indx];
+                }
+            }
+            indx++;
+        }
+        return ind+1;
+    }
+}
