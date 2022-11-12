@@ -41,3 +41,45 @@ class MedianFinder {
  * obj.addNum(num);
  * double param_2 = obj.findMedian();
  */
+-----------------------------c++------------------------------
+class MedianFinder {
+public:
+    priority_queue<int> maxArr;
+    priority_queue<int, vector<int>, greater<int>>minArr; 
+    MedianFinder() {
+        
+    }
+    
+    void addNum(int num) {
+       maxArr.push(num);
+       int mxSz = maxArr.size(), mnSz = minArr.size(), diff = mxSz - mnSz;
+       if(!maxArr.empty() && mxSz - mnSz > 1){
+           minArr.push(maxArr.top());
+           maxArr.pop();
+       }
+       if(minArr.size() > 0 && maxArr.size() > 0 && maxArr.top() > minArr.top()){
+           int maxEle = maxArr.top();
+           int minEle = minArr.top();
+           maxArr.pop();
+           minArr.pop();
+           minArr.push(maxEle);
+           maxArr.push(minEle);
+       }
+    }
+    
+    double findMedian() {
+        int totalSize = maxArr.size() + minArr.size();
+        if(totalSize % 2){
+            return maxArr.top();
+        }else{
+            return (((maxArr.top() + minArr.top()) * 1.0) / 2);
+        }
+    }
+};
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder* obj = new MedianFinder();
+ * obj->addNum(num);
+ * double param_2 = obj->findMedian();
+ */
