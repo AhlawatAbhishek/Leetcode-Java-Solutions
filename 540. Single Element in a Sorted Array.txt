@@ -47,7 +47,34 @@ Way 1: .If we are discarding the mid in either of left or right movement i.e. (l
         
         .else if you are keeping mid in either of left or right i.e. (lo = mid / hi = mid), then
         take lo<hi
-
+---------------------------------------------------------------------------------------------------------------------------------C++ code---------------
+class Solution {
+public:
+    int singleNonDuplicate(vector<int>& nums) {
+        int size = nums.size(), left = 0, right = size - 1;
+        while(left <= right){
+            int mid = left + (right - left)/2, midE = nums[mid];
+            int rightDist = 0;
+            if(mid + 1 < size && midE == nums[mid+1]){
+                rightDist = size - mid - 2;
+            }else if(mid - 1 > -1){
+                if(nums[mid-1] != midE){
+                    return nums[mid];
+                }else{
+                    rightDist = size - mid - 1;
+                }
+            }else{
+                return nums[mid];
+            }
+            if(rightDist % 2){
+                left = mid + 1;
+            }else{
+                right = mid - 1;
+            }
+        }
+        return -1;
+    }
+};
 
 Way 2: .If you are returning inside the while loop use lo<=hi
 
