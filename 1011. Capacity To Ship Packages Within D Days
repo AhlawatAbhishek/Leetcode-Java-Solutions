@@ -1,0 +1,54 @@
+-----------------------------C++----------------
+class Solution {
+public:
+    int shipWithinDays(vector<int>& weights, int days) {
+        int sum = accumulate(weights.begin(), weights.end(), 0), 
+        left = *max_element(weights.begin(), weights.end()), right = sum, minWt = sum;
+        while(left <= right){
+            int cap = left + (right - left)/2, sum = 0, d = 1;
+            bool isGoodCap = true;
+            for(int indx =0; indx<weights.size(); indx++){
+                int wt = weights[indx];
+                if(sum + wt <= cap)sum += wt;
+                else{
+                    d++;
+                    sum = wt;
+                }
+            }
+            if(d <= days){
+              minWt = min(minWt, cap);
+              right = cap - 1;
+            }else{
+              left = cap + 1;
+            }
+        }
+        return minWt;
+    }
+};
+-----------------------------java----------------
+class Solution {
+    public int shipWithinDays(int[] weights, int days) {
+        int left = 0, right = 0;
+        for(int wt : weights){
+            left = Math.max(wt, left);
+            right += wt;
+        }
+        while(left <= right){
+            int mid = left+(right-left)/2;
+            int reqDays = 1, currWt = 0;
+            for(int wt : weights){
+                if(currWt + wt > mid){
+                    reqDays++;
+                    currWt = 0;
+                }
+                currWt += wt;
+            }
+            if(reqDays > days){
+                left = mid+1;
+            }else{
+                right = mid-1;
+            }
+        }
+        return left;
+    }
+}
